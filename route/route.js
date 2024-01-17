@@ -6,7 +6,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 
-router.get("/", async (req, res) => {
+router.get("/get", async (req, res) => {
     try {
         // Fetch all employees from the database
         const employees = await employee.findAll();
