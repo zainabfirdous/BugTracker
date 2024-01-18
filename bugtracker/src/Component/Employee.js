@@ -70,7 +70,7 @@ export default function Employee() {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody> 
             {employeeList.map((empItem) => {
               return (
                 <tr key={empItem.empID}>
