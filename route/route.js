@@ -75,5 +75,22 @@ router.post('/login', async (req, res) => {
 })
 
 
+router.put("/updateEmployee", async (req, res) => {
+    try {
+        const data = req.body;
+        const updateObject = { ...data };
+        delete updateObject.empID;
+        const updatedCount = await employee.update(updateObject, {
+        where: { empID: data.empID },
+    });
+    res.json(updatedCount);
+    } catch (error) {
+        console.error('Error while Updating employee:', error);
+        res.json({ error: "Can't Update" });
+    }
+})
+
+
+
 
 module.exports = router;

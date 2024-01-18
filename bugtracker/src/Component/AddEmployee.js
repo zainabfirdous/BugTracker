@@ -29,13 +29,20 @@ export default function AddEmployee(props) {
       email: email,
       roleID: roleID,
     };
+    console.log(updatedData);
     const udpatedRecord = await axios.put(
-      "http://127.0.0.1:5000/updEmployee",
+      "http://127.0.0.1:5000/updateEmployee",
       updatedData
     );
-    props.updateProductList();
+    props.updateEmployeeList();
     resetForm();
-    alert(udpatedRecord + "Product updated successfully!");
+    if(udpatedRecord.data.error){
+      alert(`${udpatedRecord.data.error}`);
+    }
+    else{
+      alert("Product updated successfully!");
+    }
+    
   };
 
   const handleInput = (e) => {
