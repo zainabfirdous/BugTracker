@@ -29,7 +29,12 @@ export default function Employee() {
       `http://127.0.0.1:5000/delete/${employeeID}`
     );
     getEmployee();
-    alert(`${deletedRecords.data} Employee deleted successfully`);
+    if(deletedRecords.data.error){
+      alert(`${deletedRecords.data.error}`);
+    }
+    else{
+      alert(`${deletedRecords.data} Employee deleted successfully`);
+    }
   };
 
   const handleUpdateEmployee = (employee) => {

@@ -37,9 +37,15 @@ router.post("/newEmployee", async (req, res) => {
 })
 
 router.delete("/delete/:id", async (req, res) => {
-    const id = req.params.id;
-    const deletedCount = await employee.destroy({ where: { empID: id } });
-    res.json(deletedCount);
+    try {
+        const id = req.params.id;
+        const deletedCount = await employee.destroy({ where: { empID: id } });
+        res.json(deletedCount);
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        res.json({ error: "This Employee Can't Delete, (FK-In_Use)" });
+    }
+    
 })
 
 router.post('/login', async (req, res) => {
