@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const employee = require('../models/Employee.js');
 const EmpProfile = require('../models/EmpProfile.js');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const Project = require('../models/Project.js')
 
 
 router.get("/get", async (req, res) => {
@@ -90,7 +89,58 @@ router.put("/updateEmployee", async (req, res) => {
     }
 })
 
+router.get("/getprojects", async (req, res) => {
+    try {
+        const proj = await Project.findAll();
+        res.json(proj);
+    } catch (error) {
+        console.error('Error fetching Projects:', error);
+        res.status(500).send('Internal Server Error');
+    }
+})
 
+router.post("/newProject", async (req, res) => {
+    try {
+        const body = req.body;
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().split('T')[0];
+        const data = { ...body };
+        data.crtDate = formattedDate;
+        data.updDate = null;
+        const newproj = await Project.create(data);
+        res.json(newproj);
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        res.status(500).send('Internal Server Error');
+    }
+})
+
+router.put("/updateProject", async (req, res) => {
+    try {
+        const data = req.body;
+        const updateObject = { ...data };
+        delete updateObject.projID;
+        const updatedCount = await Project.update(updateObject, {
+        where: { projID: data.projID },
+    });
+    res.json(updatedCount);
+    } catch (error) {
+        console.error('Error while Updating employee:', error);
+        res.json({ error: "Can't Update" });
+    }
+})
+
+router.delete("/deleteproj/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedCount = await Project.destroy({ where: { projID: id } });
+        res.json(deletedCount);
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        res.json({ error: "This Employee Can't Delete, (FK-In_Use)" });
+    }
+    
+})
 
 
 module.exports = router;
