@@ -1,4 +1,4 @@
-const { INTEGER,STRING, DATEONLY } = require('sequelize');
+const { INTEGER,STRING, DATEONLY,DATE } = require('sequelize');
 const con = require('../config/database.js');
 
 const proj = con.define(
@@ -24,6 +24,12 @@ const proj = con.define(
         type:STRING,
         allowNull:false,
     },
+    crtDate:{
+        type: DATE,
+    },
+    updDate:{
+        type: DATE,
+    }
  },{ tableName: 'project',timestamps:false, freezeTableName:false} 
 )
 

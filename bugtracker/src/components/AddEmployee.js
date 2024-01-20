@@ -40,7 +40,7 @@ export default function AddEmployee(props) {
       alert(`${udpatedRecord.data.error}`);
     }
     else{
-      alert("Product updated successfully!");
+      alert("Employee updated successfully!");
     }
     
   };
@@ -107,8 +107,8 @@ export default function AddEmployee(props) {
   };
 
   return (
-    <form className="row product-form">
-      <div className="form-group col-4">
+    <form className="row mt-4">
+      <div className="form-group col-sm-12 col-md-4">
         <label htmlFor="empID">Employee Id: </label>
         <input
           className="form-control"
@@ -118,7 +118,7 @@ export default function AddEmployee(props) {
           onChange={handleInput}
         />
       </div>
-      <div className="form-group col-4">
+      <div className="form-group col-sm-12 col-md-4">
         <label htmlFor="firstName">First Name: </label>
         <input
           className="form-control"
@@ -128,7 +128,7 @@ export default function AddEmployee(props) {
           onChange={handleInput}
         />
       </div>
-      <div className="form-group col-4">
+      <div className="form-group col-sm-12 col-md-4">
         <label htmlFor="lastName">Last Name: </label>
         <input
           className="form-control"
@@ -138,7 +138,7 @@ export default function AddEmployee(props) {
           onChange={handleInput}
         />
       </div>
-      <div className="form-group col-4">
+      <div className="form-group col-sm-12 col-md-4">
         <label htmlFor="email">Email : </label>
         <input
           className="form-control"
@@ -148,7 +148,7 @@ export default function AddEmployee(props) {
           onChange={handleInput}
         />
       </div>
-      <div className="form-group col-4">
+      <div className="form-group col-sm-12 col-md-4">
         <label htmlFor="roleID">Role ID: </label>
         <input
           className="form-control"
@@ -158,8 +158,8 @@ export default function AddEmployee(props) {
           onChange={handleInput}
         />
       </div>
-      <div className="form-group col-4 product-btn">
-        <button className="btn btn-success" onClick={handleSubmit}>
+      <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
+        <button type="button" className="btn btn-success text-center" onClick={handleSubmit}>
           {isUpdateButton ? "Update Employee" : "Add Employee"}
         </button>
       </div>

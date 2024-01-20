@@ -4,7 +4,8 @@ const employee = require('../models/Employee.js');
 const EmpProfile = require('../models/EmpProfile.js');
 const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
-
+const currentDate = new Date();
+const formattedDate = currentDate.toISOString().split('T')[0];
 
 router.get("/get", async (req, res) => {
     try {
@@ -23,8 +24,6 @@ router.get("/get", async (req, res) => {
 router.post("/newEmployee", async (req, res) => {
     try {
         const body = req.body;
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString().split('T')[0];
         const data = { ...body };
         data.crtDate = formattedDate;
         data.updDate = null;
@@ -79,10 +78,15 @@ router.put("/updateEmployee", async (req, res) => {
     try {
         const data = req.body;
         const updateObject = { ...data };
+        const employees = await employee.findByPk(updateObject.empID);
+        console.log(employees.crtDate + " " + formattedDate );
         delete updateObject.empID;
+        updateObject.crtDate = employees.crtDate;
+        updateObject.updDate = formattedDate;
         const updatedCount = await employee.update(updateObject, {
         where: { empID: data.empID },
     });
+        
     res.json(updatedCount);
     } catch (error) {
         console.error('Error while Updating employee:', error);
@@ -103,8 +107,6 @@ router.get("/getprojects", async (req, res) => {
 router.post("/newProject", async (req, res) => {
     try {
         const body = req.body;
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString().split('T')[0];
         const data = { ...body };
         data.crtDate = formattedDate;
         data.updDate = null;
@@ -116,11 +118,21 @@ router.post("/newProject", async (req, res) => {
     }
 })
 
+router.get("/getprojbyid/:projID", async (req,res) =>{
+    const pprojID = req.params.projID;
+    const projectg = await Project.findByPk(pprojID);
+    res.send(projectg);
+})
+
 router.put("/updateProject", async (req, res) => {
     try {
         const data = req.body;
         const updateObject = { ...data };
+        const projectg = await Project.findByPk(updateObject.projID);
+        console.log(projectg.crtDate + " " + formattedDate );
         delete updateObject.projID;
+        updateObject.crtDate = projectg.crtDate;
+        updateObject.updDate = formattedDate;
         const updatedCount = await Project.update(updateObject, {
         where: { projID: data.projID },
     });

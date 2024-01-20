@@ -64,7 +64,8 @@ export default function Employee() {
           }}
           employee={updateEmployee}
         />
-        <table className="table table-bordered table-strip">
+        <div class="table-responsive">
+        <table className="table table-striped table-bordered table-hover mt-4">
           <thead>
             <tr>
               <th>Employee Id</th>
@@ -84,26 +85,32 @@ export default function Employee() {
                   <td>{empItem.lName}</td>
                   <td>{empItem.email}</td>
                   <td>{empItem.roleID}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning"
+                  <td><div className='row'>
+                    <div className='col-sm-12 col-lg-6'>
+                    <button type="button"
+                      className="btn btn-warning m-1 text-center"
                       style={{ marginRight: "5px" }}
                       onClick={() => handleUpdateEmployee(empItem)}
                     >
                       Update
                     </button>
-                    <button
-                      className="btn btn-danger"
+                    </div>
+                    <div   className='col-sm-12 col-lg-6'>
+                    <button type="button"
+                      className="btn btn-danger m-1 text-center"
                       onClick={() => handleDelete(empItem.empID)}
                     >
                       Delete
                     </button>
+                    </div>
+                  </div>
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
     

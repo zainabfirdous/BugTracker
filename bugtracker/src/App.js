@@ -1,9 +1,10 @@
 import './App.css';
 import Login from './Login';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Desktop from './Component/Desktop'
-import Home from './Component/Home'
-import Employee from './Component/Employee'
+import Desktop from './components/Desktop'
+import Home from './components/Home'
+import Employee from './components/Employee'
+import Project from './components/Project'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/Login" element={<Login />} />
       <Route path="/Desktop" element={<Desktop />} />
       <Route path="/Employee" element={<Employee />} />
+      <Route path="/Project" element={<Project />} />
       
       </Routes>
     </BrowserRouter>

@@ -37,7 +37,7 @@ CREATE TABLE Project (
     projID INT NOT NULL PRIMARY KEY,
     projName VARCHAR(30) NOT NULL,
     startDate DATE NOT NULL,
-    endDate BIGINT NOT NULL,
+    endDate DATE NOT NULL,
     status VARCHAR(30) NOT NULL,
     crtDate DATE NULL,
     updDate DATE NULL
