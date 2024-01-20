@@ -5,18 +5,19 @@ import Desktop from './components/Desktop'
 import Home from './components/Home'
 import Employee from './components/Employee'
 import Project from './components/Project'
+import { useState } from 'react';
 
 function App() {
+
   return (
     <>
     <BrowserRouter>
       <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Login />} />
       <Route path="/Login" element={<Login />} />
       <Route path="/Desktop" element={<Desktop />} />
       <Route path="/Employee" element={<Employee />} />
       <Route path="/Project" element={<Project />} />
-      
       </Routes>
     </BrowserRouter>
     </>

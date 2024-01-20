@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
+import Home from './components/Home'
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -37,6 +38,10 @@ export default function Login() {
     }
   };
 
+  const handleback = () => {
+    navigate("/Desktop", { replace: true })
+  }
+
   return (
     <div>
       <form className="login-form" onSubmit={handleSubmit}>
@@ -67,14 +72,22 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="form-group row">
+          <div className="col-6">
           <button
             type="submit"
             // onClick={handleSubmit}
             className="btn btn-primary"
           >
             Login
-          </button>
+          </button></div>
+          <div className=" col-6 d-flex justify-content-end"><button
+            type="button"
+             onClick={handleback}
+            className="btn btn-info"
+          >
+            Back
+          </button></div>
         </div>
       </form>
     </div>
