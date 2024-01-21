@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
-import Home from './components/Home'
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -28,7 +27,7 @@ export default function Login() {
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("user", result.data.username);
         localStorage.setItem("urole", result.data.urole);
-        navigate("/Desktop", { replace: true });
+        navigate("/Welcome", { replace: true });
       } else {
         
       }

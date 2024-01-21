@@ -51,7 +51,6 @@ export default function Project() {
 
   return (
     <>
-    <Desktop />
     <div
       class="container"
     >

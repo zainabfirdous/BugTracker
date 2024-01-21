@@ -52,7 +52,6 @@ export default function Employee() {
 
   return (
     <>
-    <Desktop />
     <div
       class="container"
     >
