@@ -11,9 +11,11 @@ export default function Desktop() {
     const navigate = useNavigate();
 
     const [ ismytoken, setMyToken] = useState(false);
+    const [ isLogin, setIsLogin] = useState(false);
 
     const handleLogin = () => {
         navigate("/Login", { replace: true });
+        setIsLogin(true);
       };
 
       useEffect(() => {
@@ -27,19 +29,18 @@ export default function Desktop() {
 
     const handleLogout = () => {
       localStorage.clear();
-        navigate("/Login", { replace: true });
+        navigate("/Desktop", { replace: true });
+        setMyToken(false);
       };
 
-    const handelclick = () => {
-      navigate("/Employee", { replace: true });
-    }
+
 
       
   return (
     <>
      <Navbar style={{ backgroundColor: 'aqua'}}   collapseOnSelect expand="lg" className="bg-body-tertiary">
       <Container>
-      {ismytoken ? <Navbar.Brand href="/Welcome">Bug Tracking</Navbar.Brand> : <Navbar.Brand href="/Desktop">Bug Tracking</Navbar.Brand>}
+      {ismytoken ? <Navbar.Brand href="/Welcome">Bug Tracking</Navbar.Brand> : <Navbar.Brand href="/Appinfo">Bug Tracking</Navbar.Brand>}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav >
@@ -57,7 +58,7 @@ export default function Desktop() {
           
       </Container>
     </Navbar>
-    {ismytoken ? <div></div> : <AppInfo />}
+    {isLogin ? <div></div>  : <AppInfo />  }
     </>
   )
 }

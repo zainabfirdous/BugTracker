@@ -2,7 +2,7 @@ import './App.css';
 import Login from './Login';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Desktop from './components/Desktop'
-import Home from './components/Home'
+import AppInfo from './AppInfo'
 import Employee from './components/Employee'
 import Project from './components/Project'
 import Welcome from './components/Welcome'
@@ -17,6 +17,7 @@ function App() {
       <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/Login" element={<Login />} />
+      <Route path="/AppInfo" element={<AppInfo />} />
       <Route path="/Welcome" element={<Welcome />} />
       {/* <Route path="/Desktop" element={<Desktop />} /> */}
       <Route path="/Employee" element={<Employee />} />
