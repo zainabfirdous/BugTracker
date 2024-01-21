@@ -4,6 +4,7 @@ const employee = require('../models/Employee.js');
 const EmpProfile = require('../models/EmpProfile.js');
 const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
+const userrole = require('../models/Role.js')
 const currentDate = new Date();
 const formattedDate = currentDate.toISOString().split('T')[0];
 
@@ -62,7 +63,10 @@ router.post('/login', async (req, res) => {
         // Checking if the password entered is matching the original password
         if (user.password === pass) {
             //   res.send('Login successful!');
-            res.json({ token: "thisismytoken" });
+            const emp = await employee.findByPk(user.empID);
+            const urole = await userrole.findByPk(emp.roleID);
+            console.log(emp.fName + " " + emp.email + " " + urole.roleName);
+            res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
         } else {
             // Password is incorrect.
             res.send('Incorrect Password');

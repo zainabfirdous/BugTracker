@@ -26,6 +26,8 @@ export default function Login() {
       if (result.data.token) {
         // redirect to productPage
         localStorage.setItem("token", result.data.token);
+        localStorage.setItem("user", result.data.username);
+        localStorage.setItem("urole", result.data.urole);
         navigate("/Desktop", { replace: true });
       } else {
         

@@ -25,7 +25,7 @@ export default function Desktop() {
       }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
+      localStorage.clear();
         navigate("/", { replace: true });
       };
 
@@ -44,6 +44,9 @@ export default function Desktop() {
             {ismytoken ?  <Nav.Link href="#pricing">Bug Report</Nav.Link> : <Nav.Link></Nav.Link> }
           </Nav>
           </Navbar.Collapse>
+          <div className='row'>
+            <div className='col-6'><Nav.Link className='float-right' >{localStorage.user} {localStorage.urole}</Nav.Link></div>
+          </div>
           {ismytoken ?  <button class="btn btn-success btn-lg float-right" type="submit" onClick={() => handleLogout()}> Logout</button> 
           :  <button class="btn btn-success btn-lg float-right" type="submit" onClick={() => handleLogin()}> Login</button> }
           
