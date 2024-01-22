@@ -7,7 +7,7 @@ export default function Welcome() {
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
-    // if (token) navigate("/", { replace: true });
+    if (!token) navigate("/", { replace: true });
     console.log("Welcome : token  = " + token)
   }, [navigate]);
   return (
