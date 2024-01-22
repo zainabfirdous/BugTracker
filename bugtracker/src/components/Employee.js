@@ -1,5 +1,4 @@
 import React from 'react'
-import Desktop from './Desktop'
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

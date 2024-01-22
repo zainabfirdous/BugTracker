@@ -69,11 +69,11 @@ router.post('/login', async (req, res) => {
             res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
         } else {
             // Password is incorrect.
-            res.send('Incorrect Password');
+            res.json({ "error": "Wrong Password"});
         }
     } else {
         // The user does not exist in the database
-        res.send('User not found');
+        res.json({ "error": "Wrong Username or Password"});
     }
 })
 

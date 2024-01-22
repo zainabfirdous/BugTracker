@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useState,useEffect,React } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
 
-export default function Login() {
+export default function Login () {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [message, setSetMessage] = useState("");
+  
   const navigate = useNavigate();
+
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/Login", { replace: true });
+  
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     const reqBody = {
       userName: username,
       password: password,
@@ -23,13 +31,17 @@ export default function Login() {
       );
 
       if (result.data.token) {
-        // redirect to productPage
+        // redirect to Welcome
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("user", result.data.username);
         localStorage.setItem("urole", result.data.urole);
         navigate("/Welcome", { replace: true });
       } else {
-        
+        setIsAlertVisible(true);
+        setSetMessage(result.data.error);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
       }
 
       console.log(result);
@@ -38,12 +50,31 @@ export default function Login() {
       alert(err.response.statusText);
     }
   };
-
+  
   const handleback = () => {
-    navigate("/Desktop", { replace: true })
+    navigate("/AppInfo", { replace: true })
   }
 
+  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+
+
   return (
+    <>
+    {/* Alert Message */}
+    <div className="App">
+           {isAlertVisible && <div className='alert-container'>
+           <div className="row">
+           <div class="alert  bg-danger  alert-dismissible  mt-4 col-md-4 offset-md-4 " role="alert">
+            <strong>{message}</strong> Try Again!!!
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          </div>
+           </div>}   
+    </div>
+
+    {/* Main Body */}
     <div>
       <form className="login-form" onSubmit={handleSubmit}>
         <h3>Welcome, Please Login here!</h3>
@@ -92,5 +123,9 @@ export default function Login() {
         </div>
       </form>
     </div>
+    
+    </>
   );
 }
+
+

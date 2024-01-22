@@ -1,6 +1,15 @@
 import React from 'react'
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
 
 export default function AppInfo() {
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/", { replace: true });
+  }, [navigate]);
   return (
     <>
      <div className="container mt-5">
