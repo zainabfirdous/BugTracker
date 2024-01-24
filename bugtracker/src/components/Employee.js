@@ -29,10 +29,12 @@ export default function Employee() {
       // console.log(resp2);
       setRoleList(resp2.data);
       setEmployeeList(response.data);
-      employeeList.map((empItem) =>  {
-        return ( 
-          console.log(empItem.roleID) );
-      })
+      
+      // employeeList.map((empItem) =>  {
+      //   return ( 
+      //     console.log(empItem.roleID) );
+      // })
+
     } catch (err) {
       console.log(err);
     }
