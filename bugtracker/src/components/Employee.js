@@ -4,19 +4,37 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Employee.css";
 import AddEmployee from "./AddEmployee";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 export default function Employee() {
 
   const navigate = useNavigate();
-
   const [employeeList, setEmployeeList] = useState([]);
+  const [rolelist, setRoleList] = useState([]);
+
+  const [message, setSetMessage] = useState("");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+
 
   const [updateEmployee, setUpdateEmployee] = useState({});
+
 
   const getEmployee = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:5000/get");
+      const resp2 = await axios.get("http://127.0.0.1:5000/getrole");
+      // console.log(resp2);
+      setRoleList(resp2.data);
       setEmployeeList(response.data);
+      
+      // employeeList.map((empItem) =>  {
+      //   return ( 
+      //     console.log(empItem.roleID) );
+      // })
+
     } catch (err) {
       console.log(err);
     }
@@ -29,10 +47,20 @@ export default function Employee() {
     );
     getEmployee();
     if(deletedRecords.data.error){
-      alert(`${deletedRecords.data.error}`);
+      setIsAlertVisible(true);
+      setShow(true);
+        setSetMessage(`${deletedRecords.data.error}`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
     }
     else{
-      alert(`${deletedRecords.data} Employee deleted successfully`);
+      setIsAlertVisible(true);
+      setShow(true);
+        setSetMessage(`${deletedRecords.data} Employee deleted successfully`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
     }
   };
 
@@ -45,12 +73,30 @@ export default function Employee() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
-
+    
     getEmployee();
   }, [navigate]);
 
   return (
     <>
+
+    {/* Alert Message */}
+    <div className="App">
+           {isAlertVisible && <Modal show={show} onHide={handleClose}>
+        <Modal.Header className="bg-white">
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-white" >{message}</Modal.Body>
+        <Modal.Footer className="bg-dark" >
+          <Button variant="warning" className='h-1' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>}   
+    </div>
+
+    {/* Main Body */}
+
     <div
       class="container"
     >
@@ -61,6 +107,7 @@ export default function Employee() {
             setUpdateEmployee({});
           }}
           employee={updateEmployee}
+          rolelist={rolelist}
         />
         <div class="table-responsive">
         <table className="table table-striped table-bordered table-hover mt-4">

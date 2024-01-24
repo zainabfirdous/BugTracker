@@ -17,6 +17,8 @@ export default function Login () {
   
   }, [navigate]);
 
+  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -55,7 +57,7 @@ export default function Login () {
     navigate("/AppInfo", { replace: true })
   }
 
-  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+ 
 
 
   return (
