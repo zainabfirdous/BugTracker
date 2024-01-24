@@ -6,6 +6,7 @@ import AppInfo from './AppInfo'
 import Employee from './components/Employee'
 import Project from './components/Project'
 import Welcome from './components/Welcome'
+import BugRegistration from './components/BugRegistration';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
       <Route path="/Welcome" element={<Welcome />} />
       <Route path="/Employee" element={<Employee />} />
       <Route path="/Project" element={<Project />} />
+      <Route path="/BugReg" element={<BugRegistration/>}/>
       </Routes>
     </BrowserRouter>
     </>
