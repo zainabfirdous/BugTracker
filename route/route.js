@@ -8,12 +8,13 @@ const userrole = require('../models/Role.js')
 const currentDate = new Date();
 const Role = require('../models/Role.js')
 const formattedDate = currentDate.toISOString().split('T')[0];
+// const sequelize = require('sequelize');
 
 router.get("/get", async (req, res) => {
     try {
         // Fetch all employees from the database
         const employees = await employee.findAll();
-        const emp = { ...employees };
+        
         // Render a template or send JSON response with the employees
         res.json(employees);
     } catch (error) {

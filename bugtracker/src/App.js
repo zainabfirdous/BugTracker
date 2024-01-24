@@ -1,7 +1,7 @@
 import './App.css';
 import Login from './Login';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Desktop from './components/Desktop'
+import Dashboard from './components/Dashboard'
 import AppInfo from './AppInfo'
 import Employee from './components/Employee'
 import Project from './components/Project'
@@ -15,7 +15,7 @@ function App() {
     <>
     
     <BrowserRouter>
-    <Desktop/>
+    <Dashboard/>
       <Routes>
       {localStorage.user ? <Route path="/" element={<Welcome />} /> : <Route path="/" element={<AppInfo />} /> }
       <Route path="/Login" element={<Login />} />

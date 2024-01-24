@@ -12,7 +12,6 @@ export default function Employee() {
   const navigate = useNavigate();
   const [employeeList, setEmployeeList] = useState([]);
   const [rolelist, setRoleList] = useState([]);
-  const [roleID, setRoleID] = useState();
   const [message, setSetMessage] = useState("");
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -128,10 +127,13 @@ export default function Employee() {
                   <td>{empItem.fName}</td>
                   <td>{empItem.lName}</td>
                   <td>{empItem.email}</td>
-                  {rolelist.map((roleItem) => { if (roleItem.roleID === empItem.roleID)
-              return (
-                <td>{roleItem.roleName}</td>
-                   );
+                  {rolelist.map((roleItem) => {
+                       if (roleItem.roleID === empItem.roleID) {
+                         return (
+                           <td key={roleItem.roleID}>{roleItem.roleName}</td>
+                         );
+                       }
+                       return null; // or return <td key={roleItem.roleID}></td>;
                   })}
                   <td><div className='row'>
                     <div className='col-sm-12 col-lg-6'>
