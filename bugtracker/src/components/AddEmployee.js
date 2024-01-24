@@ -223,7 +223,7 @@ export default function AddEmployee(props) {
         <label htmlFor="roleID">Role : </label>
 
         <select id="roleID" value={roleID} className="form-control form-select" variant="info"  aria-label="Default select example" onChange={handleInput}>
-        <option id="Role"  selected>Role</option>
+        <option id="Role"  selected>Select</option>
         {rolelist.map((roleItem) => {
               return (
         <option value={roleItem.roleID} key={roleItem.roleID}>{roleItem.roleName}</option>
