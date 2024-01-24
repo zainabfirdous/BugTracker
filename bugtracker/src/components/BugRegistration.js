@@ -68,11 +68,12 @@ const handlesubmit =(e) =>{
    <>
    
    <div className="bug-registration-form">
-        <h1>Bug Registration Form</h1>
-        <form onSubmit={handlesubmit}>
-            <div className="form-group">
+        
+        <form className="row mt-4" onSubmit={handlesubmit}>
+        <div className="form-group offset-4 col-4">
+                <label htmlFor="bugID"><h1>Bug Registration Form</h1></label><br></br>
                 <label htmlFor="bugID">Bug ID</label>
-                <input 
+                <input  className="form-control"
                 type = "text"
                 id ="bugID"
                 name = "bugID"
@@ -81,9 +82,9 @@ const handlesubmit =(e) =>{
                 required
                 />
             </div>
-            <div className = "form-group">
+            <div className="form-group offset-4 col-4">
                 <label htmlFor = "bugName">Bug Name</label>
-                <input 
+                <input className="form-control"
                 type = "text"
                 id ="bugName"
                 name = "bugName"
@@ -92,9 +93,9 @@ const handlesubmit =(e) =>{
                 required
                 />
             </div>
-            <div className="form-group">
+            <div className="form-group offset-4 col-4">
                 <label htmlFor = "priority">Priority</label>
-                <select
+                <select className="form-control"
                 id ="priority"
                 name = "priority"
                 value = {priority}
@@ -108,9 +109,9 @@ const handlesubmit =(e) =>{
                     <option value="critical"> Critical </option> 
                 </select>
             </div>
-            <div className="form-group">
+        <div className="form-group offset-4 col-4">
           <label htmlFor="bugDesc">Bug Description</label>
-          <textarea
+          <textarea className="form-control"
             id="bugDesc"
             name="bugDesc"
             value={bugDesc}
@@ -118,9 +119,9 @@ const handlesubmit =(e) =>{
             required
           ></textarea>
         </div>
-        <div className="form-group">
-            <label htmlFor="projID">Project ID</label>
-            <input
+        <div className="form-group offset-4 col-4">
+            <label htmlFor="projID">Project</label>
+            <input className="form-control"
             type ="text"
             id = "projID"
             name = "projID"
@@ -128,9 +129,10 @@ const handlesubmit =(e) =>{
             onChange={(e) => setprojID(e.target.value)}
             required
             />
-            <div className="form-group">
+         </div>
+        <div className="form-group offset-4 col-4">
           <label htmlFor="regBy">Registered By</label>
-          <input
+          <input className="form-control"
             type="text"
             id="regBy"
             name="regBy"
@@ -139,10 +141,10 @@ const handlesubmit =(e) =>{
             required
           />
           </div>
-        <div className="form-group">
-          <button type="submit">Register Bug</button>
+        <div className="form-group offset-4 col-4">
+          <button type="submit" className="btn btn-success text-center">Register Bug</button>
         </div>
-          </div>
+          
         </form>
     </div>
    
