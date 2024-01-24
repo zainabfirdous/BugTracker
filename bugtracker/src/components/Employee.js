@@ -12,7 +12,7 @@ export default function Employee() {
   const navigate = useNavigate();
   const [employeeList, setEmployeeList] = useState([]);
   const [rolelist, setRoleList] = useState([]);
-
+  const [roleID, setRoleID] = useState();
   const [message, setSetMessage] = useState("");
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -34,7 +34,6 @@ export default function Employee() {
       //   return ( 
       //     console.log(empItem.roleID) );
       // })
-
     } catch (err) {
       console.log(err);
     }
@@ -129,7 +128,11 @@ export default function Employee() {
                   <td>{empItem.fName}</td>
                   <td>{empItem.lName}</td>
                   <td>{empItem.email}</td>
-                  <td>{empItem.roleID}</td>
+                  {rolelist.map((roleItem) => { if (roleItem.roleID === empItem.roleID)
+              return (
+                <td>{roleItem.roleName}</td>
+                   );
+                  })}
                   <td><div className='row'>
                     <div className='col-sm-12 col-lg-6'>
                     <button type="button"
