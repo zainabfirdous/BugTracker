@@ -25,6 +25,7 @@ function App() {
       <Route path="/Employee" element={<Employee />} />
       <Route path="/Project" element={<Project />} />
       <Route path="/BugReg" element={<BugRegistration/>}/>
+      
       </Routes>
     </BrowserRouter>
     </>
