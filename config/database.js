@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
     'bugtracker',
     'root',
-    'root',
+    '2211',
     {
         host:'127.0.0.1',
         port:'3306',
