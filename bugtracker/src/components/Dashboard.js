@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 
-export default function Desktop() {
+export default function Dashboard() {
     const navigate = useNavigate();
 
     const [ ismytoken, setMyToken] = useState(false);
