@@ -103,7 +103,10 @@ export default function AddProject(props) {
           "http://127.0.0.1:5000/newProject",
           project
         );
-        if (response.data) {
+        if (response.data.error) {
+          alert(`${response.data.error}`);
+        }
+        else{
           props.updateEmployeeList();
           resetForm();
         }

@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 export default function AddEmployee(props) {
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const [message, setSetMessage] = useState("");
+  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+  const [ bgcolor , setBgColor] = useState("");
+
+  const [rolelist, setRoleList] = useState([]);
+  
   const [empID, setEmpID] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [email, setEmail] = useState();
   const [roleID, setRoleID] = useState();
-
   const [isUpdateButton, setIsUpdateButton] = useState(false);
 
   useEffect(() => {
@@ -17,9 +27,18 @@ export default function AddEmployee(props) {
         setLastName(props.employee.lName);
         setEmail(props.employee.email);
         setRoleID(props.employee.roleID);
+        setRoleList(props.rolelist);
+
       setIsUpdateButton(true);
     } else setIsUpdateButton(false);
+    getRole();
   }, [props]);
+
+  const getRole = async () =>{
+    const resp2 = await axios.get("http://127.0.0.1:5000/getrole");
+    console.log(resp2);
+    setRoleList(resp2.data);
+  }
 
   const updateEmployee = async () => {
     const updatedData = {
@@ -37,10 +56,26 @@ export default function AddEmployee(props) {
     props.updateEmployeeList();
     resetForm();
     if(udpatedRecord.data.error){
-      alert(`${udpatedRecord.data.error}`);
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(`${udpatedRecord.data.error}`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
+      
     }
     else{
-      alert("Employee updated successfully!");
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-info");
+      setSetMessage("Employee updated successfully!");
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
+      
     }
     
   };
@@ -49,21 +84,26 @@ export default function AddEmployee(props) {
     switch (e.target.id) {
       case "empID":
         setEmpID(e.target.value);
+        console.log(e.target.value);
         break;
       case "firstName":
         setFirstName(e.target.value);
+        console.log(e.target.value);
         break;
       case "lastName":
         setLastName(e.target.value);
+        console.log(e.target.value);
         break;
       case "email":
         setEmail(e.target.value);
         break;
       case "roleID":
         setRoleID(e.target.value);
+        console.log(e.target.value);
         break;
         default : break;
     }
+    
   };
 
   const addEmployee = async (employee) => {
@@ -71,7 +111,17 @@ export default function AddEmployee(props) {
       "http://127.0.0.1:5000/newEmployee",
       employee
     );
-    if (response.data) {
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
+    }
+    else{
       props.updateEmployeeList();
       resetForm();
     }
@@ -107,6 +157,27 @@ export default function AddEmployee(props) {
   };
 
   return (
+
+    <>
+    
+    {/* Alert Message */}
+    <div className="App">
+           {isAlertVisible && <Modal show={show} onHide={handleClose}>
+        <Modal.Header className="bg-white">
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-white" >{message}</Modal.Body>
+        <Modal.Footer className={bgcolor} >
+          <Button variant="warning" className='h-1' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>}   
+    </div>
+
+    {/* Main Body */}
+    
+    
     <form className="row mt-4">
       <div className="form-group col-sm-12 col-md-4">
         <label htmlFor="empID">Employee Id: </label>
@@ -149,14 +220,16 @@ export default function AddEmployee(props) {
         />
       </div>
       <div className="form-group col-sm-12 col-md-4">
-        <label htmlFor="roleID">Role ID: </label>
-        <input
-          className="form-control"
-          type="text"
-          id="roleID"
-          value={roleID}
-          onChange={handleInput}
-        />
+        <label htmlFor="roleID">Role : </label>
+
+        <select id="roleID" value={roleID} className="form-control form-select" variant="info"  aria-label="Default select example" onChange={handleInput}>
+        <option id="Role"  selected>Role</option>
+        {rolelist.map((roleItem) => {
+              return (
+        <option value={roleItem.roleID} key={roleItem.roleID}>{roleItem.roleName}</option>
+        );
+            })}
+        </select>
       </div>
       <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
         <button type="button" className="btn btn-success text-center" onClick={handleSubmit}>
@@ -164,5 +237,6 @@ export default function AddEmployee(props) {
         </button>
       </div>
     </form>
+    </>
   );
 }

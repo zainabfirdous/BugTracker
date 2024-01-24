@@ -6,13 +6,14 @@ const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
 const userrole = require('../models/Role.js')
 const currentDate = new Date();
+const Role = require('../models/Role.js')
 const formattedDate = currentDate.toISOString().split('T')[0];
 
 router.get("/get", async (req, res) => {
     try {
         // Fetch all employees from the database
         const employees = await employee.findAll();
-
+        const emp = { ...employees };
         // Render a template or send JSON response with the employees
         res.json(employees);
     } catch (error) {
@@ -32,7 +33,7 @@ router.post("/newEmployee", async (req, res) => {
         res.json(newEmp);
     } catch (error) {
         console.error('Error creating employee:', error);
-        res.status(500).send('Internal Server Error');
+        res.json({ error: "Error While Adding Please Check" });
     }
 })
 
@@ -104,7 +105,7 @@ router.get("/getprojects", async (req, res) => {
         res.json(proj);
     } catch (error) {
         console.error('Error fetching Projects:', error);
-        res.status(500).send('Internal Server Error');
+        res.json({ error: "Error While Getting Projects Info" });
     }
 })
 
@@ -118,7 +119,7 @@ router.post("/newProject", async (req, res) => {
         res.json(newproj);
     } catch (error) {
         console.error('Error creating project:', error);
-        res.status(500).send('Internal Server Error');
+        res.json({ error: "Error While Adding Please Check" });
     }
 })
 
@@ -169,6 +170,7 @@ router.get("/getbugs", async (req, res) => {
     }
 })
 
+
 router.post("/newBug", async (req, res) => {
     try {
         const body = req.body;
@@ -210,6 +212,17 @@ router.delete("/deletebug/:id", async (req, res) => {
         res.json({ error: "This Bug Can't be Deleted, (FK-In_Use)" });
     }
     
+})
+
+router.get("/getrole", async (req, res) => {
+    try {
+        const role = await Role.findAll();
+        res.json(role);
+
+    } catch (error) {
+        console.error('Error fetching role:', error);
+        res.json({ error: "Error While Fatching Roles" });
+    }
 })
 
 
