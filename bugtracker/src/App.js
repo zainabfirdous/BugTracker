@@ -1,12 +1,12 @@
 import './App.css';
 import Login from './Login';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from './components/Dashboard'
 import AppInfo from './AppInfo'
 import Employee from './components/Employee'
 import Project from './components/Project'
 import Welcome from './components/Welcome'
 import BugRegistration from './components/BugRegistration';
+import Dashboard from './components/Dashboard';
 
 function App() {
 
