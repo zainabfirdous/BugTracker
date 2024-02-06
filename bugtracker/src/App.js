@@ -6,10 +6,11 @@ import Employee from './components/Employee'
 import Project from './components/Project'
 import Welcome from './components/Welcome'
 import BugRegistration from './components/BugRegistration';
-import Dashboard from './components/Dashboard';
+import Dashboard from './Dashboard';
+import Team from './components/Team';
 
 function App() {
-
+  
 
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
       <Route path="/Employee" element={<Employee />} />
       <Route path="/Project" element={<Project />} />
       <Route path="/BugReg" element={<BugRegistration/>}/>
+      <Route path="/Team" element={<Team/>}/>
       </Routes>
     </BrowserRouter>
     </>

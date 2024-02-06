@@ -25,7 +25,7 @@ export default function Employee() {
     try {
       const response = await axios.get("http://127.0.0.1:5000/get");
       const resp2 = await axios.get("http://127.0.0.1:5000/getrole");
-      // console.log(resp2);
+       console.log(response.data);
       setRoleList(resp2.data);
       setEmployeeList(response.data);
       
@@ -96,7 +96,7 @@ export default function Employee() {
     {/* Main Body */}
 
     <div
-      class="container"
+      className="container"
     >
        <div className="container">
         <AddEmployee

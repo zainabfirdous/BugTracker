@@ -11,10 +11,8 @@ export default function Login () {
   const navigate = useNavigate();
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
     if (!token) navigate("/Login", { replace: true });
-  
   }, [navigate]);
 
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
@@ -38,12 +36,15 @@ export default function Login () {
         localStorage.setItem("user", result.data.username);
         localStorage.setItem("urole", result.data.urole);
         navigate("/Welcome", { replace: true });
+        setTimeout(() => {
+          localStorage.clear();
+      }, 600000);
       } else {
         setIsAlertVisible(true);
         setSetMessage(result.data.error);
         setTimeout(() => {
             setIsAlertVisible(false);
-        }, 5000);
+        }, 40000);
       }
 
       console.log(result);
@@ -62,6 +63,7 @@ export default function Login () {
 
   return (
     <>
+
     {/* Alert Message */}
     <div className="App">
            {isAlertVisible && <div className='alert-container'>
@@ -93,10 +95,10 @@ export default function Login () {
               //   username = e.target.value; /// this will not provider update state
               setUsername(e.target.value);
             }}
-          />
+          required />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password" aria-required>Password</label>
           <input
             className="form-control"
             type="password"
@@ -104,7 +106,7 @@ export default function Login () {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          />
+            required />
         </div>
         <div className="form-group row">
           <div className="col-6">
