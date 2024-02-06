@@ -1,8 +1,16 @@
 import React from 'react'
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 export default function AddProject(props) {
+
+        const [message, setSetMessage] = useState("");
+        const [show, setShow] = useState(false);
+        const handleClose = () => setShow(false);
+        const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+        const [bgcolor, setBgColor] = useState("");
 
         const [projID, setProjID] = useState();
         const [projName, setProjName] = useState();
@@ -89,10 +97,23 @@ export default function AddProject(props) {
         props.updateProjectList();
         resetForm();
         if(udpatedRecord.data.error){
-          alert(`${udpatedRecord.data.error}`);
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(`${udpatedRecord.data.error}`);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
         }
         else{
-          alert("Project updated successfully!");
+          setShow(true)
+          setIsAlertVisible(true);
+          setShow(true);
+          setBgColor("bg-info");
+          setSetMessage("Employee updated successfully!");
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
         }
         
       };
@@ -104,7 +125,14 @@ export default function AddProject(props) {
           project
         );
         if (response.data.error) {
-          alert(`${response.data.error}`);
+          setShow(true)
+          setIsAlertVisible(true);
+          setShow(true);
+          setBgColor("bg-warning");
+          setSetMessage(response.data.error);
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
         }
         else{
           props.updateEmployeeList();
@@ -113,6 +141,27 @@ export default function AddProject(props) {
       };
 
   return (
+
+    <>
+    
+    {/* Alert Message */}
+    <div className="App">
+        {isAlertVisible && <Modal show={show} onHide={handleClose}>
+          <Modal.Header className="bg-white">
+            <Modal.Title></Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bg-white" >{message}</Modal.Body>
+          <Modal.Footer className={bgcolor} >
+            <Button variant="warning" className='h-1' onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>}
+      </div>
+
+     {/* Main Body */}
+     
+     
     <form className="row mt-4">
     <div className="form-group col-sm-12 col-md-4">
       <label htmlFor="projID">Project Id: </label>
@@ -168,5 +217,7 @@ export default function AddProject(props) {
       </button>
     </div>
   </form>
+
+  </>
   )
 }
