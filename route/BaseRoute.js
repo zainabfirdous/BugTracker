@@ -1,9 +1,3 @@
-const exp = require('express')
-const jwt = require("jsonwebtoken");
-
-
-
-
-
+const exp = require('express');
 
 const route = exp.Router()
