@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Desktop() {
-  axios.defaults.withCredentials = true;
+ // axios.defaults.withCredentials = true;
     const navigate = useNavigate();
 
     const handleLogin = () => {
