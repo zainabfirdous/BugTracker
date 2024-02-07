@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require("cors");
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
+// const session = require('express-session');
+// const cookieParser = require('cookie-parser');
 const app = express();
 
 const {PORT, HOST} = require('./constant.js');
@@ -19,18 +19,18 @@ app.use(cors(
 ));
 app.use(bodyParser.json());
 
-app.use(cookieParser());
+// app.use(cookieParser());
 
-app.use(session({
-    secret : 'secret',
-    resave: false,
-    saveUninitialized : false,
-    cookie: {
-        sameSite: 'None',
-        secure: false,
-        maxAge: 1000*60*60*24
-    },
-}))
+// app.use(session({
+//     secret : 'secret',
+//     resave: false,
+//     saveUninitialized : false,
+//     cookie: {
+//         sameSite: 'None',
+//         secure: false,
+//         maxAge: 1000*60*60*24
+//     },
+// }))
 app.use(bodyParser.urlencoded({extended:false}));
 
 app.use("/", router);
