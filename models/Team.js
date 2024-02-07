@@ -1,4 +1,4 @@
-const { STRING } = require('sequelize');
+const { STRING, INTEGER } = require('sequelize');
 const con = require('../config/database.js');
 
 const Team = con.define(

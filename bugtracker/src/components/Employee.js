@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 export default function Employee() {
-
+  axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const [employeeList, setEmployeeList] = useState([]);
   const [rolelist, setRoleList] = useState([]);
@@ -68,9 +68,20 @@ export default function Employee() {
     setUpdateEmployee(employee);
   };
 
+  const isShow =async () =>{
+    const response =await axios.get("http://127.0.0.1:5000");
+    console.log("Hello : " + response.Valid);
+    if (response){
+     
+    }else{
+      navigate("/", { replace: true });
+    }
+  }
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
+    isShow();
     
     getEmployee();
   }, [navigate]);

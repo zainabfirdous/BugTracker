@@ -1,15 +1,18 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import axios from 'axios';
 
 export default function Welcome() {
-
+  axios.defaults.withCredentials = true;
   const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
     console.log("Welcome : token  = " + token)
   }, [navigate]);
+  
   return (
     <>
      <div className="container mt-5 text-center">

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import axios from 'axios';
 
 export default function AddTeam() {
-
+  axios.defaults.withCredentials = true;
     const [ isUpdateButton , setIsUpdateButton] = useState("");
 
     const [teamID, setTeamID] = useState();

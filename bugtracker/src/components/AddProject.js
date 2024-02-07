@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 export default function AddProject(props) {
+  axios.defaults.withCredentials = true;
 
         const [message, setSetMessage] = useState("");
         const [show, setShow] = useState(false);
