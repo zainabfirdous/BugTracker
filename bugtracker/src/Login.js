@@ -4,6 +4,7 @@ import "./Login.css";
 import axios from "axios";
 
 export default function Login () {
+  axios.withCredentials = true;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setSetMessage] = useState("");
@@ -11,10 +12,8 @@ export default function Login () {
   const navigate = useNavigate();
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
     if (!token) navigate("/Login", { replace: true });
-  
   }, [navigate]);
 
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
@@ -28,25 +27,30 @@ export default function Login () {
     };
     try {
       const result = await axios.post(
-        "http://127.0.0.1:5000/login",
+        "http://127.0.0.1:5000/Login",
         reqBody
       );
-
+     
       if (result.data.token) {
         // redirect to Welcome
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("user", result.data.username);
         localStorage.setItem("urole", result.data.urole);
-        navigate("/Welcome", { replace: true });
+        sessionStorage.setItem("ID",result.data.ssid);
+        //navigate("/Welcome", { replace: true });
+        window.location.href = "/Welcome";
+        setTimeout(() => {
+          localStorage.clear();
+      }, 600000);
       } else {
         setIsAlertVisible(true);
         setSetMessage(result.data.error);
         setTimeout(() => {
             setIsAlertVisible(false);
-        }, 5000);
+        }, 40000);
       }
 
-      console.log(result);
+      // console.log(result);
     } catch (err) {
       console.log(err);
       alert(err.response.statusText);
@@ -62,6 +66,7 @@ export default function Login () {
 
   return (
     <>
+
     {/* Alert Message */}
     <div className="App">
            {isAlertVisible && <div className='alert-container'>
@@ -93,10 +98,10 @@ export default function Login () {
               //   username = e.target.value; /// this will not provider update state
               setUsername(e.target.value);
             }}
-          />
+          required />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password" aria-required>Password</label>
           <input
             className="form-control"
             type="password"
@@ -104,7 +109,7 @@ export default function Login () {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          />
+            required />
         </div>
         <div className="form-group row">
           <div className="col-6">

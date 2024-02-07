@@ -1,8 +1,9 @@
+const { INTEGER, STRING } = require('sequelize');
 const con = require('../config/database.js');
 
 const Admin = con.define(
     'admin',{
-        adminID:{
+        admID:{
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
@@ -25,3 +26,5 @@ const Admin = con.define(
         }
     },{ tableName: 'admin',timestamps:false, freezeTableName:false}
 )
+
+module.exports=Admin;

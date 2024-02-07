@@ -3,8 +3,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AddProject from './AddProject';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 export default function Project() {
+  axios.defaults.withCredentials = true;
+  const [message, setSetMessage] = useState("");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,11 +35,27 @@ export default function Project() {
     );
     getProject();
     if(deletedRecords.data.error){
-      alert(`${deletedRecords.data.error}`);
+      setIsAlertVisible(true);
+      setShow(true);
+        setSetMessage(`${deletedRecords.data.error}`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
     }
     else{
-      alert(`${deletedRecords.data} Project deleted successfully`);
+      setIsAlertVisible(true);
+      setShow(true);
+        setSetMessage(`${deletedRecords.data} Project deleted successfully`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
     }
+    // if(deletedRecords.data.error){
+    //   alert(`${deletedRecords.data.error}`);
+    // }
+    // else{
+    //   alert(`${deletedRecords.data} Project deleted successfully`);
+    // }
   };
 
   const handleUpdateProject = (project) => {
@@ -50,8 +73,25 @@ export default function Project() {
 
   return (
     <>
+    
+     {/* Alert Message */}
+     <div className="App">
+           {isAlertVisible && <Modal show={show} onHide={handleClose}>
+        <Modal.Header className="bg-white">
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-white" >{message}</Modal.Body>
+        <Modal.Footer className="bg-dark" >
+          <Button variant="warning" className='h-1' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>}   
+    </div>
+
+     {/* Main Body */}
     <div
-      class="container"
+      className="container"
     >
        <div className="container">
         <AddProject
