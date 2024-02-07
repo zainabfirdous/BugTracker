@@ -14,12 +14,13 @@ export default function Dashboard() {
     const [bgcolor, setBgColor] = useState("");
     const [ isAlertVisible, setIsAlertVisible ] = useState(false);
     const [message, setSetMessage] = useState("");
+    const [urole , setUrole] = useState("");
 
     const timeout = () =>{
 
       setTimeout(() => {
         const token = localStorage.getItem("token");
-        console.log(token);
+     //   console.log(token);
         if(!token){
           localStorage.clear();
           setShow(true)
@@ -42,11 +43,14 @@ export default function Dashboard() {
 
       useEffect(() => {
         const token = localStorage.getItem("token");
-        console.log(token + " " + ismytoken);
+       // const user = localStorage.getItem("user"); 
+       // const urole = localStorage.getItem("urole");
+        setUrole(localStorage.getItem("urole"));
+      //  console.log(token + " " + ismytoken);
         if (token) {
           setMyToken(true);
         }
-        console.log(token + " " + ismytoken);
+    //    console.log(token + " " + ismytoken);
       }, [ismytoken]);
 
     const handleLogout = () => {
@@ -80,11 +84,11 @@ export default function Dashboard() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav >
-            {localStorage.user ? <Nav.Link href="/Employee" >Employee</Nav.Link> : <Nav.Link href="/AppInfo">Features</Nav.Link>}
-            {localStorage.user ? <Nav.Link href="/Project">Project</Nav.Link> : <Nav.Link href="/AppInfo">About Us</Nav.Link>}
-            {localStorage.user ? <Nav.Link href="/BugReg">Bug Register</Nav.Link> : <Nav.Link></Nav.Link>}
-            {localStorage.user ?  <Nav.Link href="/Welcome">Bug Report</Nav.Link> : <Nav.Link></Nav.Link> }
-            {localStorage.user ?  <Nav.Link href="/Team">Team</Nav.Link> : <Nav.Link></Nav.Link> }
+            {localStorage.user ? (urole==="Admin"?<Nav.Link href="/Employee" >Employee</Nav.Link>:<div></div>) : <Nav.Link href="/AppInfo">Features</Nav.Link>}
+            {localStorage.user ? (urole==="Admin"?<Nav.Link href="/Project">Project</Nav.Link>:<div></div>) : <Nav.Link href="/AppInfo">About Us</Nav.Link>}
+            {localStorage.user ? (urole==="Admin"||urole==="Tester"?<Nav.Link href="/BugReg">Bug Register</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link>}
+            {localStorage.user ? (urole==="Admin"||urole==="Tester"||urole==="Developer"?<Nav.Link href="/Welcome">Bug Report</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
+            {localStorage.user ? (urole==="Admin"?<Nav.Link href="/Team">Team</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
           </Nav>
           </Navbar.Collapse>
           {/* <div className='row'>

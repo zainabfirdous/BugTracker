@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 export default function Project() {
-
+  axios.defaults.withCredentials = true;
   const [message, setSetMessage] = useState("");
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);

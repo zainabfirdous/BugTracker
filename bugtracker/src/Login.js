@@ -4,6 +4,7 @@ import "./Login.css";
 import axios from "axios";
 
 export default function Login () {
+  axios.withCredentials = true;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setSetMessage] = useState("");
@@ -26,16 +27,18 @@ export default function Login () {
     };
     try {
       const result = await axios.post(
-        "http://127.0.0.1:5000/login",
+        "http://127.0.0.1:5000/Login",
         reqBody
       );
-
+     
       if (result.data.token) {
         // redirect to Welcome
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("user", result.data.username);
         localStorage.setItem("urole", result.data.urole);
-        navigate("/Welcome", { replace: true });
+        sessionStorage.setItem("ID",result.data.ssid);
+        //navigate("/Welcome", { replace: true });
+        window.location.href = "/Welcome";
         setTimeout(() => {
           localStorage.clear();
       }, 600000);
@@ -47,7 +50,7 @@ export default function Login () {
         }, 40000);
       }
 
-      console.log(result);
+      // console.log(result);
     } catch (err) {
       console.log(err);
       alert(err.response.statusText);

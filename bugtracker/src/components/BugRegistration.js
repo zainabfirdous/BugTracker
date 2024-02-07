@@ -1,8 +1,9 @@
 import React from 'react'
 import { useState } from "react";
+import axios from 'axios';
 
 function BugRegistration() {
-
+  axios.defaults.withCredentials = true;
   const [bugID, setbugID]=useState();
 const [bugName, setbugName]=useState();
 const [priority, setpriority]=useState();

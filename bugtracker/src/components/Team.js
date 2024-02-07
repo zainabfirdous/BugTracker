@@ -1,9 +1,11 @@
 import React from 'react'
 import AddTeam from './AddTeam';
+import axios from 'axios';
 
 
 
 export default function Team() {
+  axios.defaults.withCredentials = true;
   return (
     <>
     
