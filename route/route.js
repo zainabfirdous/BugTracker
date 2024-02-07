@@ -10,11 +10,11 @@ const currentDate = new Date();
 const Role = require('../models/Role.js')
 const formattedDate = currentDate.toISOString().split('T')[0];
 // const sequelize = require('sequelize');
-
+const Troute = require('./Tester.js')
 
 
  
-
+router.use("/tester", Troute);
 router.get("/get", async (req, res) => {
     try {
         // Fetch all employees from the database
