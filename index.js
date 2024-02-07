@@ -1,13 +1,23 @@
 const express = require('express');
 const cors = require("cors");
+
+const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv');
+dotenv.config();
+
 // const session = require('express-session');
 // const cookieParser = require('cookie-parser');
+main
 const app = express();
 
 const {PORT, HOST} = require('./constant.js');
-const router = require('./route/route.js');
+const router = require('./route/BaseRoute.js');
 
 const bodyParser = require('body-parser');
+
+
+app.use(express.json());
+app.use(cors());
 
 
 // app.use(cors(
@@ -17,6 +27,7 @@ const bodyParser = require('body-parser');
 //         credentials : true
 //     }
 // ));
+
 app.use(bodyParser.json());
 
 // app.use(cookieParser());
