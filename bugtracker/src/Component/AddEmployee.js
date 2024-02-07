@@ -7,9 +7,8 @@ export default function AddEmployee(props) {
   const [lastName, setLastName] = useState();
   const [email, setEmail] = useState();
   const [roleID, setRoleID] = useState();
-
   const [isUpdateButton, setIsUpdateButton] = useState(false);
-    
+
   useEffect(() => {
     if (props.employee.empID) {
         setEmpID(props.employee.empID);
