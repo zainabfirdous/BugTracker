@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import axios from 'axios';
 
 export default function Welcome() {
-  axios.defaults.withCredentials = true;
+ // axios.defaults.withCredentials = true;
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -18,7 +18,7 @@ const formattedDate = currentDate.toISOString().split('T')[0];
 router.get("/get", async (req, res) => {
     try {
         // Fetch all employees from the database
-        console.log("Session ID : " + req.sessionID)
+       
         const employees = await employee.findAll();
         
         // Render a template or send JSON response with the employees
@@ -56,38 +56,11 @@ router.delete("/delete/:id", async (req, res) => {
     
 })
 
-// router.get("/getadm", async (req, res) => {
-//     try {
-//         // Fetch all employees from the database
-//         const admin = await Admin.findAll();
-        
-//         // Render a template or send JSON response with the employees
-//         res.json(admin);
-//     } catch (error) {
-//         console.error('Error fetching admin:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// })
 
-router.get("/", async (req, res) => {
-    console.log( req.session.userName + "  : " + req.session.urole );
-    if(req.session.userName){
-        res.json({Valid:true,username : req.session.userName}); 
-    }
-    else{
-        res.json({Valid:false,username : req.sessionID}); 
-    }
-})
-
-router.get("/lll", async (req, res) => {
-    req.session.destroy();
-    res.json({result:"Session Over!!!"}); 
-})
 
 router.post('/login', async (req, res) => {
     const username = req.body.userName;
     const pass = req.body.password;
-     console.log( req.session.userName + "  : " + req.session.urole );
     const user = await EmpProfile.findOne({
         attributes: ['empID', 'userName', 'password'], // Specify the columns you need
         where: { userName: username }
@@ -109,11 +82,9 @@ router.post('/login', async (req, res) => {
             const emp = await employee.findByPk(user.empID);
             const urole = await userrole.findByPk(emp.roleID);
           //  console.log(emp.fName + " " + emp.email + " " + urole.roleName);
-            req.session.userName = emp.fName;
-            req.session.urole = urole.roleName;
-            console.log( req.session.userName + "  : " + req.session.urole + " : ssid " + req.sessionID );
-           // res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
-            res.json({Login: true , ssid : req.sessionID, urole : req.session.urole, token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
+           
+            res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
+           
         } else {
             // Password is incorrect.
             res.json({ "error": "Wrong Password", Login : false});
@@ -124,12 +95,10 @@ router.post('/login', async (req, res) => {
         if (admin.password === pass) {
         const adm = await Admin.findByPk(admin.admID);
        // console.log(adm.fName);
-       req.session.userName = adm.fName;
-       req.session.urole = "Admin";
-       console.log( req.session.userName + "  : " + req.session.urole + " : ssid " + req.sessionID );
-      // res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
-       res.json({Login: true ,ssid : req.sessionID, username : req.session.userName, urole : req.session.urole, token: "thisismytoken" , username : adm.fName, urole : "Admin"});
-        //res.json({ token: "thisismytoken" , username : adm.fName, urole : "Admin"});
+       
+       //res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
+       
+        res.json({ token: "thisismytoken" , username : adm.fName, urole : "Admin"});
             } else {
            // Password is incorrect.
           res.json({ "error": "Wrong Password", Login : false});
