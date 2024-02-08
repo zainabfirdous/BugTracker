@@ -4,32 +4,42 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function Team() {
   axios.defaults.withCredentials = true;
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const [message, setSetMessage] = useState("");
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [bgcolor, setBgColor] = useState("");
   const [teamList,setTeamList] = useState([]);
+  const [projlist, setProjList] = useState([]);
+  const [admlist, setAdmlist] = useState([]);
+       
+  
 
-  const getEmployee = async () => {
+  const getData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:5000/get");
+      const response = await axios.get("http://127.0.0.1:5000/admin/getteams");
       setTeamList(response.data);
+      const resp1 = await axios.get("http://127.0.0.1:5000/getprojects");
+      setProjList(resp1.data);
+      const resp2 = await axios.get("http://127.0.0.1:5000/admin/adminDashboard");
+      setAdmlist(resp2.data);
       
-      // employeeList.map((empItem) =>  {
-      //   return ( 
-      //     console.log(empItem.roleID) );
-      // })
     } catch (err) {
       console.log(err);
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) navigate("/", { replace: true });
+    getData();
+}, [navigate]);
 
 
   return (
@@ -56,39 +66,56 @@ export default function Team() {
     >
        <div className="container">
         <AddTeam
-        //   updateTeamList={() => {
-        //     getTeam();
-        //     setUpdateTeam({});
-        //   }}
-        //   team={updateTeam}
+          updateTeamList={() => {
+            getData();
+        //    setUpdateTeam({});
+          }}
+        //  team={updateTeam}
         />
         <div class="table-responsive">
         <table className="table table-striped table-bordered table-hover mt-4">
           <thead>
             <tr>
-              <th>Team Id</th>
+              <th>ID</th>
               <th>Team Name</th>
               <th>Project ID</th>
               <th>Project Name</th>
               <th>Admin</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody> 
-            {/* {teamList.map((teamItem) => {
+            {teamList.map((teamItem) => {
               return (
                 <tr key={teamItem.teamID}>
                   <td>{teamItem.teamID}</td>
                   <td>{teamItem.teamName}</td>
                   <td>{teamItem.projID}</td>
-                  <td>{teamItem.projID}</td>
-                  <td>{teamItem.admID}</td>
+                  {projlist.map((projItem) => {
+                       if (teamItem.projID === projItem.projID) {
+                         return (
+                           <td key={teamItem.projID}>{projItem.projName}</td>
+                         );
+                       }
+                       return null;
+                  })}
+                  {/* <td>{teamItem.projID}</td> */}
+                  {admlist.map((admItem) => {
+                       if (teamItem.admID === admItem.admID) {
+                         return (
+                           <td key={teamItem.admID}>{admItem.fName}</td>
+                         );
+                       }
+                       return null;
+                  })}
+                  {/* <td>{teamItem.admID}</td> */}
                   <td>
                     <div className='row'>
                     <div className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-warning m-1 text-center"
                       style={{ marginRight: "5px" }}
-                      onClick={() => handleUpdateTeam(teamItem)}
+                      // onClick={() => handleUpdateTeam(teamItem)}
                     >
                       Update
                     </button>
@@ -96,7 +123,7 @@ export default function Team() {
                     <div   className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-danger m-1 text-center"
-                      onClick={() => handleDelete(teamItem.teamID)}
+                      // onClick={() => handleDelete(teamItem.TeamID)}
                     >
                       Delete
                     </button>
@@ -105,7 +132,7 @@ export default function Team() {
                   </td>
                 </tr>
               );
-            })} */}
+            })}
           </tbody>
         </table>
         </div>

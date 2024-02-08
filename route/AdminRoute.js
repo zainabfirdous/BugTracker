@@ -12,7 +12,8 @@ const router = express.Router();
 
 router.get("/adminDashboard", async(req, res)=>{
     try{
-        const admin = await Admin.findByPk(adminID);
+       // const admin = await Admin.findByPk(adminID);
+        const admin = await Admin.findAll()
         res.json(admin);
     }catch(error)
     {

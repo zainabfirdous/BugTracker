@@ -3,7 +3,7 @@ const con = require('../config/database.js');
 
 const Team = con.define(
     'team',{
-        TeamID:{
+        teamID:{
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
