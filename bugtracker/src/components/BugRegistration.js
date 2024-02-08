@@ -219,7 +219,7 @@ function BugRegistration() {
       </div>
 
       {/* Table Data */}
-      
+
       <div
       className="container"
     >
@@ -283,7 +283,7 @@ function BugRegistration() {
                   </div>
                   </td> */}
                 </tr>
-                
+                 
               );
             } return null; 
             })}
