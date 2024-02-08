@@ -1,13 +1,54 @@
 import React from 'react'
 import AddTeam from './AddTeam';
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import { useEffect, useState } from "react";
 
 
 
 export default function Team() {
- // axios.defaults.withCredentials = true;
+  axios.defaults.withCredentials = true;
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const [message, setSetMessage] = useState("");
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [bgcolor, setBgColor] = useState("");
+  const [teamList,setTeamList] = useState([]);
+
+  const getEmployee = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:5000/get");
+      setTeamList(response.data);
+      
+      // employeeList.map((empItem) =>  {
+      //   return ( 
+      //     console.log(empItem.roleID) );
+      // })
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+
   return (
     <>
+       {/* Alert Message */}
+       <div className="App">
+        {isAlertVisible && <Modal show={show} onHide={handleClose}>
+          <Modal.Header className="bg-white">
+            <Modal.Title></Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bg-white" >{message}</Modal.Body>
+          <Modal.Footer className={bgcolor} >
+            <Button variant="warning" className='h-1' onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>}
+      </div>
+
     
     {/* Main Body */}
     <div

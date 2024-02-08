@@ -89,6 +89,7 @@ export default function Dashboard() {
             {localStorage.user ? (urole==="Admin"||urole==="Tester"?<Nav.Link href="/BugReg">Bug Register</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link>}
             {localStorage.user ? (urole==="Admin"||urole==="Tester"||urole==="Developer"?<Nav.Link href="/Welcome">Bug Report</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
             {localStorage.user ? (urole==="Admin"?<Nav.Link href="/Team">Team</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
+            {localStorage.user ? (urole==="Admin"?<Nav.Link href="/ProjectAssign">Project Assign</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
           </Nav>
           </Navbar.Collapse>
           {/* <div className='row'>

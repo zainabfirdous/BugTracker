@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 export default function AddEmployee(props) {
-
+  axios.defaults.withCredentials = true;
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const [message, setSetMessage] = useState("");
@@ -107,7 +107,7 @@ export default function AddEmployee(props) {
   };
 
   const addEmployee = async (employee) => {
-    axios.defaults.withCredentials = true;
+   
     const response = await axios.post(
       "http://127.0.0.1:5000/newEmployee",
       employee

@@ -84,8 +84,8 @@ router.post('/login', async (req, res) => {
             const emp = await employee.findByPk(user.empID);
             const urole = await userrole.findByPk(emp.roleID);
           //  console.log(emp.fName + " " + emp.email + " " + urole.roleName);
-           
-            res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
+           console.log("Emp ID : "+ emp.empID )
+            res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName, uid:emp.empID});
            
         } else {
             // Password is incorrect.
@@ -210,13 +210,14 @@ router.post("/newBug", async (req, res) => {
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split('T')[0];
         const data = { ...body };
+        console.log("Date : " + formattedDate);
         data.crtDate = formattedDate;
         data.updDate = null;
         const newbug = await Bug.create(data);
         res.json(newbug);
     } catch (error) {
         console.error('Error creating Bug:', error);
-        res.status(500).send('Internal Server Error');
+        res.json({ error: "Error While Adding Please Check" });
     }
 })
 

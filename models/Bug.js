@@ -1,4 +1,6 @@
+ 
 const { INTEGER,STRING, DATEONLY ,NOW} = require('sequelize');
+
 const con = require('../config/database.js');
 
 const Bug = con.define(
@@ -29,7 +31,7 @@ const Bug = con.define(
           key: 'projID',
         },
       },
-      regBy: {
+    regBy: {
         type: INTEGER,
         allowNull: true,
         references: {
