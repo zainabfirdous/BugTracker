@@ -36,6 +36,7 @@ export default function Login () {
         localStorage.setItem("token", result.data.token);
         localStorage.setItem("user", result.data.username);
         localStorage.setItem("urole", result.data.urole);
+        localStorage.setItem("uid", result.data.uid);
         sessionStorage.setItem("ID",result.data.ssid);
         //navigate("/Welcome", { replace: true });
         window.location.href = "/Welcome";
