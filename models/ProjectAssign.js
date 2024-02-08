@@ -1,4 +1,4 @@
-const { INTEGER, DATE } = require('sequelize');
+const { INTEGER, DATEONLY ,NOW } = require('sequelize');
 const con = require('../config/database.js');
 
 const PAssignment = con.define(
@@ -7,6 +7,7 @@ const PAssignment = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
+            autoIncrement: true
         },
         projID: {
             type: INTEGER,
@@ -33,10 +34,12 @@ const PAssignment = con.define(
         },
         },
         crtDate:{
-          type: DATE,
+          type: DATEONLY,
+          defaultValue: NOW
       },
       updDate:{
-          type: DATE,
+          type: DATEONLY,
+          defaultValue: null
       }
     },{ tableName: 'projassign',timestamps:false, freezeTableName:false}
 )

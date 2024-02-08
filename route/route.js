@@ -12,7 +12,9 @@ const formattedDate = currentDate.toISOString().split('T')[0];
 // const sequelize = require('sequelize');
 const Troute = require('./Tester.js')
 const Droute = require('./Developer.js')
+const Aroute = require('./AdminRoute.js')
 
+router.use("/admin", Aroute); 
 router.use("/dev", Droute); 
 router.use("/tester", Troute);
 router.get("/get", async (req, res) => {
@@ -34,8 +36,8 @@ router.post("/newEmployee", async (req, res) => {
     try {
         const body = req.body;
         const data = { ...body };
-        data.crtDate = formattedDate;
-        data.updDate = null;
+        //data.crtDate = formattedDate;
+        //data.updDate = null;
         const newEmp = await employee.create(data);
         res.json(newEmp);
     } catch (error) {

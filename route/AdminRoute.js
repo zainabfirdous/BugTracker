@@ -2,6 +2,7 @@ const employee = require('../models/Employee.js');
 const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
 const Admin = require('../models/Admin.js')
+const Team = require('../models/Team.js')
 
 
 
@@ -48,8 +49,6 @@ router.post("/newEmployee", async (req, res) => {
     try {
         const body = req.body;
         const data = { ...body };
-        data.crtDate = formattedDate;
-        data.updDate = null;
         const newEmp = await employee.create(data);
         res.json(newEmp);
     } catch (error) {
@@ -74,13 +73,13 @@ router.delete("/deleteEmp/:id", async (req, res) => {
 router.put("/updateEmployee", async (req, res) => {
     try {
         const data = req.body;
-        const updateObject = { ...data };
-        const employees = await employee.findByPk(updateObject.empID);
-        console.log(employees.crtDate + " " + formattedDate );
-        delete updateObject.empID;
-        updateObject.crtDate = employees.crtDate;
-        updateObject.updDate = formattedDate;
-        const updatedCount = await employee.update(updateObject, {
+        //const updateObject = { ...data };
+        //const employees = await employee.findByPk(updateObject.empID);
+        // console.log(employees.crtDate + " " + formattedDate );
+        // delete updateObject.empID;
+        // updateObject.crtDate = employees.crtDate;
+        // updateObject.updDate = formattedDate;
+        const updatedCount = await employee.update(data, {
         where: { empID: data.empID },
     });
         
@@ -105,8 +104,8 @@ router.post("/newProject", async (req, res) => {
     try {
         const body = req.body;
         const data = { ...body };
-        data.crtDate = formattedDate;
-        data.updDate = null;
+        // data.crtDate = formattedDate;
+        // data.updDate = null;
         const newproj = await Project.create(data);
         res.json(newproj);
     } catch (error) {
@@ -124,13 +123,13 @@ router.get("/getprojbyid/:projID", async (req,res) =>{
 router.put("/updateProject", async (req, res) => {
     try {
         const data = req.body;
-        const updateObject = { ...data };
-        const projectg = await Project.findByPk(updateObject.projID);
-        console.log(projectg.crtDate + " " + formattedDate );
-        delete updateObject.projID;
-        updateObject.crtDate = projectg.crtDate;
-        updateObject.updDate = formattedDate;
-        const updatedCount = await Project.update(updateObject, {
+        // const updateObject = { ...data };
+        // const projectg = await Project.findByPk(updateObject.projID);
+        // console.log(projectg.crtDate + " " + formattedDate );
+        // delete updateObject.projID;
+        // updateObject.crtDate = projectg.crtDate;
+        // updateObject.updDate = formattedDate;
+        const updatedCount = await Project.update(data, {
         where: { projID: data.projID },
     });
     res.json(updatedCount);
@@ -165,9 +164,9 @@ router.get("/getbugs", async (req, res) => {
 router.put("/updateBug", async (req, res) => {
     try {
         const data = req.body;
-        const updateObject = { ...data };
-        delete updateObject.bugID;
-        const updatedCount = await Bug.update(updateObject, {
+        // const updateObject = { ...data };
+        // delete updateObject.bugID;
+        const updatedCount = await Bug.update(data, {
         where: { bugID: data.bugID },
     });
     res.json(updatedCount);
@@ -199,3 +198,54 @@ router.get("/BugbyID/:id", async(req, res)=>{
         res.status(500).send('Internal Server Error');
     }
 })
+
+router.get("/getteams", async (req, res)=>{
+    try{
+        const teams = await Team.findAll();
+        res.json(teams)
+    }catch(error)
+    {
+        console.error('Error while fetching Teams:', error);
+        res.json({ error: "Unable to fetch teams" });
+    }
+})
+
+router.post("/newTeam", async(req, res)=>{
+    try{
+        const body = req.body
+        const data = {...body}
+        const newTeam = await Team.create(data)
+        res.json(newTeam)
+    }catch (error) {
+        console.error('Error creating team:', error);
+        res.json({ error: "Error While Adding Please Check" });
+    }
+})
+
+router.put("/updateTeam", async(req, res)=>{
+    try{
+        const body = req.body;
+        //const data = {...body}
+        const count = await Team.update(body, {
+            where: { teamID: body.teamID }
+        })
+        res.json(count);
+    }catch(error){
+        console.error('Error while Updating Team:', error);
+        res.json({ error: "Can't Update" });
+    }
+})
+
+router.delete("/deleteteam/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedCount = await Team.destroy({ where: { teamID: id } });
+        res.json(deletedCount);
+    } catch (error) {
+        console.error('Error while deleting team:', error);
+        res.json({ error: "This team Can't be Deleted, (FK-In_Use)" });
+    }
+    
+})
+
+module.exports = router;
