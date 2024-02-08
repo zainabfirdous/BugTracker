@@ -1,5 +1,6 @@
+ 
+const { INTEGER,STRING, DATEONLY ,NOW} = require('sequelize');
 
-const { INTEGER,STRING, DATE} = require('sequelize');
 const con = require('../config/database.js');
 
 const Bug = con.define(
@@ -8,6 +9,7 @@ const Bug = con.define(
         type:INTEGER,
         allowNull: false,
         primaryKey: true,
+        autoIncrement: true
         },
     bugName:{
         type:STRING,
@@ -38,10 +40,12 @@ const Bug = con.define(
         },
     },
     crtDate:{
-      type: DATE,
+      type: DATEONLY,
+      defaultValue: NOW
   },
   updDate:{
-      type: DATE,
+      type: DATEONLY,
+      defaultValue: null
   }
 },{ tableName: 'bug',timestamps: false, freezeTableName:false} 
 )

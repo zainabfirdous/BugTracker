@@ -1,4 +1,4 @@
-const { DATEONLY,DATE, INTEGER, TIME, STRING } = require('sequelize');
+const { DATEONLY,DATE, INTEGER, TIME, STRING  ,NOW} = require('sequelize');
 const con = require('../config/database.js');
 
 const tracking = con.define(
@@ -7,6 +7,7 @@ const tracking = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
+            autoIncrement: true
         },
         bugID:{
             type: INTEGER,
@@ -55,6 +56,14 @@ const tracking = con.define(
         status:{
             type:STRING,
             allowNull:false
+        },
+        crtDate:{
+            type: DATEONLY,
+            defaultValue: NOW
+        },
+        updDate:{
+            type: DATEONLY,
+            defaultValue: null
         }
     },{ tableName: 'tracking',timestamps:false, freezeTableName:false} 
 )
