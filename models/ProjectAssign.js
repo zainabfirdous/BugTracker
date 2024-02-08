@@ -1,4 +1,4 @@
-const { INTEGER } = require('sequelize');
+const { INTEGER, DATE } = require('sequelize');
 const con = require('../config/database.js');
 
 const PAssignment = con.define(
@@ -18,7 +18,7 @@ const PAssignment = con.define(
           },
         teamID:{
             type: INTEGER,
-            allowNull: flase,
+            allowNull: false,
             references: {
               model: 'Team',
               key: 'TeamID',
@@ -31,7 +31,13 @@ const PAssignment = con.define(
              model: 'Employee',
              key: 'empID',
         },
-        }
+        },
+        crtDate:{
+          type: DATE,
+      },
+      updDate:{
+          type: DATE,
+      }
     },{ tableName: 'projassign',timestamps:false, freezeTableName:false}
 )
 
