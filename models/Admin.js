@@ -7,6 +7,7 @@ const Admin = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
+            autoIncrement: true
         },
         fName:{
             type:STRING,

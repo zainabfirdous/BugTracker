@@ -50,6 +50,16 @@ const trackingdetails = async(req, res)=>{
     }
 };
 
+const trackingall = async(req, res)=>{
+    try{
+        const allbugs = await Tracker.findAll()
+        res.json(allbugs);
+    }catch(error){
+        console.error('Error fetching all bug tracking details: ', error);
+        res.json({ error: "Can't fetch details" })
+    }
+}
+
 const TesterProjects = async(req, res)=>{
     try {
        
@@ -133,5 +143,6 @@ Trouter.get("/testerprojects/:id", TesterProjects);
 Trouter.get("/testerDashboard", testerProfile);
 Trouter.post("/newBug", newbugReg);
 Trouter.get("/trackBug/:id",trackingdetails);
+Trouter.get("/trackBug",trackingall);
 
 module.exports = Trouter;
