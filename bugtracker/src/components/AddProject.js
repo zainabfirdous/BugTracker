@@ -136,7 +136,7 @@ export default function AddProject(props) {
           }, 5000);
         }
         else{
-          props.updateEmployeeList();
+          props.updateProjectList();
           resetForm();
         }
       };
