@@ -19,7 +19,7 @@ const testerProfile = async(req, res)=>{
         })
         res.json(tester);
     }catch(error) {
-        console.error('Error fetching employees:', error);
+        console.error('Error fetching employee:', error);
         res.status(500).send('Internal Server Error');
 }}
 
