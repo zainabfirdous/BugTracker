@@ -8,38 +8,22 @@ const formattedDate = currentDate.toISOString().split('T')[0];
 
 
 const express = require('express');
-const Trouter = express.Router();
+const Drouter = express.Router();
 
 
-const testerProfile = async(req, res)=>{
+const DevProfile = async(req, res)=>{
     try{
         const empID = req.body.empID;
-        const tester = await employee.findOne({
+        const dev = await employee.findOne({
              where: { empID:empID }
         })
-        res.json(tester);
+        res.json(dev);
     }catch(error) {
         console.error('Error fetching employee:', error);
         res.status(500).send('Internal Server Error');
 }}
 
-const newbugReg = async (req, res) => {
-    try {
-        const body = req.body;
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString().split('T')[0];
-        const data = { ...body };
-        data.crtDate = formattedDate;
-        data.updDate = null;
-        const newbug = await Bug.create(data);
-        res.json(newbug);
-    } catch (error) {
-        console.error('Error creating Bug:', error);
-        res.status(500).send('Internal Server Error');
-    }
-}
-
-const trackingdetails = async(req, res)=>{
+const tracking = async(req, res)=>{
     try{
         const trackID = req.params.id;
         const Track = await Tracker.findByPk(trackID)
@@ -50,7 +34,7 @@ const trackingdetails = async(req, res)=>{
     }
 };
 
-const TesterProjects = async(req, res)=>{
+const DevProjects = async(req, res)=>{
     try {
        
         // Execute the raw SQL query
@@ -75,7 +59,7 @@ const TesterProjects = async(req, res)=>{
       }
 }
 
-const TeamMembers = async(req, res)=>{
+const DevTeamMembers = async(req, res)=>{
     try{
         const team = await sequelize.query(
             'SELECT e.empID, e.fName, e.lName, e.email '+
@@ -101,7 +85,7 @@ const TeamMembers = async(req, res)=>{
     
 }
 
-const ProjTeam = async(req, res)=>{
+const DProjTeam = async(req, res)=>{
     try{
         const pteam = await sequelize.query(
             'SELECT e.empID, e.fName, e.lName, e.email '+
@@ -127,11 +111,10 @@ const ProjTeam = async(req, res)=>{
       }
     }
 
-Trouter.get("/projTeam/:id/:eid", ProjTeam)
-Trouter.get("/teammembers/:id/:eid", TeamMembers);
-Trouter.get("/testerprojects/:id", TesterProjects);
-Trouter.get("/testerDashboard", testerProfile);
-Trouter.post("/newBug", newbugReg);
-Trouter.get("/trackBug/:id",trackingdetails);
-
-module.exports = Trouter;
+    Drouter.get("/projTeam/:id/:eid", DProjTeam)
+    Drouter.get("/teammembers/:id/:eid", DevTeamMembers);
+    Drouter.get("/devprojects/:id", DevProjects);
+    Drouter.get("/devDashboard", DevProfile);
+    Drouter.get("/trackBug/:id",tracking);
+    
+    module.exports = Drouter;

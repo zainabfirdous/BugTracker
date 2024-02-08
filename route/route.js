@@ -11,9 +11,9 @@ const Role = require('../models/Role.js')
 const formattedDate = currentDate.toISOString().split('T')[0];
 // const sequelize = require('sequelize');
 const Troute = require('./Tester.js')
+const Droute = require('./Developer.js')
 
-
- 
+router.use("/dev", Droute); 
 router.use("/tester", Troute);
 router.get("/get", async (req, res) => {
     try {

@@ -1,4 +1,5 @@
-const { INTEGER,STRING,DATE} = require('sequelize');
+
+const { INTEGER,STRING, DATE} = require('sequelize');
 const con = require('../config/database.js');
 
 const Bug = con.define(
@@ -37,12 +38,12 @@ const Bug = con.define(
         },
     },
     crtDate:{
-        type: DATE,
-    },
-    updDate:{
-        type: DATE,
-    },
-},{ tableName: 'bug',timestamps:false, freezeTableName:false} 
+      type: DATE,
+  },
+  updDate:{
+      type: DATE,
+  }
+},{ tableName: 'bug',timestamps: false, freezeTableName:false} 
 )
 
 
