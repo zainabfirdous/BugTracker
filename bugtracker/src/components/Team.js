@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 export default function Team() {
-  axios.defaults.withCredentials = true;
+ // axios.defaults.withCredentials = true;
   return (
     <>
     
