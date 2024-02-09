@@ -8,6 +8,7 @@ import Welcome from './components/Welcome'
 import BugRegistration from './components/BugRegistration';
 import Dashboard from './Dashboard';
 import Team from './components/Team';
+import BugReport from './components/BugReport'
 
 function App() {
   
@@ -26,6 +27,7 @@ function App() {
       <Route path="/Employee" element={<Employee />} />
       <Route path="/Project" element={<Project />} />
       <Route path="/BugReg" element={<BugRegistration/>}/>
+      <Route path="/BugReport" element={<BugReport/>}/>
       <Route path="/Team" element={<Team/>}/>
       </Routes>
     </BrowserRouter>
