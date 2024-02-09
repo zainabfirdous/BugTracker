@@ -3,6 +3,7 @@ const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
 const Admin = require('../models/Admin.js')
 const Team = require('../models/Team.js')
+const PAssign = require('../models/ProjectAssign.js')
 
 
 
@@ -255,6 +256,68 @@ router.delete("/deleteteam/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const deletedCount = await Team.destroy({ where: { teamID: id } });
+        res.json(deletedCount);
+    } catch (error) {
+        console.error('Error while deleting team:', error);
+        res.json({ error: "This team Can't be Deleted, (FK-In_Use)" });
+    }
+    
+})
+
+router.get("/projectAssign", async(req, res)=>{
+    try{
+        const passign = await PAssign.findAll();
+        res.json(passign);
+    }catch(error)
+    {
+        console.error('Error while fetching Project assignment details:', error);
+        res.json({ error: "Unable to fetch Project assignment details" });
+    }
+})
+
+router.get("/projectassign/:id", async(req, res)=>{
+    try{
+        const id = req.params.id;
+        const proj = await PAssign.findByPk(id);
+        res.json(proj);
+    }catch(error)
+    {
+        console.error('Error while fetching Project assignment details:', error);
+        res.json({ error: "Unable to fetch Project assignment details" });
+    }
+})
+
+router.post("/newPorjectAssign", async(req, res)=>
+{
+    try{
+        const body = req.body;
+        const newPassign = await PAssign.create(body);
+        res.json(newPassign);
+    }catch (error) {
+        console.error('Error creating team:', error);
+        res.json({ error: "Error While Adding Please Check" });
+    }
+    
+})
+
+router.put("/updateProjAssign", async(req, res)=>{
+    try{
+        const body = req.body;
+        //const data = {...body}
+        const count = await PAssign.update(body, {
+            where: { assignID: body.assignID }
+        })
+        res.json(count);
+    }catch(error){
+        console.error('Error while Updating Project Assignment details:', error);
+        res.json({ error: "Can't Project Assignment details" });
+    }
+})
+
+router.delete("/deleteprojAssign/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedCount = await Team.PAssign({ where: { assignID: id } });
         res.json(deletedCount);
     } catch (error) {
         console.error('Error while deleting team:', error);
