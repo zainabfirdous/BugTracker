@@ -3,7 +3,8 @@ const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
 const Admin = require('../models/Admin.js')
 const Team = require('../models/Team.js')
-
+const PAssign = require('../models/ProjectAssign.js')
+const Tracker = require('../models/Tracker.js')
 
 
 
@@ -263,4 +264,105 @@ router.delete("/deleteteam/:id", async (req, res) => {
     
 })
 
+router.get("/projectAssign", async(req, res)=>{
+    try{
+        const passign = await PAssign.findAll();
+        res.json(passign);
+    }catch(error)
+    {
+        console.error('Error while fetching Project assignment details:', error);
+        res.json({ error: "Unable to fetch Project assignment details" });
+    }
+})
+
+router.get("/projectassign/:id", async(req, res)=>{
+    try{
+        const id = req.params.id;
+        const proj = await PAssign.findByPk(id);
+        res.json(proj);
+    }catch(error)
+    {
+        console.error('Error while fetching Project assignment details:', error);
+        res.json({ error: "Unable to fetch Project assignment details" });
+    }
+})
+
+router.post("/newPorjectAssign", async(req, res)=>
+{
+    try{
+        const body = req.body;
+        const newPassign = await PAssign.create(body);
+        res.json(newPassign);
+    }catch (error) {
+        console.error('Error creating team:', error);
+        res.json({ error: "Error While Adding Please Check" });
+    }
+    
+})
+
+router.put("/updateProjAssign", async(req, res)=>{
+    try{
+        const body = req.body;
+        //const data = {...body}
+        const count = await PAssign.update(body, {
+            where: { assignID: body.assignID }
+        })
+        res.json(count);
+    }catch(error){
+        console.error('Error while Updating Project Assignment details:', error);
+        res.json({ error: "Can't Project Assignment details" });
+    }
+})
+
+router.delete("/deleteprojAssign/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedCount = await Team.PAssign({ where: { assignID: id } });
+        res.json(deletedCount);
+    } catch (error) {
+        console.error('Error while deleting team:', error);
+        res.json({ error: "This team Can't be Deleted, (FK-In_Use)" });
+    }
+    
+})
+
+router.get("/trackbugs", async(req, res)=>{
+    try{
+        const Track = await Tracker.findAll()
+        res.json(Track);
+    }catch(error){
+        console.error('Error tracking bug:', error);
+        res.json({ error: "Can't fetch tracking details" });
+    }
+})
+
+router.get("/trackbugs/:id", async(req, res)=>{
+    try{
+        const trackID = req.params.id;
+        const Track = await Tracker.findByPk(trackID)
+        res.json(Track)
+    }catch(error){
+        console.error('Error fetching all bug tracking details: ', error);
+        res.json({ error: "Can't fetch details" })
+    }})
+
+
+// router.post("/newTrackBug", async(req, res)=>{
+//     try{
+//         const body = req.body
+//         req.body.status = "Assigned"
+//         const newTrack = await Tracker.create(body);
+//         res.json(newTrack);
+//     }catch (error){
+//         console.error('Error creating bug tracker:', error);
+//         res.json({ error: "Error While Adding Please Check" });
+//     }
+// })
+
+// router.put("/updateTracker", async(req, res)=>{
+//     try{
+//         const body = req.body
+
+//     }
+// })
 module.exports = router;
