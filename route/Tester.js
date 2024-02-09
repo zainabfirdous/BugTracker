@@ -137,6 +137,18 @@ const ProjTeam = async(req, res)=>{
       }
     }
 
+const NewTracking = async(req, res)=>{
+    try{
+        const body = req.body
+        req.body.status = "Assigned"
+        const newTrack = await Tracker.create(body);
+        res.json(newTrack);
+    }catch (error){
+        console.error('Error creating bug tracker:', error);
+        res.json({ error: "Error While Adding Please Check" });
+    }
+}
+
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
 Trouter.get("/testerprojects/:id", TesterProjects);
@@ -144,5 +156,5 @@ Trouter.get("/testerDashboard", testerProfile);
 Trouter.post("/newBug", newbugReg);
 Trouter.get("/trackBug/:id",trackingdetails);
 Trouter.get("/trackBug",trackingall);
-
+Trouter.post("/newtrack", NewTracking);
 module.exports = Trouter;
