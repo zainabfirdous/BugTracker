@@ -100,7 +100,7 @@ router.post('/login', async (req, res) => {
        
        //res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
        
-        res.json({ token: "thisismytoken" , username : adm.fName, urole : "Admin"});
+        res.json({ token: "thisismytoken" , username : adm.fName, urole : "Admin",uid : adm.admID});
             } else {
            // Password is incorrect.
           res.json({ "error": "Wrong Password", Login : false});
