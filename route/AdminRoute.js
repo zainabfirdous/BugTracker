@@ -22,6 +22,19 @@ router.get("/adminDashboard", async(req, res)=>{
     }
 })
 
+router.get("/adminDashboard/:id", async(req, res)=>{
+    try{
+        const admID = req.params.id;
+       // const admin = await Admin.findByPk(adminID);
+        const admin = await Admin.findByPk(admID)
+        res.json(admin);
+    }catch(error)
+    {
+        console.error('Error fetching details of admin: '+error);
+        res.status(500).send('Internal Server Error');
+    }
+})
+
 router.get("/getEmployees", async (req, res) => {
     try {
         // Fetch all employees from the database
@@ -33,9 +46,10 @@ router.get("/getEmployees", async (req, res) => {
     }
 })
 
-router.get("getEmpByID/:id", async (req,res) =>{
+router.get("/getEmpByID/:id", async (req,res) =>{
     try{
-        const empID = req.params.empID;
+        const empID = req.params.id;
+        console.log(empID);
         const emp_byid = await Project.findByPk(empID);
         res.send(emp_byid);
     }catch(error){
