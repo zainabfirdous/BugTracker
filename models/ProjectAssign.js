@@ -25,7 +25,7 @@ const PAssignment = con.define(
               key: 'TeamID',
             },
         },
-        EmpID:{
+        empID:{
             type: INTEGER,
             allowNull: false,
             references: {
@@ -41,7 +41,7 @@ const PAssignment = con.define(
           type: DATEONLY,
           defaultValue: null
       }
-    },{ tableName: 'projassign',timestamps:false, freezeTableName:false}
+    },{ tableName: 'projectassign',timestamps:false, freezeTableName:false}
 )
 
 module.exports = PAssignment;
