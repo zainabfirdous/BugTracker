@@ -140,7 +140,7 @@ const ProjTeam = async(req, res)=>{
 const NewTracking = async(req, res)=>{
     try{
         const body = req.body
-        req.body.status = "Assigned"
+        req.body.status = "New"
         const newTrack = await Tracker.create(body);
         res.json(newTrack);
     }catch (error){
