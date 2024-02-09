@@ -11,7 +11,7 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     const [show, setShow] = useState(false);
-    const [showprof, setShowprof] =  useState(false);
+   // const [showprof, setShowprof] =  useState(false);
     const handleClose = () => setShow(false);
     const [bgcolor, setBgColor] = useState("");
     const [ isAlertVisible, setIsAlertVisible ] = useState(false);
@@ -84,7 +84,7 @@ export default function Dashboard() {
     <>
     
     {/* Alert Message */}
-    {/* <div className="App">
+    <div className="App">
         {isAlertVisible && <Modal show={show} onHide={handleClose}>
           <Modal.Header className="bg-white">
             <Modal.Title></Modal.Title>
@@ -96,7 +96,7 @@ export default function Dashboard() {
             </Button>
           </Modal.Footer>
         </Modal>}
-      </div> */}
+      </div>
 
       {/* Profile */}
     <div className="App">
@@ -121,7 +121,7 @@ export default function Dashboard() {
       {/* nav bar */}
      <Navbar style={{ backgroundColor: 'aqua'}}   collapseOnSelect expand="lg" className="bg-body-tertiary">
       <Container>
-      {localStorage.user ? <Navbar.Brand href="/Welcome">Bug Tracking</Navbar.Brand> : <Navbar.Brand href="/AppInfo">Bug Tracking</Navbar.Brand>}
+      {localStorage.user ? <Navbar.Brand href="/BugReport">Bug Tracking</Navbar.Brand> : <Navbar.Brand href="/AppInfo">Bug Tracking</Navbar.Brand>}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav >
