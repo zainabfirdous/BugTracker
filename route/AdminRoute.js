@@ -4,7 +4,7 @@ const Bug = require('../models/Bug.js')
 const Admin = require('../models/Admin.js')
 const Team = require('../models/Team.js')
 const PAssign = require('../models/ProjectAssign.js')
-
+const Tracker = require('../models/Tracker.js')
 
 
 
@@ -326,4 +326,43 @@ router.delete("/deleteprojAssign/:id", async (req, res) => {
     
 })
 
+router.get("/trackbugs", async(req, res)=>{
+    try{
+        const Track = await Tracker.findAll()
+        res.json(Track);
+    }catch(error){
+        console.error('Error tracking bug:', error);
+        res.json({ error: "Can't fetch tracking details" });
+    }
+})
+
+router.get("/trackbugs/:id", async(req, res)=>{
+    try{
+        const trackID = req.params.id;
+        const Track = await Tracker.findByPk(trackID)
+        res.json(Track)
+    }catch(error){
+        console.error('Error fetching all bug tracking details: ', error);
+        res.json({ error: "Can't fetch details" })
+    }})
+
+
+// router.post("/newTrackBug", async(req, res)=>{
+//     try{
+//         const body = req.body
+//         req.body.status = "Assigned"
+//         const newTrack = await Tracker.create(body);
+//         res.json(newTrack);
+//     }catch (error){
+//         console.error('Error creating bug tracker:', error);
+//         res.json({ error: "Error While Adding Please Check" });
+//     }
+// })
+
+// router.put("/updateTracker", async(req, res)=>{
+//     try{
+//         const body = req.body
+
+//     }
+// })
 module.exports = router;

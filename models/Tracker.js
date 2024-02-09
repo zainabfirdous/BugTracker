@@ -32,26 +32,32 @@ const tracking = con.define(
               model: 'Employee',
               key: 'empID',
             },
+            defaultValue: null
         },
         assignTS:{
             type:DATE,
-            allowNull: true
+            allowNull: true,
+            defaultValue: null
         },
         dueDate:{
             type:DATEONLY,
-            allowNull: false
+            allowNull: true,
+            defaultValue: null
         },
         dueTime:{
             type:TIME,
-            allowNull: false
+            allowNull: true,
+            defaultValue: null
         },
         compDate:{
             type:DATEONLY,
-            allowNull:false
+            allowNull:true,
+            defaultValue: null
         },
         compTime:{
             type:TIME,
-            allowNull:false
+            allowNull:true,
+            defaultValue: null
         },
         status:{
             type:STRING,
