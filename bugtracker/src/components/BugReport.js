@@ -17,9 +17,9 @@ function BugReportPage() {
     try{
       const resp = await axios.get("http://127.0.0.1:5000/getbugs");
       console.log(resp.data);
-    setBugs(resp.data);
+      setBugs(resp.data);
        }
-   catch(err){
+    catch(err){
     console.log(err);
     }
   };
