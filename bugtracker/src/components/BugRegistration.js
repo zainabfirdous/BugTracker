@@ -109,6 +109,7 @@ function BugRegistration() {
     "http://127.0.0.1:5000/tester/newtrack",
     bugTract
   );
+  console.log(response);
   }
   
   const handleInput = (e) => {

@@ -26,7 +26,7 @@ export default function BugReport() {
         const token = localStorage.getItem("token");
          if (!token) navigate("/", { replace: true });
         getData();
-    }, [])
+    }, [navigate])
 
     return (
         <>

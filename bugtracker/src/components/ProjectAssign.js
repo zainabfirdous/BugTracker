@@ -24,6 +24,10 @@ export default function ProjectAssign() {
     const [empList, setEmpList] = useState([]);
     const [ assignProjList, setAssignProjList] = useState([]);
 
+    const handleUpdateProject = async () =>{
+        setIsUpdateButton(true);
+    }
+
     const getSelectData = async () => {
         const resp1 = await axios.get("http://127.0.0.1:5000/getprojects");
         const resp2 = await axios.get("http://127.0.0.1:5000/admin/getteams");
@@ -214,8 +218,7 @@ export default function ProjectAssign() {
               <th>Project</th>
               <th>Team</th>
               <th>Employee</th>
-              {/* <th>Project</th> */}
-              {/* <th>Action</th> */}
+              <th>Action</th>
             </tr>
           </thead>
           <tbody> 
@@ -259,27 +262,27 @@ export default function ProjectAssign() {
                   {/* <td>{aplItem.teamID}</td>
                   <td>{aplItem.empID}</td> */}
                   
-                  {/* <td>
+                  <td>
                     <div className='row'>
                     <div className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-warning m-1 text-center"
                       style={{ marginRight: "5px" }}
-                      onClick={() => handleUpdateEmployee(empItem)}
+                      onClick={() => handleUpdateProject(aplItem)}
                     >
                       Update
                     </button>
                     </div>
-                    <div   className='col-sm-12 col-lg-6'>
+                    {/* <div   className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-danger m-1 text-center"
                       onClick={() => handleDelete(empItem.empID)}
                     >
                       Delete
                     </button>
-                    </div>
+                    </div> */}
                   </div>
-                  </td> */}
+                  </td>
                 </tr>
                 
               );

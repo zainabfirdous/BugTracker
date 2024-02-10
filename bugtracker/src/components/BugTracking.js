@@ -73,6 +73,7 @@ export default function BugTracking() {
           if (e.target.value === empItem.empID) {
             setEmpName(empItem.fName);
           }
+          return null;
         })
         // console.log(empID);
         break;
@@ -103,7 +104,7 @@ export default function BugTracking() {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
     getData();
-  }, [])
+  }, [navigate])
 
 
 
