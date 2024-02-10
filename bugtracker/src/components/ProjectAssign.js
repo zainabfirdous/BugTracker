@@ -19,10 +19,14 @@ export default function ProjectAssign() {
     const [empID, setEmpID] = useState("");
     const [isUpdateButton, setIsUpdateButton] = useState(false);
 
-    const [projlist, setProjList] = useState([]);
+    const [projList, setProjList] = useState([]);
     const [teamList, setTeamList] = useState([]);
     const [empList, setEmpList] = useState([]);
     const [ assignProjList, setAssignProjList] = useState([]);
+
+    const handleUpdateProject = async () =>{
+        setIsUpdateButton(true);
+    }
 
     const getSelectData = async () => {
         const resp1 = await axios.get("http://127.0.0.1:5000/getprojects");
@@ -34,7 +38,7 @@ export default function ProjectAssign() {
     }
 
     const assignProjListget = async () =>{
-        const resp1 = await axios.get("http://127.0.0.1:5000/getprojects");
+        const resp1 = await axios.get("http://127.0.0.1:5000/admin/projectAssign");
         setAssignProjList(resp1.data);
         console.log(resp1.data)
     }
@@ -60,7 +64,7 @@ export default function ProjectAssign() {
     const addProjAssign = async (projAssign) => {
         console.log(projAssign);
         const response = await axios.post(
-            "http://127.0.0.1:5000/newBug",
+            "http://127.0.0.1:5000/admin/newPorjectAssign",
             projAssign
         );
         if (response.data.error) {
@@ -70,11 +74,12 @@ export default function ProjectAssign() {
             setBgColor("bg-warning");
             setSetMessage(response.data.error);
             setTimeout(() => {
-                setIsAlertVisible(false);
+            setIsAlertVisible(false);
             }, 5000);
         }
         else {
             // props.updateEmployeeList();
+            assignProjListget();
             resetForm();
             setShow(true)
             setIsAlertVisible(true);
@@ -151,7 +156,7 @@ export default function ProjectAssign() {
                         <label htmlFor="projID">Project Id: </label>
                         <select id="projID" value={projID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
                             <option id="projID" selected>Select</option>
-                            {projlist.map((projItem) => {
+                            {projList.map((projItem) => {
                                 return (
                                     <option value={projItem.projID} key={projItem.projID}>{projItem.projID} {projItem.projName}</option>
                                 );
@@ -213,8 +218,7 @@ export default function ProjectAssign() {
               <th>Project</th>
               <th>Team</th>
               <th>Employee</th>
-              {/* <th>Project</th> */}
-              {/* <th>Action</th> */}
+              <th>Action</th>
             </tr>
           </thead>
           <tbody> 
@@ -230,40 +234,55 @@ export default function ProjectAssign() {
               return (
                 <tr key={aplItem.assignID}>
                   <td>{aplItem.assignID}</td>
-                  <td>{aplItem.projID}</td>
-                  <td>{aplItem.teamID}</td>
-                  <td>{aplItem.empID}</td>
                   {/* <td>{aplItem.projID}</td> */}
-                  {/* <td>{bugItem.regBy}</td> */}
-                  {/* {rolelist.map((roleItem) => {
-                       if (roleItem.roleID === empItem.roleID) {
+                  {projList.map((projItem) => {
+                       if (projItem.projID === aplItem.projID) {
                          return (
-                           <td key={roleItem.roleID}>{roleItem.roleName}</td>
+                           <td key={aplItem.projID}>{projItem.projID} {projItem.projName}</td>
                          );
                        }
                        return null; // or return <td key={roleItem.roleID}></td>;
-                  })} */}
-                  {/* <td>
+                  })}
+                  {teamList.map((teamItem) => {
+                       if (teamItem.teamID === aplItem.teamID) {
+                         return (
+                           <td key={aplItem.teamID}>{teamItem.teamID} {teamItem.teamName}</td>
+                         );
+                       }
+                       return null; // or return <td key={roleItem.roleID}></td>;
+                  })}
+                  {empList.map((empItem) => {
+                       if (empItem.empID === aplItem.empID) {
+                         return (
+                           <td key={aplItem.empID}>{empItem.empID} {empItem.fName}</td>
+                         );
+                       }
+                       return null; // or return <td key={roleItem.roleID}></td>;
+                  })}
+                  {/* <td>{aplItem.teamID}</td>
+                  <td>{aplItem.empID}</td> */}
+                  
+                  <td>
                     <div className='row'>
                     <div className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-warning m-1 text-center"
                       style={{ marginRight: "5px" }}
-                      onClick={() => handleUpdateEmployee(empItem)}
+                      onClick={() => handleUpdateProject(aplItem)}
                     >
                       Update
                     </button>
                     </div>
-                    <div   className='col-sm-12 col-lg-6'>
+                    {/* <div   className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-danger m-1 text-center"
                       onClick={() => handleDelete(empItem.empID)}
                     >
                       Delete
                     </button>
-                    </div>
+                    </div> */}
                   </div>
-                  </td> */}
+                  </td>
                 </tr>
                 
               );

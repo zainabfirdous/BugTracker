@@ -8,13 +8,16 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 
 export default function Dashboard() {
+  
     const navigate = useNavigate();
 
     const [show, setShow] = useState(false);
     const [showprof, setShowprof] =  useState(false);
     const handleClose = () => setShow(false);
+    const handleCloseprof = () => setShowprof(false);
     const [bgcolor, setBgColor] = useState("");
     const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+    const [ isAlertVisible1, setIsAlertVisible1 ] = useState(false);
     const [message, setSetMessage] = useState("");
     const [urole , setUrole] = useState("");
     const [profile , setProfile] = useState({});
@@ -33,7 +36,7 @@ export default function Dashboard() {
           navigate("/AppInfo", { replace: false });
           setMyToken(false);
         }
-    }, 50000);
+    }, 20000);
      
     }
 
@@ -49,8 +52,8 @@ export default function Dashboard() {
     
 
     const handleProfile = () =>{
-          setShow(true)
-          setIsAlertVisible(true);
+           setShowprof(true)
+           setIsAlertVisible1(true);
           setBgColor("bg-warning");
           setSetMessage("Session Time Out");
     }
@@ -84,8 +87,22 @@ export default function Dashboard() {
     <>
     
     {/* Alert Message */}
-    {/* <div className="App">
+    <div className="App">
         {isAlertVisible && <Modal show={show} onHide={handleClose}>
+          <Modal.Header className="bg-white">
+            <Modal.Title></Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bg-white" >{message}</Modal.Body>
+          <Modal.Footer className={bgcolor} >
+            <Button variant="warning" className='h-1' onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>}
+      </div>
+      
+      {/* <div className="App">
+        {isAlertVisible1 && <Modal show={showprof} onHide={handleClose}>
           <Modal.Header className="bg-white">
             <Modal.Title></Modal.Title>
           </Modal.Header>
@@ -100,7 +117,7 @@ export default function Dashboard() {
 
       {/* Profile */}
     <div className="App">
-        {isAlertVisible && <Modal show={show} onHide={handleClose}>
+        {isAlertVisible1 && <Modal show={showprof} onHide={handleCloseprof}>
           <Modal.Header className="bg-white">
             <Modal.Title></Modal.Title>
           </Modal.Header>
@@ -111,7 +128,7 @@ export default function Dashboard() {
           <br></br> New Password : <input  className="form-control m-1" style={{width:"50%"}}></input> Confirm Password : <input  className="form-control m-1" style={{width:"50%"}}></input>
           </Modal.Body>
           <Modal.Footer className={bgcolor} >
-            <Button variant="warning" className='h-1' onClick={handleClose}>
+            <Button variant="warning" className='h-1' onClick={handleCloseprof}>
               Close
             </Button>
           </Modal.Footer>
@@ -121,14 +138,14 @@ export default function Dashboard() {
       {/* nav bar */}
      <Navbar style={{ backgroundColor: 'aqua'}}   collapseOnSelect expand="lg" className="bg-body-tertiary">
       <Container>
-      {localStorage.user ? <Navbar.Brand href="/Welcome">Bug Tracking</Navbar.Brand> : <Navbar.Brand href="/AppInfo">Bug Tracking</Navbar.Brand>}
+      {localStorage.user ? <Navbar.Brand href="/BugReport">Bug Tracking</Navbar.Brand> : <Navbar.Brand href="/AppInfo">Bug Tracking</Navbar.Brand>}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav >
             {localStorage.user ? (urole==="Admin"?<Nav.Link href="/Employee" >Employee</Nav.Link>:<div></div>) : <Nav.Link href="/AppInfo">Features</Nav.Link>}
             {localStorage.user ? (urole==="Admin"?<Nav.Link href="/Project">Project</Nav.Link>:<div></div>) : <Nav.Link href="/AppInfo">About Us</Nav.Link>}
             {localStorage.user ? (urole==="Admin"||urole==="Tester"?<Nav.Link href="/BugReg">Bug Register</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link>}
-            {localStorage.user ? (urole==="Admin"||urole==="Tester"||urole==="Developer"?<Nav.Link href="/BugReport">Bug Report</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
+            {localStorage.user ? (urole==="Admin"||urole==="Tester"||urole==="Developer"?<Nav.Link href="/BugTracking">Bug Report</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
             {localStorage.user ? (urole==="Admin"?<Nav.Link href="/Team">Team</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
             {localStorage.user ? (urole==="Admin"?<Nav.Link href="/ProjectAssign">Project Assign</Nav.Link>:<div></div>) : <Nav.Link></Nav.Link> }
           </Nav>

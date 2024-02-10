@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 function BugRegistration() {
 
   axios.defaults.withCredentials = true;
-
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const [message, setSetMessage] = useState("");
@@ -16,7 +16,7 @@ function BugRegistration() {
   const [bgcolor, setBgColor] = useState("");
 
 
-  const navigate = useNavigate();
+
   const [bugID, setbugID] = useState();
   const [bugName, setbugName] = useState();
   const [priority, setpriority] = useState();
@@ -72,9 +72,10 @@ function BugRegistration() {
   const addBug = async (bug) => {
     console.log(bug);
     const response = await axios.post(
-      "http://127.0.0.1:5000/newBug",
+      "http://127.0.0.1:5000/tester/newBug",
       bug
     );
+    console.log(response.data);
     if (response.data.error) {
       setShow(true)
       setIsAlertVisible(true);
@@ -87,6 +88,7 @@ function BugRegistration() {
     }
     else {
       // props.updateEmployeeList();
+      addBugTrack(response.data.bugID);
       resetForm();
       setShow(true)
       setIsAlertVisible(true);
@@ -99,14 +101,19 @@ function BugRegistration() {
     }
   }
 
-
-
+  const addBugTrack = async (bugID) =>{
+    const bugTract = {
+      bugID: bugID
+  }
+  const response = await axios.post(
+    "http://127.0.0.1:5000/tester/newtrack",
+    bugTract
+  );
+  console.log(response);
+  }
+  
   const handleInput = (e) => {
     switch (e.target.id) {
-      case "bugID":
-        setbugID(e.target.value);
-        // console.log(bugID);
-        break;
       case "bugName":
         setbugName(e.target.value);
         // console.log(bugName);
@@ -148,21 +155,13 @@ function BugRegistration() {
 
 
       <div className="bug-registration-form">
-
-        <form className="row mt-4" onSubmit={handlesubmit}>
-          <div className="form-group offset-4 col-4">
-            <label htmlFor="bugID"><h1>Bug Registration Form</h1></label><br></br>
-            <label htmlFor="bugID">Bug ID</label>
-            <input className="form-control"
-              type="text"
-              id="bugID"
-              name="bugID"
-              value={bugID}
-              onChange={handleInput}
-              required
-            />
+      <div className="row">
+      <div className="col-md-12  offset-lg-3 col-lg-6">
+      <form className="row mt-4  border border-warning rounded m-3" onSubmit={handlesubmit}>
+        <div className="form-group col-md-12  offset-lg-2 col-lg-8">
+        <h3 className=" m-3" style={{ textAlign: 'center' }}><span className='m-4 bg-warning border border-warning rounded'><span className='m-2'>Bug Registration</span></span></h3>
           </div>
-          <div className="form-group offset-4 col-4">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="bugName">Bug Name</label>
             <input className="form-control"
               type="text"
@@ -173,7 +172,7 @@ function BugRegistration() {
               required
             />
           </div>
-          <div className="form-group offset-4 col-4">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="priority">Priority</label>
             <select className="form-control"
               id="priority"
@@ -189,7 +188,7 @@ function BugRegistration() {
               <option value="critical"> Critical </option>
             </select>
           </div>
-          <div className="form-group offset-4 col-4">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="bugDesc">Bug Description</label>
             <textarea className="form-control"
               id="bugDesc"
@@ -199,7 +198,7 @@ function BugRegistration() {
               required
             ></textarea>
           </div>
-          <div className="form-group offset-4 col-4">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="projID">Project : </label>
 
             <select id="projID" value={projID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
@@ -211,11 +210,14 @@ function BugRegistration() {
               })}
             </select>
           </div>
-          <div className="form-group offset-4 col-4">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <button type="submit" className="btn btn-success text-center">Register Bug</button>
           </div>
 
         </form>
+      </div>
+      </div>
+        
       </div>
 
       {/* Table Data */}
@@ -251,16 +253,17 @@ function BugRegistration() {
                   <td>{bugItem.bugName}</td>
                   <td>{bugItem.priority}</td>
                   <td>{bugItem.bugDesc}</td>
-                  <td>{bugItem.projID}</td>
-                  {/* <td>{bugItem.regBy}</td> */}
-                  {/* {rolelist.map((roleItem) => {
-                       if (roleItem.roleID === empItem.roleID) {
+                  {projlist.map((projItem) => {
+                       if (projItem.projID === bugItem.projID) {
                          return (
-                           <td key={roleItem.roleID}>{roleItem.roleName}</td>
+                           <td key={bugItem.projID}>{projItem.projID} : {projItem.projName}</td>
                          );
                        }
                        return null; // or return <td key={roleItem.roleID}></td>;
-                  })} */}
+                  })}
+                  {/* <td>{bugItem.projID}</td> */}
+                  {/* <td>{bugItem.regBy}</td> */}
+                  
                   {/* <td>
                     <div className='row'>
                     <div className='col-sm-12 col-lg-6'>
