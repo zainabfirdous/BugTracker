@@ -156,12 +156,12 @@ function BugRegistration() {
 
       <div className="bug-registration-form">
       <div className="row">
-      <div className="offset-3 col-6">
+      <div className="col-md-12  offset-lg-3 col-lg-6">
       <form className="row mt-4  border border-warning rounded m-3" onSubmit={handlesubmit}>
-        <div className="col-12">
-        <h3 className=" m-3" style={{ textAlign: 'center' }}><span className='m-4 bg-warning border border-warning rounded'><span className='m-4'>Bug Registration</span></span></h3>
+        <div className="form-group col-md-12  offset-lg-2 col-lg-8">
+        <h3 className=" m-3" style={{ textAlign: 'center' }}><span className='m-4 bg-warning border border-warning rounded'><span className='m-2'>Bug Registration</span></span></h3>
           </div>
-          <div className="form-group offset-2 col-8">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="bugName">Bug Name</label>
             <input className="form-control"
               type="text"
@@ -172,7 +172,7 @@ function BugRegistration() {
               required
             />
           </div>
-          <div className="form-group offset-2 col-8">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="priority">Priority</label>
             <select className="form-control"
               id="priority"
@@ -188,7 +188,7 @@ function BugRegistration() {
               <option value="critical"> Critical </option>
             </select>
           </div>
-          <div className="form-group offset-2 col-8">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="bugDesc">Bug Description</label>
             <textarea className="form-control"
               id="bugDesc"
@@ -198,7 +198,7 @@ function BugRegistration() {
               required
             ></textarea>
           </div>
-          <div className="form-group offset-2 col-8">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <label htmlFor="projID">Project : </label>
 
             <select id="projID" value={projID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
@@ -210,7 +210,7 @@ function BugRegistration() {
               })}
             </select>
           </div>
-          <div className="form-group offset-2 col-8">
+          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
             <button type="submit" className="btn btn-success text-center">Register Bug</button>
           </div>
 

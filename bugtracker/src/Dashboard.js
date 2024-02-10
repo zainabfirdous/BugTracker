@@ -12,10 +12,12 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     const [show, setShow] = useState(false);
-   // const [showprof, setShowprof] =  useState(false);
+    const [showprof, setShowprof] =  useState(false);
     const handleClose = () => setShow(false);
+    const handleCloseprof = () => setShowprof(false);
     const [bgcolor, setBgColor] = useState("");
     const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+    const [ isAlertVisible1, setIsAlertVisible1 ] = useState(false);
     const [message, setSetMessage] = useState("");
     const [urole , setUrole] = useState("");
     const [profile , setProfile] = useState({});
@@ -34,7 +36,7 @@ export default function Dashboard() {
           navigate("/AppInfo", { replace: false });
           setMyToken(false);
         }
-    }, 50000);
+    }, 20000);
      
     }
 
@@ -50,8 +52,8 @@ export default function Dashboard() {
     
 
     const handleProfile = () =>{
-          setShow(true)
-          setIsAlertVisible(true);
+           setShowprof(true)
+           setIsAlertVisible1(true);
           setBgColor("bg-warning");
           setSetMessage("Session Time Out");
     }
@@ -98,10 +100,24 @@ export default function Dashboard() {
           </Modal.Footer>
         </Modal>}
       </div>
+      
+      {/* <div className="App">
+        {isAlertVisible1 && <Modal show={showprof} onHide={handleClose}>
+          <Modal.Header className="bg-white">
+            <Modal.Title></Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bg-white" >{message}</Modal.Body>
+          <Modal.Footer className={bgcolor} >
+            <Button variant="warning" className='h-1' onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>}
+      </div> */}
 
       {/* Profile */}
     <div className="App">
-        {isAlertVisible && <Modal show={show} onHide={handleClose}>
+        {isAlertVisible1 && <Modal show={showprof} onHide={handleCloseprof}>
           <Modal.Header className="bg-white">
             <Modal.Title></Modal.Title>
           </Modal.Header>
@@ -112,7 +128,7 @@ export default function Dashboard() {
           <br></br> New Password : <input  className="form-control m-1" style={{width:"50%"}}></input> Confirm Password : <input  className="form-control m-1" style={{width:"50%"}}></input>
           </Modal.Body>
           <Modal.Footer className={bgcolor} >
-            <Button variant="warning" className='h-1' onClick={handleClose}>
+            <Button variant="warning" className='h-1' onClick={handleCloseprof}>
               Close
             </Button>
           </Modal.Footer>
