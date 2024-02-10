@@ -59,6 +59,7 @@ const EmpById = async (req,res) =>{
         console.error('Error fetching employees:', error);
         res.status(500).send('Internal Server Error');
     }
+
     
 }
 
