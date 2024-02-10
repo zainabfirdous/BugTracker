@@ -111,10 +111,24 @@ const DProjTeam = async(req, res)=>{
       }
     }
 
+const UpdateTrack = async(req, res)=>{
+        try{
+            const body = req.body
+            const updateCount = await Tracker.update(body,{
+                where:{trackID: body.trackID}
+            })
+            res.json(updateCount)
+        }catch(error){
+            console.error('Error updating bug tracking details: ', error);
+            res.json({ error: "Can't update details" })
+        }
+    }
+
     Drouter.get("/projTeam/:id/:eid", DProjTeam)
     Drouter.get("/teammembers/:id/:eid", DevTeamMembers);
     Drouter.get("/devprojects/:id", DevProjects);
     Drouter.get("/devDashboard", DevProfile);
     Drouter.get("/trackBug/:id",tracking);
+    Drouter.put("/updateTracker",UpdateTrack )
     
     module.exports = Drouter;
