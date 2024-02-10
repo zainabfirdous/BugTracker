@@ -19,7 +19,7 @@ const tracking = con.define(
         },
         assignBy:{
             type: INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
               model: 'Employee',
               key: 'empID',

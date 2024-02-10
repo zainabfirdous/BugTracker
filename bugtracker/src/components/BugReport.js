@@ -23,6 +23,8 @@ export default function BugReport() {
 
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+         if (!token) navigate("/", { replace: true });
         getData();
     }, [])
 
@@ -39,7 +41,7 @@ export default function BugReport() {
                                         return (
                                             bugList.map((bugItem) => {
                                                 if (bugItem.bugID === btItem.bugID) {
-                                                    console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                               //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -106,7 +108,7 @@ export default function BugReport() {
                                         return (
                                             bugList.map((bugItem) => {
                                                 if (bugItem.bugID === btItem.bugID) {
-                                                    console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                         //           console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -193,7 +195,7 @@ export default function BugReport() {
                                         return (
                                             bugList.map((bugItem) => {
                                                 if (bugItem.bugID === btItem.bugID) {
-                                                    console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                             //       console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>

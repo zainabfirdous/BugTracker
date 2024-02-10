@@ -4,6 +4,7 @@ const Tracker = require("../models/Tracker");
 const { QueryTypes } = require('sequelize');
 const sequelize = require('../config/database.js');
 const currentDate = new Date();
+const Bug = require("../models/Bug.js")
 const formattedDate = currentDate.toISOString().split('T')[0];
 
 
@@ -36,7 +37,7 @@ const newbugReg = async (req, res) => {
         res.json(newbug);
     } catch (error) {
         console.error('Error creating Bug:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
@@ -47,7 +48,7 @@ const trackingdetails = async (req, res) => {
         res.json(Track);
     } catch (error) {
         console.error('Error tracking bug:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 

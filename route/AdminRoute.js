@@ -353,6 +353,7 @@ const UpdateTrack = async(req, res)=>{
     try{
         const body = req.body
         req.body.status = "Assigned"
+        console.log("Hello ",body);
         const updateCount = await Tracker.update(body,{
             where:{trackID: body.trackID}
         })
