@@ -5,7 +5,7 @@ const Admin = require('../models/Admin.js')
 const Team = require('../models/Team.js')
 const PAssign = require('../models/ProjectAssign.js')
 const Tracker = require('../models/Tracker.js')
-
+const currentDate = new Date();
 
 
 const express = require('express');
@@ -353,6 +353,7 @@ const UpdateTrack = async(req, res)=>{
     try{
         const body = req.body
         req.body.status = "Assigned"
+        req.body.assignTS = currentDate;
         console.log("Hello ",body);
         const updateCount = await Tracker.update(body,{
             where:{trackID: body.trackID}

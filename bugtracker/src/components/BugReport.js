@@ -24,7 +24,7 @@ export default function BugReport() {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-         if (!token) navigate("/", { replace: true });
+        if (!token) navigate("/", { replace: true });
         getData();
     }, [navigate])
 
@@ -41,7 +41,7 @@ export default function BugReport() {
                                         return (
                                             bugList.map((bugItem) => {
                                                 if (bugItem.bugID === btItem.bugID) {
-                                               //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                                    //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -108,7 +108,7 @@ export default function BugReport() {
                                         return (
                                             bugList.map((bugItem) => {
                                                 if (bugItem.bugID === btItem.bugID) {
-                                         //           console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                                    //           console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -135,12 +135,12 @@ export default function BugReport() {
                                                                 </div>
                                                             </div>
                                                             <div className="row mt-1">
-                                                            {
+                                                                {
                                                                     empList.map((empItem) => {
                                                                         if (empItem.empID === bugItem.regBy) {
                                                                             return (
                                                                                 <div className="col-12">
-                                                                                    <h6 className="mt-1">Tester : {empItem.fName}</h6>
+                                                                                    <h6 className="mt-1" key={bugItem.regBy}>Tester : {empItem.fName}</h6>
                                                                                 </div>
                                                                             );
                                                                         }
@@ -149,10 +149,11 @@ export default function BugReport() {
                                                                 }
                                                                 {
                                                                     empList.map((empItem) => {
-                                                                        if (empItem.empID === bugItem.assignTo) {
+                                                                      //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
+                                                                        if (empItem.empID === btItem.assignTo) {
                                                                             return (
                                                                                 <div className="col-12">
-                                                                                    <h6 className="mt-1">Tester : {empItem.fName}</h6>
+                                                                                    <h6 className="mt-1" key={bugItem.assignTo}>Assign To : {empItem.fName}</h6>
                                                                                 </div>
                                                                             );
                                                                         }
@@ -195,7 +196,7 @@ export default function BugReport() {
                                         return (
                                             bugList.map((bugItem) => {
                                                 if (bugItem.bugID === btItem.bugID) {
-                                             //       console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                                    //       console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -222,7 +223,7 @@ export default function BugReport() {
                                                                 </div>
                                                             </div>
                                                             <div className="row mt-1">
-                                                            {
+                                                                {
                                                                     empList.map((empItem) => {
                                                                         if (empItem.empID === bugItem.regBy) {
                                                                             return (
@@ -236,10 +237,10 @@ export default function BugReport() {
                                                                 }
                                                                 {
                                                                     empList.map((empItem) => {
-                                                                        if (empItem.empID === bugItem.assignTo) {
+                                                                        if (empItem.empID === btItem.assignTo) {
                                                                             return (
                                                                                 <div className="col-12">
-                                                                                    <h6 className="mt-1">Tester : {empItem.fName}</h6>
+                                                                                    <h6 className="mt-1">Assign To : {empItem.fName}</h6>
                                                                                 </div>
                                                                             );
                                                                         }
