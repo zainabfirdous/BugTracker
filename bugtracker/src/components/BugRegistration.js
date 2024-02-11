@@ -295,6 +295,8 @@ function BugRegistration() {
         </div>
         </div>
 
+        
+
     </>
   )
 }
