@@ -151,11 +151,24 @@ const NewTracking = async (req, res) => {
     }
 }
 
+const DeleteBug =  async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedCount = await Bug.destroy({ where: { bugID: id } });
+        res.json(deletedCount);
+    } catch (error) {
+        console.error('Error while deleting bug:', error);
+        res.json({ error: "This Bug Can't be Deleted, (FK-In_Use)" });
+    }
+    
+}
+
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
 Trouter.get("/testerprojects/:id", TesterProjects);
 Trouter.get("/testerDashboard", testerProfile);
 Trouter.post("/newBug", newbugReg);
+Trouter.delete("/deletebug/:id", DeleteBug);
 Trouter.get("/trackBug/:id", trackingdetails);
 Trouter.get("/trackBug", trackingall);
 Trouter.post("/newtrack", NewTracking);
