@@ -23,7 +23,7 @@ const Team = con.define(
         },
         projID:{
             type: INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'Project',
                 key: 'projID',

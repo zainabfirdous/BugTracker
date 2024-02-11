@@ -2,7 +2,7 @@ const { INTEGER, STRING } = require('sequelize');
 const con = require('../config/database.js');
 
 const role = con.define
-('EmpProfile',{
+('role',{
     roleID:{
         type:INTEGER,
         allowNull: false,
