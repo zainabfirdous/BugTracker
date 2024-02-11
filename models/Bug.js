@@ -1,5 +1,5 @@
  
-const { INTEGER,STRING, DATEONLY ,NOW} = require('sequelize');
+const { INTEGER,STRING, DATEONLY ,NOW, TEXT, TIME} = require('sequelize');
 
 const con = require('../config/database.js');
 
@@ -16,16 +16,16 @@ const Bug = con.define(
         allowNull:false,
     },
     priority:{
-        type:INTEGER,
+        type:STRING,
         allowNull: false,
     },
     bugDesc:{
-        type:STRING,
+        type:TEXT,
         allowNull:false,
     },
     projID: {
         type: INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'Project',
           key: 'projID',
@@ -33,11 +33,15 @@ const Bug = con.define(
       },
     regBy: {
         type: INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'Employee',
           key: 'empID',
         },
+    },
+    crtTime:{
+      type:TIME,
+      defaultValue: Sequelize.literal('CURRENT_TIME')
     },
     crtDate:{
       type: DATEONLY,

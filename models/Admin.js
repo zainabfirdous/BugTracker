@@ -20,6 +20,7 @@ const Admin = con.define(
         email:{
             type:STRING,
             allowNull: false,
+            unique: true
         },
         password:{
             type:STRING,
