@@ -6,11 +6,15 @@ const credential = con.define
     empID:{
         type:INTEGER,
         allowNull: false,
-        primaryKey: false,
+        references: {
+            model: 'Employee',
+            key: 'empID',
+       },
     },
     userName:{
         type:STRING,
         allowNull: false,
+        unique: true
     },
     password:{
         type:STRING,
