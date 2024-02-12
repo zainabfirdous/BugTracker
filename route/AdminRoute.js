@@ -16,7 +16,6 @@ const router = express.Router();
 
 const dashboard = async(req, res)=>{
     try{
-       // const admin = await Admin.findByPk(adminID);
         const admin = await Admin.findAll()
         res.json(admin);
     }catch(error)
@@ -29,7 +28,6 @@ const dashboard = async(req, res)=>{
 const dashboardByID = async(req, res)=>{
     try{
         const admID = req.params.id;
-       // const admin = await Admin.findByPk(adminID);
         const admin = await Admin.findByPk(admID)
         res.json(admin);
     }catch(error)
@@ -41,7 +39,6 @@ const dashboardByID = async(req, res)=>{
 
 const allEmp =  async (req, res) => {
     try {
-        // Fetch all employees from the database
         const employees = await employee.findAll();
         res.json(employees);
     } catch (error) {
@@ -68,8 +65,7 @@ const EmpById = async (req,res) =>{
 const CreateEmp =  async (req, res) => {
     try {
         const body = req.body;
-        const data = { ...body };
-        const newEmp = await employee.create(data);
+        const newEmp = await employee.create(body);
         res.json(newEmp);
     } catch (error) {
         console.error('Error creating employee:', error);
@@ -339,12 +335,26 @@ const UpdateTrack = async(req, res)=>{
     try{
         const currentTime = new Date(); 
         const body = req.body
-        req.body.status = "Assigned"
-        req.body.assignTime = currentTime.toTimeString().split(' ')[0];
-        req.body.assignDate =  Sequelize.literal('CURRENT_DATE');
-        req.body.updDate = Sequelize.literal('CURRENT_DATE');
+        body.status = "Assigned"
+        body.assignDate = Sequelize.literal('CURRENT_DATE'),
+        body.assignTime = currentTime.toTimeString().split(' ')[0],
+        body.updDate = Sequelize.literal('CURRENT_DATE')
         const updateCount = await Tracker.update(body,{
-            where:{trackID: body.trackID}
+            where:{trackID: req.params.id}
+        })
+        res.json(updateCount)
+    }catch(error){
+        console.error('Error updating bug tracking details: ', error);
+        res.json({ error: "Can't update details" })
+    }
+}
+
+const UpdateClose = async(req, res)=>{
+    try{
+        const updateCount = await Tracker.update({status:'Closed', 
+        updDate : Sequelize.literal('CURRENT_DATE')
+    },{
+            where:{trackID: req.params.id}
         })
         res.json(updateCount)
     }catch(error){
@@ -393,7 +403,8 @@ router.put("/updateProjAssign", UpdateProjectAssign)
 router.delete("/deleteprojAssign/:id", DeleteProjectAssign)
 router.get("/trackbugs", Track)
 router.get("/trackbugs/:id", TrackById)
-router.put("/updateTracker", UpdateTrack)
+router.put("/updateTracker/assigned/:id", UpdateTrack)
+router.put("/updateTracker/close/:id", UpdateClose)
 router.delete("/deletetracks/:id",DeleteTrack)
 
 
