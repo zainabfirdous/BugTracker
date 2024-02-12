@@ -40,8 +40,12 @@ export default function BugReport() {
                                     if (btItem.status === "New") {
                                         return (
                                             bugList.map((bugItem) => {
-                                                if (bugItem.bugID === btItem.bugID) {
-                                                    //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                                let uid = parseInt(localStorage.getItem("uid"));
+                                                if (localStorage.getItem("urole")==="Admin" ? 
+                                                bugItem.bugID === btItem.bugID : 
+                                                localStorage.getItem("urole")==="Tester" ?
+                                                 bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
+                                                 bugItem.bugID === btItem.bugID && btItem.assignTo === uid ) {
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -58,8 +62,7 @@ export default function BugReport() {
                                                                                 <div className="col-3">
                                                                                     <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span></h5>
                                                                                 </div>
-                                                                            )
-                                                                        }
+                                                                            )}
                                                                         return null;
                                                                     })
                                                                 }
@@ -74,7 +77,7 @@ export default function BugReport() {
                                                                         if (empItem.empID === bugItem.regBy) {
                                                                             return (
                                                                                 <div className="col-12">
-                                                                                    <h6 className="mt-1">Tester : {empItem.fName}</h6>
+                                                                                    <h6 className="mt-1">Tester : ({empItem.empID}) {empItem.fName}</h6>
                                                                                 </div>
                                                                             );
                                                                         }
@@ -84,7 +87,7 @@ export default function BugReport() {
 
 
                                                             </div>
-                                                            <h6><span className="float-left border border-warning rounded"><p className='m-1'>{bugItem.crtDate}</p></span>
+                                                            <h6><span className="float-left border border-warning rounded"><p className='m-1'>{bugItem.crtDate} {bugItem.crtTime}</p></span>
                                                                 {/* <span className="float-right border border-warning rounded"><p className='m-1'>{bugItem.crtTime}</p></span> */}
                                                             </h6>
                                                         </div>
@@ -107,7 +110,13 @@ export default function BugReport() {
                                     if (btItem.status === "Assigned" || btItem.status === "Open" || btItem.status === "Resolved") {
                                         return (
                                             bugList.map((bugItem) => {
-                                                if (bugItem.bugID === btItem.bugID) {
+                                                let uid = parseInt(localStorage.getItem("uid"));
+                                    
+                                                if (localStorage.getItem("urole")==="Admin" ? 
+                                                bugItem.bugID === btItem.bugID : 
+                                                localStorage.getItem("urole")==="Tester" ?
+                                                 bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
+                                                 bugItem.bugID === btItem.bugID && btItem.assignTo === uid  ) {
                                                     //           console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
@@ -195,7 +204,13 @@ export default function BugReport() {
                                     if (btItem.status === "Verified" || btItem.status === "Closed") {
                                         return (
                                             bugList.map((bugItem) => {
-                                                if (bugItem.bugID === btItem.bugID) {
+                                                let uid = parseInt(localStorage.getItem("uid"));
+                                    
+                                                if (localStorage.getItem("urole")==="Admin" ? 
+                                                bugItem.bugID === btItem.bugID : 
+                                                localStorage.getItem("urole")==="Tester" ?
+                                                 bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
+                                                 bugItem.bugID === btItem.bugID && btItem.assignTo === uid  ) {
                                                     //       console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
