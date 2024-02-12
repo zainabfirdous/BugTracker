@@ -57,8 +57,32 @@ export default function BugTracking() {
     putbugAssign(bugAssign);
   };
 
-  const handleAccept = async (trackID) =>{
-
+  const handleResolved = async (trackID) =>{
+    const response = await axios.put(
+      `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
+    );
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(`Marked as Resolved`);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+      getData();
+      setShowBugdesc(false);
+    }
+  }
+  const handleAccept = async (trackID) => {
     const response = await axios.put(
       `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
     );
@@ -82,7 +106,7 @@ export default function BugTracking() {
       getData();
       setShowBugdesc(false);
     }
-    
+
   }
 
   const handleDelete = async (trackID) => {
@@ -177,13 +201,13 @@ export default function BugTracking() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
-    if(localStorage.getItem("urole")==="Admin"){
+    if (localStorage.getItem("urole") === "Admin") {
       setStatus("New");
-    }else if(localStorage.getItem("urole")==="Developer"){
+    } else if (localStorage.getItem("urole") === "Developer") {
       setStatus("Assigned");
     }
-    else{
-    setStatus("Resolved");
+    else {
+      setStatus("Resolved");
     }
     getData();
   }, [navigate])
@@ -351,12 +375,21 @@ export default function BugTracking() {
                                             <div></div>}
 
                                         </form>
-                                        :
-                                        <form className="row mt-4">
-                                            <div className="form-group col-sm-12 col-md-4">
-                                              <button type="button" onClick={() => handleAccept(btItem.trackID)} className="btn btn-success text-center">Accept Bug</button>
-                                            </div>
-                                        </form>
+                                        : (
+                                          btItem.status === "Assigned" ?
+                                            <form className="row mt-4">
+                                              <div className="form-group col-sm-12 col-md-4">
+                                                <button type="button" onClick={() => handleAccept(btItem.trackID)} className="btn btn-success text-center">Accept Bug</button>
+                                              </div>
+                                            </form>
+                                            :
+                                            <form className="row mt-4">
+                                              <div className="form-group col-sm-12 col-md-4">
+                                                <button type="button" onClick={() => handleResolved(btItem.trackID)} className="btn btn-success text-center">Mark as Resolved</button>
+                                              </div>
+                                            </form>
+
+                                        )
 
                                     }
                                   </div>
@@ -365,15 +398,12 @@ export default function BugTracking() {
                             }
                             return null;
                           }))
-
                       }
                       return null;
                     })
                   }
                 </div>
               </div>
-
-
             </div>
           </Modal.Body>
           <Modal.Footer className={bgcolor} >

@@ -41,7 +41,7 @@ export default function Dashboard() {
     }
 
     const getData = async () =>{
-      const data = await axios.get("http://127.0.0.1:5000/admin/adminDashboard/1"); 
+      const data = await axios.get(`http://127.0.0.1:5000/admin/adminDashboard/${localStorage.getItem("uid")}`); 
       setProfile(data.data);
       // console.log(profile);
     }
