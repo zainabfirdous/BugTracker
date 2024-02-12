@@ -11,6 +11,7 @@ import Team from './components/Team';
 import ProjectAssign from './components/ProjectAssign'
 import BugReport from './components/BugReport'
 import BugTracking from './components/BugTracking';
+import TesterBugPortal from './components/TesterBugPortal';
 
 function App() {
   
@@ -33,6 +34,8 @@ function App() {
       <Route path="/ProjectAssign" element={<ProjectAssign/>}/>
       <Route path="/BugReport" element={<BugReport/>}/>
       <Route path='/BugTracking' element={<BugTracking/>}/>
+      <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
+      
       </Routes>
     </BrowserRouter>
     </>

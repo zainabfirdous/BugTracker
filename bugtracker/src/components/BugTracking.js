@@ -59,7 +59,7 @@ export default function BugTracking() {
 
   const handleResolved = async (trackID) =>{
     const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
+      `http://127.0.0.1:5000/dev/updateTracker/${trackID}`
     );
     if (response.data.error) {
       setShow(true)
@@ -510,8 +510,8 @@ export default function BugTracking() {
                                           return null;
                                         })
                                       }
-                                      <div className="col-lg-12 col-xl-3">
-                                        <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate}</span></span>
+                                      <div className="col-lg-12 col-xl-4">
+                                        <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate} {bugItem.crtTime}</span></span>
                                         </h5>
                                       </div>
                                       <div className="form-group col-lg-12 col-xl-2">
@@ -523,55 +523,6 @@ export default function BugTracking() {
                                 return null;
                               })
                             }
-                            {/* <div><form className="row mt-4">
-                              <div className="form-group col-sm-12 col-md-4">
-                                <label htmlFor="empID">Assign To : </label>
-
-                                <select id="empID" value={empID} className="form-control form-select" variant="info" aria-label="Default select example"
-                                  onChange={handleInput}
-                                >
-                                  <option id="empID" selected>Select</option>
-                                  {empList.map((empItem) => {
-                                    return (
-                                      <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
-                                    );
-                                  })}
-                                </select>
-                              </div>
-                              <div className="form-group col-sm-12 col-md-4">
-                                <label htmlFor="startDate">Due Date : </label>
-                                <input
-                                  className="form-control"
-                                  type="date"
-                                  id="dueDate"
-                                  value={dueDate}
-                                  onChange={handleInput}
-                                />
-                              </div>
-                              <div className="form-group col-sm-12 col-md-4">
-                                <label htmlFor="startDate">Due Time : </label>
-                                <input
-                                  className="form-control"
-                                  type="time"
-                                  id="dueTime"
-                                  value={dueTime}
-                                  onChange={handleInput}
-                                />
-                              </div>
-
-                              <div className="form-group col-sm-12 col-md-4">
-                                <button type="button" onClick={() => handlesubmit(btItem.trackID)} className="btn btn-success text-center">Assign Bug</button>
-                              </div>
-
-                              {("All" === status)
-                                ?
-                                <div className="form-group col-sm-12 col-md-4">
-                                  <button type="button" onClick={() => handleDelete(btItem.trackID)} className="btn btn-danger text-center">Delete Bug</button>
-                                </div>
-                                :
-                                <div></div>}
-
-                            </form></div> */}
                           </div>
                         )
                       }
