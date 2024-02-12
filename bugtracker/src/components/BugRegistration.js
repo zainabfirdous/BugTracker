@@ -74,7 +74,7 @@ function BugRegistration() {
     e.preventDefault();
 
     const bugData = {
-      bugID: bugID,
+      // bugID: bugID,
       bugName: bugName,
       priority: priority,
       bugDesc: bugDesc,
@@ -113,6 +113,7 @@ function BugRegistration() {
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
+      getBug();
     }
   }
 
