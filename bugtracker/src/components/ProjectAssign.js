@@ -14,6 +14,7 @@ export default function ProjectAssign() {
     const [isAlertVisible, setIsAlertVisible] = useState(false);
     const [bgcolor, setBgColor] = useState("");
 
+    const [assignID, setAssignID] = useState("");
     const [projID, setProjID] = useState("");
     const [teamID, setTeamID] = useState("");
     const [empID, setEmpID] = useState("");
@@ -24,8 +25,13 @@ export default function ProjectAssign() {
     const [empList, setEmpList] = useState([]);
     const [ assignProjList, setAssignProjList] = useState([]);
 
-    const handleUpdateProject = async () =>{
+    const handleUpdateProject = async (aplItem) =>{
         setIsUpdateButton(true);
+        setAssignID(aplItem.assignID);
+        setProjID(aplItem.projID);
+        setTeamID(aplItem.teamID);
+        setEmpID(aplItem.empID);
+
     }
 
     const getSelectData = async () => {
@@ -35,19 +41,16 @@ export default function ProjectAssign() {
         setProjList(resp1.data);
         setTeamList(resp2.data);
         setEmpList(resp3.data);
+        const resp4 = await axios.get("http://127.0.0.1:5000/admin/projectAssign");
+        setAssignProjList(resp4.data);
+        console.log(resp4.data)
     }
 
-    const assignProjListget = async () =>{
-        const resp1 = await axios.get("http://127.0.0.1:5000/admin/projectAssign");
-        setAssignProjList(resp1.data);
-        console.log(resp1.data)
-    }
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) navigate("/", { replace: true });
         getSelectData();
-        assignProjListget();
     }, [navigate]);
 
     const handlesubmit = (e) => {
@@ -58,8 +61,71 @@ export default function ProjectAssign() {
             teamID: teamID,
             empID: empID,
         };
-        addProjAssign(projAssign);
+        isUpdateButton ?
+        updateProjAssign(projAssign) :
+        addProjAssign(projAssign)
+        ;
     };
+
+    const handleDelete =  async (assignID) =>{
+        const response = await axios.delete(
+            `http://127.0.0.1:5000/admin/deleteprojAssign/${assignID}`
+          );
+          if (response.data.error) {
+            setShow(true)
+            setIsAlertVisible(true);
+            setShow(true);
+            setBgColor("bg-warning");
+            setSetMessage(response.data.error);
+            setTimeout(() => {
+              setIsAlertVisible(false);
+            }, 5000);
+          }
+          else {
+            setShow(true)
+            setIsAlertVisible(true);
+            setShow(true);
+            setBgColor("bg-warning");
+            setSetMessage("Project Assignment Deleted Successfully");
+            setTimeout(() => {
+              setIsAlertVisible(false);
+            }, 5000);
+            getSelectData();
+          }
+    }
+
+    const updateProjAssign = async (projectAssign) =>{
+        const data = {...projectAssign};
+        data.assignID = assignID;
+        const response = await axios.put(
+            "http://127.0.0.1:5000/admin/updateProjAssign",
+            data
+        );
+        if (response.data.error) {
+            setShow(true)
+            setIsAlertVisible(true);
+            setShow(true);
+            setBgColor("bg-warning");
+            setSetMessage(response.data.error);
+            setTimeout(() => {
+            setIsAlertVisible(false);
+            }, 5000);
+        }
+        else {
+            getSelectData();
+            resetForm();
+            setShow(true)
+            setIsAlertVisible(true);
+            setShow(true);
+            setBgColor("bg-warning");
+            setSetMessage("Assignment Updated Successfully");
+            setTimeout(() => {
+                setIsAlertVisible(false);
+            }, 5000);
+            setIsUpdateButton(false);
+        }
+
+    }
 
     const addProjAssign = async (projAssign) => {
         console.log(projAssign);
@@ -78,14 +144,13 @@ export default function ProjectAssign() {
             }, 5000);
         }
         else {
-            // props.updateEmployeeList();
-            assignProjListget();
+            getSelectData();
             resetForm();
             setShow(true)
             setIsAlertVisible(true);
             setShow(true);
             setBgColor("bg-warning");
-            setSetMessage("Bug Registered Successfully");
+            setSetMessage("Project Assigned Successfully");
             setTimeout(() => {
                 setIsAlertVisible(false);
             }, 5000);
@@ -112,20 +177,6 @@ export default function ProjectAssign() {
             default: break;
         }
     };
-
-
-    // const getProjAssign = async () => {
-    //     try {
-    //     //  const response1 = await axios.get("http://127.0.0.1:5000/get");
-    //       const response = await axios.get("http://127.0.0.1:5000/getprojects");
-    //     //  / console.log("Resp : " + response1.data);
-    //       setProjectList(response.data);
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   };
-
-
 
     return (
 
@@ -200,7 +251,7 @@ export default function ProjectAssign() {
                         </select>
                     </div>
                     <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-                        <button type="button" className="btn btn-success text-center" onClick={handlesubmit}>
+                        <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"} onClick={handlesubmit}>
                             {isUpdateButton ? "Update Project" : "Add Project"}
                         </button>
                     </div>
@@ -273,14 +324,14 @@ export default function ProjectAssign() {
                       Update
                     </button>
                     </div>
-                    {/* <div   className='col-sm-12 col-lg-6'>
+                    <div   className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-danger m-1 text-center"
-                      onClick={() => handleDelete(empItem.empID)}
+                      onClick={() => handleDelete(aplItem.assignID)}
                     >
                       Delete
                     </button>
-                    </div> */}
+                    </div>
                   </div>
                   </td>
                 </tr>

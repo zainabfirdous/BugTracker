@@ -18,6 +18,12 @@ export default function Team() {
   const [teamList,setTeamList] = useState([]);
   const [projlist, setProjList] = useState([]);
   const [admlist, setAdmlist] = useState([]);
+
+const [updateTeam , setUpdateTeam ] = useState({});
+  
+  const handleUpdateTeam = (team) =>{
+    setUpdateTeam(team);
+  }
        
   
 
@@ -34,6 +40,34 @@ export default function Team() {
       console.log(err);
     }
   };
+
+  const handleDelete = async (teamID) =>{
+
+    const response = await axios.delete(
+      `http://127.0.0.1:5000/admin/deleteteam/${teamID}`
+    );
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage("Team Deleted Successfully");
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+      getData();
+    }
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -68,9 +102,9 @@ export default function Team() {
         <AddTeam
           updateTeamList={() => {
             getData();
-        //    setUpdateTeam({});
+           setUpdateTeam({});
           }}
-        //  team={updateTeam}
+         team={updateTeam}
         />
         <div class="table-responsive">
         <table className="table table-striped table-bordered table-hover mt-4">
@@ -115,7 +149,7 @@ export default function Team() {
                     <button type="button"
                       className="btn btn-warning m-1 text-center"
                       style={{ marginRight: "5px" }}
-                      // onClick={() => handleUpdateTeam(teamItem)}
+                      onClick={() => handleUpdateTeam(teamItem)}
                     >
                       Update
                     </button>
@@ -123,7 +157,7 @@ export default function Team() {
                     <div   className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-danger m-1 text-center"
-                      // onClick={() => handleDelete(teamItem.TeamID)}
+                      onClick={() => handleDelete(teamItem.teamID)}
                     >
                       Delete
                     </button>
