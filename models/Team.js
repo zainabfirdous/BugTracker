@@ -1,4 +1,4 @@
-const { STRING, INTEGER, DATEONLY ,NOW} = require('sequelize');
+const { STRING, INTEGER, DATEONLY ,NOW, Sequelize} = require('sequelize');
 const con = require('../config/database.js');
 
 const Team = con.define(
@@ -39,14 +39,12 @@ const Team = con.define(
         }
     },{ tableName: 'team',timestamps:false, freezeTableName:false,  hooks: {
         // Define a hook for updating updDate before saving
-        beforeUpdate: (team, options) => {
-            // Update the updDate field with the current date
-            team.updDate = new Date().toISOString().split('T')[0];
-            // Return the modified team object
-            return Promise.resolve(team);
+        beforeSave: (team, options) => {
+            if (team.changed('updDate')) {
+                team.updDate = Sequelize.literal('CURRENT_DATE');
+            }
         }
-    }
-    }
+    }}
 )
 
 module.exports = Team;
