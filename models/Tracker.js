@@ -24,6 +24,7 @@ const tracking = con.define(
               model: 'Employee',
               key: 'empID',
             },
+            defaultValue:null
         },
         assignTo:{
             type: INTEGER,
@@ -34,8 +35,13 @@ const tracking = con.define(
             },
             defaultValue: null
         },
-        assignTS:{
+        assignDate:{
             type:DATE,
+            allowNull: true,
+            defaultValue: null
+        },
+        assignTime:{
+            type:Time,
             allowNull: true,
             defaultValue: null
         },

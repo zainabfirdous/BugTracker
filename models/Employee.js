@@ -2,7 +2,7 @@ const { INTEGER, STRING, DATE, DATEONLY ,NOW} = require('sequelize');
 const con = require('../config/database.js');
 
 const Emp = con.define
-('Employee',{
+('employee',{
     empID:{
         type:INTEGER,
         allowNull: false,
