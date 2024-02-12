@@ -3,6 +3,7 @@ const role = require("../models/Role");
 const Tracker = require("../models/Tracker");
 const { QueryTypes } = require('sequelize');
 const sequelize = require('../config/database.js');
+const Sequelize = require('sequelize');
 const currentDate = new Date();
 const formattedDate = currentDate.toISOString().split('T')[0];
 
@@ -113,10 +114,13 @@ const DProjTeam = async(req, res)=>{
 
 const UpdateTrack = async(req, res)=>{
         try{
-            const body = req.body
-            req.body.status = "Resolved"
-            const updateCount = await Tracker.update(body,{
-                where:{trackID: body.trackID}
+            const currentTime = new Date(); 
+            const updateCount = await Tracker.update({
+                status:'Resolved',
+                compDate: Sequelize.literal('CURRENT_DATE'),
+                compTime : currentTime.toTimeString().split(' ')[0]
+        },{
+                where:{trackID: req.params.id}
             })
             res.json(updateCount)
         }catch(error){
@@ -126,10 +130,7 @@ const UpdateTrack = async(req, res)=>{
     }
 const UpdateStatus = async(req, res)=>{
     try{
-        const body = {
-            "status" : "Open"
-        }
-        const updateCount = await Tracker.update(body,{
+        const updateCount = await Tracker.update({status:'Open'},{
             where:{trackID:  req.params.id}
         })
         res.json(updateCount)
@@ -144,7 +145,7 @@ const UpdateStatus = async(req, res)=>{
     Drouter.get("/devprojects/:id", DevProjects);
     Drouter.get("/devDashboard", DevProfile);
     Drouter.get("/trackBug/:id",tracking);
-    Drouter.put("/updateTracker",UpdateTrack )
+    Drouter.put("/updateTracker/:id",UpdateTrack )
     Drouter.put("/updateTracker/acceptBug/:id",UpdateStatus )
 
 
