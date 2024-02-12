@@ -35,6 +35,7 @@ export default function BugReport() {
                     <div className='col-md-12 col-lg-4'>
                         <div className="bg-light border border-primary rounded ml-1">
                             <h3 className="bg-warning border border-warning rounded m-3" style={{ textAlign: 'center' }}>New</h3>
+                            <div className=' border border-warning rounded' style={{ height: '600px', overflow: 'auto' }}>   
                             {
                                 bugTrackList.map((btItem) => {
                                     if (btItem.status === "New") {
@@ -100,11 +101,13 @@ export default function BugReport() {
                                     return null;
                                 })
                             }
+                            </div>
                         </div>
                     </div>
                     <div className='col-md-12 col-lg-4'>
                         <div className="bg-light border border-primary rounded ml-1">
                             <h3 className="bg-info border border-info rounded m-3" style={{ textAlign: 'center' }}>Open</h3>
+                            <div className=' border border-warning rounded' style={{ height: '600px', overflow: 'auto' }}>     
                             {
                                 bugTrackList.map((btItem) => {
                                     if (btItem.status === "Assigned" || btItem.status === "Open" || btItem.status === "Resolved") {
@@ -194,11 +197,13 @@ export default function BugReport() {
                                     return null;
                                 })
                             }
+                              </div>
                         </div>
                     </div>
                     <div className='col-md-12 col-lg-4'>
                         <div className="bg-light border border-primary rounded ml-1">
                             <h3 className="bg-success border border-warning rounded m-3" style={{ textAlign: 'center' }}>Closed</h3>
+                            <div className=' border border-warning rounded' style={{ height: '600px', overflow: 'auto' }}>   
                             {
                                 bugTrackList.map((btItem) => {
                                     if (btItem.status === "Verified" || btItem.status === "Closed") {
@@ -283,6 +288,7 @@ export default function BugReport() {
                                     return null;
                                 })
                             }
+                              </div>
                         </div>
                     </div>
                 </div>
