@@ -9,7 +9,7 @@ email varchar(100) NOT NULL,
 password varchar(100) NOT NULL,
 primary key(admID),
 unique(email)
-);
+)auto_increment=1000;
 
 create table role(
 roleID int not null auto_increment,
