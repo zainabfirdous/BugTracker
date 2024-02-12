@@ -32,7 +32,7 @@ export default function BugTracking() {
   const [bugTrackList, setBugTrackList] = useState([]);
   const [empList, setEmpList] = useState([]);
   const [empName, setEmpName] = useState("");
-  const [status, setStatus] = useState("New");
+  const [status, setStatus] = useState("");
   const handleStatus = (e) => {
     setStatus(e.target.value);
   }
@@ -40,7 +40,7 @@ export default function BugTracking() {
   const [dueDate, setDueDate] = useState(Date);
   const [dueTime, setDueTime] = useState("");
 
-  const resetinput = () =>{
+  const resetinput = () => {
     setEmpId("");
     setDueDate("");
     setDueTime("");
@@ -56,6 +56,34 @@ export default function BugTracking() {
     };
     putbugAssign(bugAssign);
   };
+
+  const handleAccept = async (trackID) =>{
+
+    const response = await axios.put(
+      `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
+    );
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(`Accepted`);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+      getData();
+      setShowBugdesc(false);
+    }
+    
+  }
 
   const handleDelete = async (trackID) => {
     console.log(trackID);
@@ -80,6 +108,7 @@ export default function BugTracking() {
         setIsAlertVisible(false);
       }, 5000);
       getData();
+      setShowBugdesc(false);
     }
 
   };
@@ -116,7 +145,7 @@ export default function BugTracking() {
       case "empID":
         setEmpId(e.target.value);
         empList.map((empItem) => {
-          if (e.target.value==empItem.empID) {
+          if (e.target.value === empItem.empID) {
             setEmpName(empItem.fName);
           }
           return null;
@@ -148,6 +177,14 @@ export default function BugTracking() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
+    if(localStorage.getItem("urole")==="Admin"){
+      setStatus("New");
+    }else if(localStorage.getItem("urole")==="Developer"){
+      setStatus("Assigned");
+    }
+    else{
+    setStatus("Resolved");
+    }
     getData();
   }, [navigate])
 
@@ -261,57 +298,68 @@ export default function BugTracking() {
                                   }
 
 
-                                  <div><form className="row mt-4"
+                                  <div>
+                                    {
+                                      localStorage.getItem("urole") === "Admin"
+                                        ?
+                                        <form className="row mt-4">
+                                          <div className="form-group col-sm-12 col-md-4">
+                                            <label htmlFor="empID">Assign To : </label>
 
-                                  >
-                                    <div className="form-group col-sm-12 col-md-4">
-                                      <label htmlFor="empID">Assign To : </label>
+                                            <select id="empID" value={empID} className="form-control form-select" variant="info" aria-label="Default select example"
+                                              onChange={handleInput}
+                                            >
+                                              <option id="empID" selected>Select</option>
+                                              {empList.map((empItem) => {
+                                                return (
+                                                  <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
+                                                );
+                                              })}
+                                            </select>
+                                          </div>
+                                          <div className="form-group col-sm-12 col-md-4">
+                                            <label htmlFor="startDate">Due Date : </label>
+                                            <input
+                                              className="form-control"
+                                              type="date"
+                                              id="dueDate"
+                                              value={dueDate}
+                                              onChange={handleInput}
+                                            />
+                                          </div>
+                                          <div className="form-group col-sm-12 col-md-4">
+                                            <label htmlFor="startDate">Due Time : </label>
+                                            <input
+                                              className="form-control"
+                                              type="time"
+                                              id="dueTime"
+                                              value={dueTime}
+                                              onChange={handleInput}
+                                            />
+                                          </div>
 
-                                      <select id="empID" value={empID} className="form-control form-select" variant="info" aria-label="Default select example"
-                                        onChange={handleInput}
-                                      >
-                                        <option id="empID" selected>Select</option>
-                                        {empList.map((empItem) => {
-                                          return (
-                                            <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
-                                          );
-                                        })}
-                                      </select>
-                                    </div>
-                                    <div className="form-group col-sm-12 col-md-4">
-                                      <label htmlFor="startDate">Due Date : </label>
-                                      <input
-                                        className="form-control"
-                                        type="date"
-                                        id="dueDate"
-                                        value={dueDate}
-                                        onChange={handleInput}
-                                      />
-                                    </div>
-                                    <div className="form-group col-sm-12 col-md-4">
-                                      <label htmlFor="startDate">Due Time : </label>
-                                      <input
-                                        className="form-control"
-                                        type="time"
-                                        id="dueTime"
-                                        value={dueTime}
-                                        onChange={handleInput}
-                                      />
-                                    </div>
+                                          <div className="form-group col-sm-12 col-md-4">
+                                            <button type="button" onClick={() => handlesubmit(btItem.trackID)} className="btn btn-success text-center">Assign Bug</button>
+                                          </div>
 
-                                    <div className="form-group col-sm-12 col-md-4">
-                                      <button type="button" onClick={() => handlesubmit(btItem.trackID)} className="btn btn-success text-center">Assign Bug</button>
-                                    </div>
+                                          {("All" === status)
+                                            ?
+                                            <div className="form-group col-sm-12 col-md-4">
+                                              <button type="button" onClick={() => handleDelete(btItem.trackID)} className="btn btn-danger text-center">Delete Bug</button>
+                                            </div>
+                                            :
+                                            <div></div>}
 
-                                    {("All" === status)
-                                      ?
-                                      <div className="form-group col-sm-12 col-md-4">
-                                        <button type="button" onClick={() => handleDelete(btItem.trackID)} className="btn btn-danger text-center">Delete Bug</button>
-                                      </div>
-                                      :
-                                      <div></div>}
+                                        </form>
+                                        :
+                                        <form className="row mt-4">
+                                            <div className="form-group col-sm-12 col-md-4">
+                                              <button type="button" onClick={() => handleAccept(btItem.trackID)} className="btn btn-success text-center">Accept Bug</button>
+                                            </div>
+                                        </form>
 
-                                  </form></div>
+                                    }
+                                  </div>
                                 </div>
                               )
                             }
@@ -343,24 +391,41 @@ export default function BugTracking() {
 
         <div className='col-md-12 m-2 p-1' >
           <div className="bg-light border border-primary rounded m-xl-5" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
-            <span className=" m-1"><span className="m-2">
-              <select className="border border-warning rounded m-4 pl-5 pr-5 pt-2 pb-2"
-                id="status"
-                name="status"
-                value={status}
-                onChange={handleStatus}
-                required
-              >
-                <option value="New">New</option>
-                <option value="Assigned">Assigned</option>
-                <option value="Open">Open</option>
-                <option value="Resolved">Resolved</option>
-                <option value="Verified">Verified</option>
-                <option value="Closed">Closed</option>
-                <option value="All" >All</option>
-              </select>
-            </span></span>
-
+            {
+              localStorage.getItem("urole") === "Admin" ?
+                <span className=" m-1"><span className="m-2">
+                  <select className="border border-warning rounded m-4 pl-5 pr-5 pt-2 pb-2"
+                    id="status"
+                    name="status"
+                    value={status}
+                    onChange={handleStatus}
+                    required
+                  >
+                    <option selected value="New">New</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Open">Open</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Closed">Closed</option>
+                    <option value="All" >All</option>
+                  </select>
+                </span></span>
+                :
+                <span className=" m-1"><span className="m-2">
+                  <select className="border border-warning rounded m-4 pl-5 pr-5 pt-2 pb-2"
+                    id="status"
+                    name="status"
+                    value={status}
+                    onChange={handleStatus}
+                    required
+                  >
+                    <option selected value="Assigned">Assigned</option>
+                    <option value="Open">Open</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Verified">Verified</option>
+                  </select>
+                </span></span>
+            }
             {
               bugTrackList.map((btItem) => {
                 if ("All" === status || btItem.status === status) {
@@ -428,8 +493,6 @@ export default function BugTracking() {
                                 return null;
                               })
                             }
-
-
                             {/* <div><form className="row mt-4">
                               <div className="form-group col-sm-12 col-md-4">
                                 <label htmlFor="empID">Assign To : </label>

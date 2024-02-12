@@ -62,7 +62,6 @@ export default function AddTeam(props) {
         }, 5000);
       }
       else {
-        //props.updateEmployeeList();
         resetForm();
         props.updateTeamList();
         setShow(true)
@@ -73,6 +72,7 @@ export default function AddTeam(props) {
         setTimeout(() => {
           setIsAlertVisible(false);
         }, 5000);
+        getProj();
       }
     }
 
@@ -93,7 +93,6 @@ export default function AddTeam(props) {
         }, 5000);
       }
       else {
-        //props.updateEmployeeList();
         resetForm();
         props.updateTeamList();
         setShow(true)
@@ -104,6 +103,7 @@ export default function AddTeam(props) {
         setTimeout(() => {
           setIsAlertVisible(false);
         }, 5000);
+        getProj();
       }
     }
 
