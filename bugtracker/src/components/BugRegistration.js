@@ -57,7 +57,42 @@ function BugRegistration() {
     });
   }
 
-  const handleUpdateBug = () =>{
+  const handleUpdateBug = async () =>{
+    const bugData = {
+      bugID: bugID,
+      bugName: bugName,
+      priority: priority,
+      bugDesc: bugDesc,
+      projID: projID,
+      regBy: localStorage.getItem("uid")
+    };
+    console.log(bugData);
+      const response = await axios.put(
+        "http://127.0.0.1:5000/tester/updateBug",
+        bugData
+      );
+      if (response.data.error) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage(response.data.error);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+      else {
+        resetForm();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Bug Updated Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getBug();
+      }
 
   }
 
@@ -74,7 +109,6 @@ function BugRegistration() {
     e.preventDefault();
 
     const bugData = {
-      // bugID: bugID,
       bugName: bugName,
       priority: priority,
       bugDesc: bugDesc,
