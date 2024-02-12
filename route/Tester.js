@@ -129,7 +129,7 @@ const ProjTeam = async (req, res) => {
             'WHERE pa.projID = :pid ' +
             'AND pa.empID != :eid',
             {
-                replacements: { pid: req.params.pid, eid: req.params.eid },
+                replacements: { pid: req.params.id, eid: req.params.eid },
                 type: QueryTypes.SELECT
             }
         );
