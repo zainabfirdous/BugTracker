@@ -118,7 +118,8 @@ const UpdateTrack = async(req, res)=>{
             const updateCount = await Tracker.update({
                 status:'Resolved',
                 compDate: Sequelize.literal('CURRENT_DATE'),
-                compTime : currentTime.toTimeString().split(' ')[0]
+                compTime : currentTime.toTimeString().split(' ')[0],
+                updDate: Sequelize.literal('CURRENT_DATE')
         },{
                 where:{trackID: req.params.id}
             })
@@ -130,7 +131,21 @@ const UpdateTrack = async(req, res)=>{
     }
 const UpdateStatus = async(req, res)=>{
     try{
-        const updateCount = await Tracker.update({status:'Open'},{
+        const updateCount = await Tracker.update({status:'Open', 
+        updDate: Sequelize.literal('CURRENT_DATE')},{
+            where:{trackID:  req.params.id}
+        })
+        res.json(updateCount)
+    }catch(error){
+        console.error('Error updating bug tracking details: ', error);
+        res.json({ error: "Can't update details" })
+    }
+}
+
+const UpdateRetest = async(req, res)=>{
+    try{
+        const updateCount = await Tracker.update({status:'ReTest', 
+        updDate: Sequelize.literal('CURRENT_DATE')},{
             where:{trackID:  req.params.id}
         })
         res.json(updateCount)
@@ -145,8 +160,8 @@ const UpdateStatus = async(req, res)=>{
     Drouter.get("/devprojects/:id", DevProjects);
     Drouter.get("/devDashboard", DevProfile);
     Drouter.get("/trackBug/:id",tracking);
-    Drouter.put("/updateTracker/:id",UpdateTrack )
+    Drouter.put("/updateTracker/resolved/:id",UpdateTrack )
     Drouter.put("/updateTracker/acceptBug/:id",UpdateStatus )
-
+    Drouter.put("/updateTracker/RetestBug/:id",UpdateRetest )
 
     module.exports = Drouter;
