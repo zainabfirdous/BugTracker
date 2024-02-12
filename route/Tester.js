@@ -3,9 +3,9 @@ const role = require("../models/Role");
 const Tracker = require("../models/Tracker");
 const { QueryTypes } = require('sequelize');
 const sequelize = require('../config/database.js');
-const currentDate = new Date();
 const Bug = require("../models/Bug.js")
-const formattedDate = currentDate.toISOString().split('T')[0];
+const Sequelize = require('sequelize');
+
 
 
 const express = require('express');
@@ -178,6 +178,19 @@ const DeleteBug =  async (req, res) => {
     
 }
 
+const UpdateTrack = async(req, res)=>{
+    try{
+        const updateCount = await Tracker.update({status:'Verified',
+        updDate: Sequelize.literal('CURRENT_DATE')},{
+            where:{trackID:  req.params.id}
+        })
+        res.json(updateCount)
+    }catch(error){
+        console.error('Error updating bug tracking details: ', error);
+        res.json({ error: "Can't update details" })
+    }
+}
+
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
 Trouter.get("/testerprojects/:id", TesterProjects);
@@ -188,4 +201,5 @@ Trouter.delete("/deletebug/:id", DeleteBug);
 Trouter.get("/trackBug/:id", trackingdetails);
 Trouter.get("/trackBug", trackingall);
 Trouter.post("/newtrack", NewTracking);
+Trouter.put("/updateTrack/:id", UpdateTrack);
 module.exports = Trouter;
