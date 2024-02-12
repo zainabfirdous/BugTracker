@@ -40,6 +40,12 @@ export default function BugTracking() {
   const [dueDate, setDueDate] = useState(Date);
   const [dueTime, setDueTime] = useState("");
 
+  const resetinput = () =>{
+    setEmpId("");
+    setDueDate("");
+    setDueTime("");
+  }
+
   const handlesubmit = (trackID) => {
     const bugAssign = {
       trackID: trackID,
@@ -99,8 +105,9 @@ export default function BugTracking() {
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
-
+      setShowBugdesc(false);
       getData();
+      resetinput();
     }
   }
 
@@ -109,12 +116,11 @@ export default function BugTracking() {
       case "empID":
         setEmpId(e.target.value);
         empList.map((empItem) => {
-          if (e.target.value === empItem.empID) {
+          if (e.target.value==empItem.empID) {
             setEmpName(empItem.fName);
           }
           return null;
         })
-        // console.log(empID);
         break;
       case "dueDate":
         setDueDate(e.target.value);

@@ -1,5 +1,6 @@
  
 const { INTEGER,STRING, DATEONLY ,NOW, TEXT, TIME} = require('sequelize');
+const Sequelize = require('sequelize');
 
 const con = require('../config/database.js');
 

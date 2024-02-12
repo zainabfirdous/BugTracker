@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
-    'bugtracker',
+    'bts',
     'root',
     '2211',
     {
