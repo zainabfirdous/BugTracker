@@ -34,9 +34,36 @@ export default function TesterBugPortal() {
         setStatus(e.target.value);
     }
 
+    const handleReopen = async (trackID) =>{
+        const response = await axios.put(
+          `http://127.0.0.1:5000/tester/updateTrack/reopen/${trackID}`
+
+        );
+        if (response.data.error) {
+          setShow(true)
+          setIsAlertVisible(true);
+          setBgColor("bg-warning");
+          setSetMessage(response.data.error);
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
+        }
+        else {
+          setShow(true)
+          setIsAlertVisible(true);
+          setBgColor("bg-warning");
+          setSetMessage(`Marked as Reopen`);
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
+          getData();
+          setShowBugdesc(false);
+        }
+      }
+
     const handleVerified = async (trackID) => {
         const response = await axios.put(
-            `http://127.0.0.1:5000/dev/updateTracker/${trackID}`
+            `http://127.0.0.1:5000/tester/updateTrack/verified/${trackID}`
         );
         if (response.data.error) {
             setShow(true)
@@ -193,7 +220,7 @@ export default function TesterBugPortal() {
                                                                                 <button type="button" onClick={() => handleVerified(btItem.trackID)} className="btn btn-success text-center">Verified</button>
                                                                             </div>
                                                                             <div className="form-group col-sm-12 col-md-2">
-                                                                                <button type="button" onClick={() => handleVerified(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
+                                                                                <button type="button" onClick={() => handleReopen(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
                                                                             </div>
                                                                         </form>
                                                                         :

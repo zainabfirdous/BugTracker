@@ -57,9 +57,12 @@ export default function BugTracking() {
     putbugAssign(bugAssign);
   };
 
+  
+
   const handleResolved = async (trackID) =>{
     const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/${trackID}`
+      `http://127.0.0.1:5000/dev/updateTracker/resolved/${trackID}`
+      
     );
     if (response.data.error) {
       setShow(true)
@@ -140,7 +143,7 @@ export default function BugTracking() {
   const putbugAssign = async (bugAssign) => {
     console.log(bugAssign);
     const response = await axios.put(
-      "http://127.0.0.1:5000/admin/updateTracker",
+      `http://127.0.0.1:5000/admin/updateTracker/assigned/${bugAssign.trackID}`,
       bugAssign
     );
     if (response.data.error) {
@@ -235,7 +238,6 @@ export default function BugTracking() {
           <Modal.Header className="bg-white">
             <Modal.Title></Modal.Title>
           </Modal.Header>
-          <Modal.Body className="bg-white" >{message}</Modal.Body>
           <Modal.Body className="bg-white" >
             <div className="container" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
 
@@ -335,9 +337,12 @@ export default function BugTracking() {
                                             >
                                               <option id="empID" selected>Select</option>
                                               {empList.map((empItem) => {
-                                                return (
-                                                  <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
-                                                );
+                                                if(empItem.roleID===2){
+                                                  return (
+                                                    <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
+                                                  );
+                                                }
+                                                return null;
                                               })}
                                             </select>
                                           </div>
@@ -349,6 +354,7 @@ export default function BugTracking() {
                                               id="dueDate"
                                               value={dueDate}
                                               onChange={handleInput}
+                                              pattern="[A-Za-z]+"
                                             />
                                           </div>
                                           <div className="form-group col-sm-12 col-md-4">
@@ -359,6 +365,7 @@ export default function BugTracking() {
                                               id="dueTime"
                                               value={dueTime}
                                               onChange={handleInput}
+                                              required
                                             />
                                           </div>
 
