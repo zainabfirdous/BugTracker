@@ -9,13 +9,13 @@ const currentDate = new Date();
 
 
 const express = require('express');
+const { Sequelize } = require('sequelize');
 const router = express.Router();
 
 
 
 const dashboard = async(req, res)=>{
     try{
-       // const admin = await Admin.findByPk(adminID);
         const admin = await Admin.findAll()
         res.json(admin);
     }catch(error)
@@ -28,7 +28,6 @@ const dashboard = async(req, res)=>{
 const dashboardByID = async(req, res)=>{
     try{
         const admID = req.params.id;
-       // const admin = await Admin.findByPk(adminID);
         const admin = await Admin.findByPk(admID)
         res.json(admin);
     }catch(error)
@@ -40,7 +39,6 @@ const dashboardByID = async(req, res)=>{
 
 const allEmp =  async (req, res) => {
     try {
-        // Fetch all employees from the database
         const employees = await employee.findAll();
         res.json(employees);
     } catch (error) {
@@ -53,8 +51,8 @@ const EmpById = async (req,res) =>{
     try{
         const empID = req.params.id;
         console.log(empID);
-        const emp_byid = await Project.findByPk(empID);
-        res.send(emp_byid);
+        const emp_byid = await employee.findByPk(empID);
+        res.json(emp_byid);
     }catch(error){
         console.error('Error fetching employees:', error);
         res.status(500).send('Internal Server Error');
@@ -67,8 +65,7 @@ const EmpById = async (req,res) =>{
 const CreateEmp =  async (req, res) => {
     try {
         const body = req.body;
-        const data = { ...body };
-        const newEmp = await employee.create(data);
+        const newEmp = await employee.create(body);
         res.json(newEmp);
     } catch (error) {
         console.error('Error creating employee:', error);
@@ -91,15 +88,10 @@ const DeleteEmp =  async (req, res) => {
 
 const UpdateEmp = async (req, res) => {
     try {
-        const data = req.body;
-        //const updateObject = { ...data };
-        //const employees = await employee.findByPk(updateObject.empID);
-        // console.log(employees.crtDate + " " + formattedDate );
-        // delete updateObject.empID;
-        // updateObject.crtDate = employees.crtDate;
-        // updateObject.updDate = formattedDate;
-        const updatedCount = await employee.update(data, {
-        where: { empID: data.empID },
+        const body = req.body;
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updatedCount = await employee.update(body, {
+        where: { empID: req.body.empID },
     });
         
     res.json(updatedCount);
@@ -122,10 +114,7 @@ const Projects = async (req, res) => {
 const CreateProject =  async (req, res) => {
     try {
         const body = req.body;
-        const data = { ...body };
-        // data.crtDate = formattedDate;
-        // data.updDate = null;
-        const newproj = await Project.create(data);
+        const newproj = await Project.create(body);
         res.json(newproj);
     } catch (error) {
         console.error('Error creating project:', error);
@@ -141,15 +130,10 @@ const ProjectById = async (req,res) =>{
 
 const UpdateProject = async (req, res) => {
     try {
-        const data = req.body;
-        // const updateObject = { ...data };
-        // const projectg = await Project.findByPk(updateObject.projID);
-        // console.log(projectg.crtDate + " " + formattedDate );
-        // delete updateObject.projID;
-        // updateObject.crtDate = projectg.crtDate;
-        // updateObject.updDate = formattedDate;
-        const updatedCount = await Project.update(data, {
-        where: { projID: data.projID },
+        const body = req.body;
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updatedCount = await Project.update(body, {
+        where: { projID: req.body.projID },
     });
     res.json(updatedCount);
     } catch (error) {
@@ -182,11 +166,10 @@ const Bugs = async (req, res) => {
 
 const UpdateBugs = async (req, res) => {
     try {
-        const data = req.body;
-        // const updateObject = { ...data };
-        // delete updateObject.bugID;
-        const updatedCount = await Bug.update(data, {
-        where: { bugID: data.bugID },
+        const body = req.body;
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updatedCount = await Bug.update(body, {
+        where: { bugID: req.body.bugID },
     });
     res.json(updatedCount);
     } catch (error) {
@@ -209,9 +192,9 @@ const DeleteBug =  async (req, res) => {
 
 const BugByID = async(req, res)=>{
     try{
-        const bugID = req.params.bugID;
-        const bug_byid = await Project.findByPk(bugID);
-        res.send(bug_byid);
+        const bugID = req.params.id;
+        const bug_byid = await Bug.findByPk(bugID);
+        res.json(bug_byid);
     }catch(error){
         console.error('Error fetching Bug:', error);
         res.status(500).send('Internal Server Error');
@@ -232,8 +215,7 @@ const Teams = async (req, res)=>{
 const CreatingTeams =  async(req, res)=>{
     try{
         const body = req.body
-        const data = {...body}
-        const newTeam = await Team.create(data)
+        const newTeam = await Team.create(body)
         res.json(newTeam)
     }catch (error) {
         console.error('Error creating team:', error);
@@ -244,7 +226,7 @@ const CreatingTeams =  async(req, res)=>{
 const Updateteam = async(req, res)=>{
     try{
         const body = req.body;
-        //const data = {...body}
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
         const count = await Team.update(body, {
             where: { teamID: body.teamID }
         })
@@ -306,7 +288,7 @@ const CreateAssign = async(req, res)=>
 const UpdateProjectAssign = async(req, res)=>{
     try{
         const body = req.body;
-        //const data = {...body}
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
         const count = await PAssign.update(body, {
             where: { assignID: body.assignID }
         })
@@ -351,12 +333,28 @@ const TrackById = async(req, res)=>{
 
 const UpdateTrack = async(req, res)=>{
     try{
+        const currentTime = new Date(); 
         const body = req.body
-        req.body.status = "Assigned"
-        req.body.assignTS = currentDate;
-        console.log("Hello ",body);
+        body.status = "Assigned"
+        body.assignDate = Sequelize.literal('CURRENT_DATE'),
+        body.assignTime = currentTime.toTimeString().split(' ')[0],
+        body.updDate = Sequelize.literal('CURRENT_DATE')
         const updateCount = await Tracker.update(body,{
-            where:{trackID: body.trackID}
+            where:{trackID: req.params.id}
+        })
+        res.json(updateCount)
+    }catch(error){
+        console.error('Error updating bug tracking details: ', error);
+        res.json({ error: "Can't update details" })
+    }
+}
+
+const UpdateClose = async(req, res)=>{
+    try{
+        const updateCount = await Tracker.update({status:'Closed', 
+        updDate : Sequelize.literal('CURRENT_DATE')
+    },{
+            where:{trackID: req.params.id}
         })
         res.json(updateCount)
     }catch(error){
@@ -405,7 +403,8 @@ router.put("/updateProjAssign", UpdateProjectAssign)
 router.delete("/deleteprojAssign/:id", DeleteProjectAssign)
 router.get("/trackbugs", Track)
 router.get("/trackbugs/:id", TrackById)
-router.put("/updateTracker", UpdateTrack)
+router.put("/updateTracker/assigned/:id", UpdateTrack)
+router.put("/updateTracker/close/:id", UpdateClose)
 router.delete("/deletetracks/:id",DeleteTrack)
 
 

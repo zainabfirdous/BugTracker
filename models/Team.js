@@ -38,13 +38,13 @@ const Team = con.define(
             defaultValue: null
         }
     },{ tableName: 'team',timestamps:false, freezeTableName:false,  hooks: {
-        // Define a hook for updating updDate before saving
-        beforeSave: (team, options) => {
-            if (team.changed('updDate')) {
-                team.updDate = Sequelize.literal('CURRENT_DATE');
-            }
+        // Define a hook for updating updDate before updating the record
+        beforeUpdate: (team, options) => {
+            team.updDate = Sequelize.literal('CURRENT_DATE');
         }
-    }}
+    }
+
+    }
 )
 
 module.exports = Team;

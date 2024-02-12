@@ -3,9 +3,9 @@ const role = require("../models/Role");
 const Tracker = require("../models/Tracker");
 const { QueryTypes } = require('sequelize');
 const sequelize = require('../config/database.js');
-const currentDate = new Date();
 const Bug = require("../models/Bug.js")
-const formattedDate = currentDate.toISOString().split('T')[0];
+const Sequelize = require('sequelize');
+
 
 
 const express = require('express');
@@ -28,12 +28,7 @@ const testerProfile = async (req, res) => {
 const newbugReg = async (req, res) => {
     try {
         const body = req.body;
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString().split('T')[0];
-        const data = { ...body };
-        data.crtDate = formattedDate;
-        data.updDate = null;
-        const newbug = await Bug.create(data);
+        const newbug = await Bug.create(body);
         res.json(newbug);
     } catch (error) {
         console.error('Error creating Bug:', error);
@@ -43,11 +38,10 @@ const newbugReg = async (req, res) => {
 
 const UpdateBugs = async (req, res) => {
     try {
-        const data = req.body;
-        // const updateObject = { ...data };
-        // delete updateObject.bugID;
-        const updatedCount = await Bug.update(data, {
-        where: { bugID: data.bugID },
+        const body = req.body;
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updatedCount = await Bug.update(body, {
+        where: { bugID: body.bugID },
     });
     res.json(updatedCount);
     } catch (error) {
@@ -79,8 +73,6 @@ const trackingall = async (req, res) => {
 
 const TesterProjects = async (req, res) => {
     try {
-
-        // Execute the raw SQL query
         const projects = await sequelize.query(
             'SELECT p.projID, p.projName, p.status, p.startDate, p.endDate ' +
             'FROM Project p ' +
@@ -88,7 +80,7 @@ const TesterProjects = async (req, res) => {
             'JOIN Employee e ON pa.empID = e.empID ' +
             'WHERE e.empID = :empID',
             {
-                replacements: { empID: req.params.id }, // Replace :employeeId with the desired employee ID
+                replacements: { empID: req.params.id }, 
                 type: QueryTypes.SELECT
             }
         );
@@ -137,7 +129,7 @@ const ProjTeam = async (req, res) => {
             'WHERE pa.projID = :pid ' +
             'AND pa.empID != :eid',
             {
-                replacements: { pid: req.params.id, eid: req.params.eid },
+                replacements: { pid: req.params.pid, eid: req.params.eid },
                 type: QueryTypes.SELECT
             }
         );
@@ -178,6 +170,32 @@ const DeleteBug =  async (req, res) => {
     
 }
 
+const UpdateTrack = async(req, res)=>{
+    try{
+        const updateCount = await Tracker.update({status:'Verified',
+        updDate: Sequelize.literal('CURRENT_DATE')},{
+            where:{trackID:  req.params.id}
+        })
+        res.json(updateCount)
+    }catch(error){
+        console.error('Error updating bug tracking details: ', error);
+        res.json({ error: "Can't update details" })
+    }
+}
+
+const TrackVerified = async(req, res)=>{
+    try{
+        const updateCount = await Tracker.update({status:'Reopened',
+        updDate: Sequelize.literal('CURRENT_DATE')},{
+            where:{trackID:  req.params.id}
+        })
+        res.json(updateCount)
+    }catch(error){
+        console.error('Error updating bug tracking details: ', error);
+        res.json({ error: "Can't update details" })
+    }
+}
+
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
 Trouter.get("/testerprojects/:id", TesterProjects);
@@ -188,4 +206,6 @@ Trouter.delete("/deletebug/:id", DeleteBug);
 Trouter.get("/trackBug/:id", trackingdetails);
 Trouter.get("/trackBug", trackingall);
 Trouter.post("/newtrack", NewTracking);
+Trouter.put("/updateTrack/verified/:id", UpdateTrack);
+Trouter.put("/updateTrack/reopen/:id", TrackVerified);
 module.exports = Trouter;
