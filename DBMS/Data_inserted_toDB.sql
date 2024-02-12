@@ -18,7 +18,7 @@ values("Smart Home Security","Active","2024-03-15","2024-07-31"),("Recommendatio
 ("Customer Feedback Portal","Active","2024-01-10","2024-06-30");
     
 insert into team(teamName, admID, projID)
-values("Development Team",1,200),("Quality Assurance Team",1,200),("Mobile Development Team",1,202),("Front End Development",1,204);
+values("Development Team",1000,200),("Quality Assurance Team",1000,200),("Mobile Development Team",1000,202),("Front End Development",1000,204);
 
 insert into projectassign(projID, teamID, empID)
 values(200, 500, 100),(200, 501, 102),(202, 502, 104),(204, 503, 103),(202, 502, 101),(204, 503, 101);

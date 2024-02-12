@@ -16,7 +16,6 @@ export default function AddTeam(props) {
     const [teamID, setTeamID] = useState();
     const [teamName, setTeamName] = useState();
     const [projID, setProjID] = useState();
-    const [admID, setAdmID] = useState();
     const [projlist, setProjList] = useState([]);
 
     const getProj = async () => {
@@ -25,20 +24,25 @@ export default function AddTeam(props) {
     }
 
     useEffect(() => {
-      // const token = localStorage.getItem("token");
-      // if (!token) navigate("/", { replace: true });
+      if (props.team.teamID) {
+        setTeamID(props.team.teamID);
+        setTeamName(props.team.teamName);
+        setProjID(props.team.projID);
+      setIsUpdateButton(true);
+    } else setIsUpdateButton(false);
       getProj();
-  }, []);
+  }, [props]);
 
     const handlesubmit = (e) => {
       e.preventDefault();
   
       const team = {
+        teamID : teamID,
         teamName: teamName,
         projID: projID,
         admID : localStorage.getItem("uid")
       };
-      addTeam(team);
+      isUpdateButton ? updateTeam(team) :  addTeam(team);
     };
   
     const addTeam = async (team) => {
@@ -58,7 +62,6 @@ export default function AddTeam(props) {
         }, 5000);
       }
       else {
-        // props.updateEmployeeList();
         resetForm();
         props.updateTeamList();
         setShow(true)
@@ -69,6 +72,38 @@ export default function AddTeam(props) {
         setTimeout(() => {
           setIsAlertVisible(false);
         }, 5000);
+        getProj();
+      }
+    }
+
+    const updateTeam = async (team) => {
+      console.log(team);
+      const response = await axios.put(
+        "http://127.0.0.1:5000/admin/updateTeam",
+        team
+      );
+      if (response.data.error) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage(response.data.error);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+      else {
+        resetForm();
+        props.updateTeamList();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Team Updated Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getProj();
       }
     }
 
@@ -135,10 +170,10 @@ export default function AddTeam(props) {
         </div>
     
     <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-      <button type="button" className="btn btn-success text-center"
+      <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center" }
         onClick={handlesubmit}
        >
-        {isUpdateButton ? "Update Team" : "Add Team"}
+        {isUpdateButton ? "Update" : "Add Team"}
       </button>
     </div>
   </form>

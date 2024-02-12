@@ -126,10 +126,11 @@ const UpdateTrack = async(req, res)=>{
     }
 const UpdateStatus = async(req, res)=>{
     try{
-        const body = req.body
-        req.body.status = "Open"
+        const body = {
+            "status" : "Open"
+        }
         const updateCount = await Tracker.update(body,{
-            where:{trackID: body.trackID}
+            where:{trackID:  req.params.id}
         })
         res.json(updateCount)
     }catch(error){
@@ -144,7 +145,7 @@ const UpdateStatus = async(req, res)=>{
     Drouter.get("/devDashboard", DevProfile);
     Drouter.get("/trackBug/:id",tracking);
     Drouter.put("/updateTracker",UpdateTrack )
-    Drouter.put("/updateTracker/acceptBug",UpdateStatus )
+    Drouter.put("/updateTracker/acceptBug/:id",UpdateStatus )
 
 
     module.exports = Drouter;

@@ -41,7 +41,7 @@ const tracking = con.define(
             defaultValue: null
         },
         assignTime:{
-            type:Time,
+            type:TIME,
             allowNull: true,
             defaultValue: null
         },

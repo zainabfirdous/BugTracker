@@ -15,8 +15,6 @@ function BugRegistration() {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [bgcolor, setBgColor] = useState("");
 
-
-
   const [bugID, setbugID] = useState();
   const [bugName, setbugName] = useState();
   const [priority, setpriority] = useState();
@@ -25,15 +23,14 @@ function BugRegistration() {
   const [projlist, setProjList] = useState([]);
   const [bugList, setBugList] = useState([]);
 
-  const getProj = async () => {
-    const resp = await axios.get("http://127.0.0.1:5000/getprojects");
-    setProjList(resp.data);
-  }
+  const [isUpdate, setIsUpdate] = useState(false);
 
   const getBug = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:5000/getbugs");
       setBugList(response.data);
+      const resp = await axios.get("http://127.0.0.1:5000/getprojects");
+    setProjList(resp.data);
     } catch (err) {
       console.log(err);
     }
@@ -43,8 +40,61 @@ function BugRegistration() {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
     getBug();
-    getProj();
+  
   }, [navigate]);
+
+  const handleUpdate = async (bug) =>{
+    setIsUpdate(true);
+    setbugID(bug.bugID);
+    setbugName(bug.bugName);
+    setpriority(bug.priority);
+    setbugDesc(bug.bugDesc);
+    setprojID(bug.projID);
+
+     window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }
+
+  const handleUpdateBug = async () =>{
+    const bugData = {
+      bugID: bugID,
+      bugName: bugName,
+      priority: priority,
+      bugDesc: bugDesc,
+      projID: projID,
+      regBy: localStorage.getItem("uid")
+    };
+    console.log(bugData);
+      const response = await axios.put(
+        "http://127.0.0.1:5000/tester/updateBug",
+        bugData
+      );
+      if (response.data.error) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage(response.data.error);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+      else {
+        resetForm();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Bug Updated Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getBug();
+      }
+
+  }
 
 
   const resetForm = () => {
@@ -59,7 +109,6 @@ function BugRegistration() {
     e.preventDefault();
 
     const bugData = {
-      bugID: bugID,
       bugName: bugName,
       priority: priority,
       bugDesc: bugDesc,
@@ -98,6 +147,7 @@ function BugRegistration() {
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
+      getBug();
     }
   }
 
@@ -111,6 +161,38 @@ function BugRegistration() {
   );
   console.log(response);
   }
+
+  const handleDelete = async (bugID) =>{
+    const response = await axios.delete(
+      `http://127.0.0.1:5000/tester/deletebug/${bugID}`      
+    );
+    console.log(response.data);
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      addBugTrack(response.data.bugID);
+      resetForm();
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage("Bug Deleted Successfully");
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+      getBug();
+    }
+  }
+
+  
   
   const handleInput = (e) => {
     switch (e.target.id) {
@@ -188,9 +270,9 @@ function BugRegistration() {
               <option value="critical"> Critical </option>
             </select>
           </div>
-          <div className="form-group col-md-12  offset-lg-2 col-lg-8">
+          <div className="form-group col-md-12 offset-lg-2 col-lg-8" >
             <label htmlFor="bugDesc">Bug Description</label>
-            <textarea className="form-control"
+            <textarea className="form-control" style={{height:"115px"}}
               id="bugDesc"
               name="bugDesc"
               value={bugDesc}
@@ -211,7 +293,8 @@ function BugRegistration() {
             </select>
           </div>
           <div className="form-group col-md-12  offset-lg-2 col-lg-8">
-            <button type="submit" className="btn btn-success text-center">Register Bug</button>
+          { isUpdate ? <button type="button" onClick={handleUpdateBug} className="btn btn-warning text-center">Update</button> :
+          <button type="submit" className="btn btn-success text-center">Register Bug</button>  }
           </div>
 
         </form>
@@ -234,7 +317,7 @@ function BugRegistration() {
               <th>Priority</th>
               <th>Description</th>
               <th>Project</th>
-              {/* <th>Action</th> */}
+              <th>Action</th>
             </tr>
           </thead>
           <tbody> 
@@ -252,25 +335,28 @@ function BugRegistration() {
                   <td>{bugItem.bugID}</td>
                   <td>{bugItem.bugName}</td>
                   <td>{bugItem.priority}</td>
-                  <td>{bugItem.bugDesc}</td>
+                  <td>
+                  <div style={{ height: '100px',width:'400px', overflow: 'auto' }}>
+                  {bugItem.bugDesc}
+                  </div>
+                  </td>
                   {projlist.map((projItem) => {
                        if (projItem.projID === bugItem.projID) {
                          return (
-                           <td key={bugItem.projID}>{projItem.projID} : {projItem.projName}</td>
+                           <td  key={bugItem.projID}><div style={{width:'200px'}}>{projItem.projID} : {projItem.projName}</div></td>
                          );
                        }
                        return null; // or return <td key={roleItem.roleID}></td>;
                   })}
-                  {/* <td>{bugItem.projID}</td> */}
-                  {/* <td>{bugItem.regBy}</td> */}
                   
-                  {/* <td>
+                  <td>
+                  <div style={{width:'200px'}}>
                     <div className='row'>
                     <div className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-warning m-1 text-center"
                       style={{ marginRight: "5px" }}
-                      onClick={() => handleUpdateEmployee(empItem)}
+                      onClick={() => handleUpdate(bugItem)}
                     >
                       Update
                     </button>
@@ -278,13 +364,14 @@ function BugRegistration() {
                     <div   className='col-sm-12 col-lg-6'>
                     <button type="button"
                       className="btn btn-danger m-1 text-center"
-                      onClick={() => handleDelete(empItem.empID)}
+                      onClick={() => handleDelete(bugItem.bugID)}
                     >
                       Delete
                     </button>
                     </div>
                   </div>
-                  </td> */}
+                  </div>
+                  </td>
                 </tr>
                  
               );

@@ -41,6 +41,21 @@ const newbugReg = async (req, res) => {
     }
 }
 
+const UpdateBugs = async (req, res) => {
+    try {
+        const data = req.body;
+        // const updateObject = { ...data };
+        // delete updateObject.bugID;
+        const updatedCount = await Bug.update(data, {
+        where: { bugID: data.bugID },
+    });
+    res.json(updatedCount);
+    } catch (error) {
+        console.error('Error while Updating Bug:', error);
+        res.json({ error: "Can't Update" });
+    }
+}
+
 const trackingdetails = async (req, res) => {
     try {
         const trackID = req.params.id;
@@ -151,11 +166,25 @@ const NewTracking = async (req, res) => {
     }
 }
 
+const DeleteBug =  async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedCount = await Bug.destroy({ where: { bugID: id } });
+        res.json(deletedCount);
+    } catch (error) {
+        console.error('Error while deleting bug:', error);
+        res.json({ error: "This Bug Can't be Deleted, (FK-In_Use)" });
+    }
+    
+}
+
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
 Trouter.get("/testerprojects/:id", TesterProjects);
 Trouter.get("/testerDashboard", testerProfile);
 Trouter.post("/newBug", newbugReg);
+Trouter.put("/updateBug", UpdateBugs);
+Trouter.delete("/deletebug/:id", DeleteBug);
 Trouter.get("/trackBug/:id", trackingdetails);
 Trouter.get("/trackBug", trackingall);
 Trouter.post("/newtrack", NewTracking);
