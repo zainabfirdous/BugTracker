@@ -12,6 +12,7 @@ import ProjectAssign from './components/ProjectAssign'
 import BugReport from './components/BugReport'
 import BugTracking from './components/BugTracking';
 import TesterBugPortal from './components/TesterBugPortal';
+import DevBugPortal from './components/DevBugPortal';
 
 function App() {
   
@@ -35,6 +36,7 @@ function App() {
       <Route path="/BugReport" element={<BugReport/>}/>
       <Route path='/BugTracking' element={<BugTracking/>}/>
       <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
+      <Route path='/DevBugPortal' element={<DevBugPortal/>}/>
       
       </Routes>
     </BrowserRouter>
