@@ -266,6 +266,10 @@ export default function TesterBugPortal() {
                                 <option selected value="Resolved">Resolved</option>
                                 <option value="Verified">Verified</option>
                                 <option value="Closed">Closed</option>
+                                <option value="All">All</option>
+
+                                {/* let uid = parseInt(localStorage.getItem('uid'));
+                                if (("All" === status && btItem.assignTo === uid) || ( btItem.status === status && btItem.assignTo === uid)) { */}
                             </select>
                         </span></span>
                         {
@@ -273,7 +277,8 @@ export default function TesterBugPortal() {
                                 if ("All" === status || btItem.status === status) {
                                     return (
                                         bugList.map((bugItem) => {
-                                            if (bugItem.bugID === btItem.bugID) {
+                                            let uid = parseInt(localStorage.getItem('uid'));
+                                            if (bugItem.bugID === btItem.bugID && bugItem.regBy === uid ) {
                                                 //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                 return (
                                                     <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>

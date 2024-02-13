@@ -308,9 +308,29 @@ export default function BugTracking() {
                                               })
                                             }
                                             <div className="col-12">
-                                              <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate}</span></span>
+                                              <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate} {bugItem.crtTime}</span></span>
                                               </h5>
                                             </div>
+                                            {
+                                              btItem.status === "New" ?
+                                              <div></div>
+                                              :
+                                              btItem.status === "Assigned" || btItem.status === "Open" ?
+                                              <div className="col-12">
+                                              <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                              </h5>
+                                              <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                              </h5>
+                                            </div>:btItem.compDate !=null ?
+                                            <div className="col-12">
+                                              <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                              </h5>
+                                              <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                              </h5>
+                                            <h5 className="mt-1">Completed : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.compDate} {btItem.compTime}</span></span>
+                                            </h5>
+                                          </div>
+                                          :<div></div>}
                                             <div className="form-group col-12">
                                               <div className=' border border-warning rounded' style={{ height: '100px', overflow: 'auto' }}>
                                                 {bugItem.bugDesc}
@@ -443,6 +463,8 @@ export default function BugTracking() {
                     <option value="Open">Open</option>
                     <option value="Resolved">Resolved</option>
                     <option value="Verified">Verified</option>
+                    <option value="Reopen">Reopen</option>
+                    <option value="Retest">Retest</option>
                     <option value="Closed">Closed</option>
                     <option value="All" >All</option>
                   </select>
