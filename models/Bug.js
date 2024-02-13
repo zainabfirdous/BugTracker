@@ -15,14 +15,29 @@ const Bug = con.define(
     bugName:{
         type:STRING,
         allowNull:false,
+        validate: {
+          isAlphanumeric: {
+              msg: 'Bug Name must contain only alphabets and numbers'
+          }
+      }
     },
     priority:{
         type:STRING,
         allowNull: false,
+        validate:{
+          isAlpha:{
+            msg: 'Priority can contain only string'
+          }
+        }
     },
     bugDesc:{
         type:TEXT,
         allowNull:false,
+        validate: {
+          isAlphanumeric: {
+              msg: 'Bug Description must contain only alphabets and numbers'
+          }
+      }
     },
     projID: {
         type: INTEGER,
@@ -31,6 +46,9 @@ const Bug = con.define(
           model: 'Project',
           key: 'projID',
         },
+        validate:{isInt: {
+          msg: 'Project ID must be an integer'
+      }}
       },
     regBy: {
         type: INTEGER,
@@ -39,6 +57,9 @@ const Bug = con.define(
           model: 'Employee',
           key: 'empID',
         },
+        validate:{isInt: {
+          msg: 'Employee ID must be an integer'
+      }}
     },
     crtTime:{
       type:TIME,

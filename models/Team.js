@@ -16,10 +16,16 @@ const Team = con.define(
                 model: 'Admin',
                 key: 'adminID',
             },
+            validate:{isInt: {
+                msg: 'admin ID must be an integer'
+            }}
         },
         teamName:{
             type:STRING,
-            allowNull: false
+            allowNull: false,
+            validate:{isAlpha:{
+                msg:'Team name must contain only alphabetic characters'
+            }}
         },
         projID:{
             type: INTEGER,
@@ -27,7 +33,9 @@ const Team = con.define(
             references: {
                 model: 'Project',
                 key: 'projID',
-        },
+        },validate:{isInt: {
+            msg: 'Project ID must be an integer'
+        }}
         },
         crtDate:{
             type: DATEONLY,

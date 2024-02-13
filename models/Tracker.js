@@ -16,6 +16,9 @@ const tracking = con.define(
               model: 'Bug',
               key: 'bugID',
             },
+            validate:{isInt: {
+                msg: 'Bug ID must be an integer'
+            }}
         },
         assignBy:{
             type: INTEGER,
@@ -24,7 +27,10 @@ const tracking = con.define(
               model: 'Employee',
               key: 'empID',
             },
-            defaultValue:null
+            defaultValue:null,
+            validate:{isInt: {
+                msg: 'Employee ID must be an integer'
+            }}
         },
         assignTo:{
             type: INTEGER,
@@ -33,41 +39,112 @@ const tracking = con.define(
               model: 'Employee',
               key: 'empID',
             },
-            defaultValue: null
+            defaultValue: null,
+            validate:{isInt: {
+                msg: 'Employee ID must be an integer'
+            }}
         },
         assignDate:{
             type:DATE,
             allowNull: true,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isNotPastDate(value) {
+                    const currentDate = new Date();
+                    if (new Date(value) < currentDate) {
+                        throw new Error('Start date must be a future date');
+                    }
+                },
+                isDate: {
+                    msg: 'Start date must be in date format'
+                }
+            }
         },
         assignTime:{
             type:TIME,
             allowNull: true,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isNotPastTime(value) {
+                    const currentTime = new Date();
+                    const providedTime = new Date(value);
+    
+                    if (providedTime < currentTime) {
+                        throw new Error('Time cannot be in the past');
+                    }
+                }
+            }
         },
         dueDate:{
             type:DATEONLY,
             allowNull: true,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isNotPastDate(value) {
+                    const currentDate = new Date();
+                    if (new Date(value) < currentDate) {
+                        throw new Error('Start date must be a future date');
+                    }
+                },
+                isDate: {
+                    msg: 'Start date must be in date format'
+                }
+            }
         },
         dueTime:{
             type:TIME,
             allowNull: true,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isNotPastTime(value) {
+                    const currentTime = new Date();
+                    const providedTime = new Date(value);
+    
+                    if (providedTime < currentTime) {
+                        throw new Error('Time cannot be in the past');
+                    }
+                }
+            }
         },
         compDate:{
             type:DATEONLY,
             allowNull:true,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isNotPastDate(value) {
+                    const currentDate = new Date();
+                    if (new Date(value) < currentDate) {
+                        throw new Error('Start date must be a future date');
+                    }
+                },
+                isDate: {
+                    msg: 'Start date must be in date format'
+                }
+            }
         },
         compTime:{
             type:TIME,
             allowNull:true,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isNotPastTime(value) {
+                    const currentTime = new Date();
+                    const providedTime = new Date(value);
+    
+                    if (providedTime < currentTime) {
+                        throw new Error('Time cannot be in the past');
+                    }
+                }
+            }
         },
         status:{
             type:STRING,
-            allowNull:false
+            allowNull:false,
+            validate:{
+                isAlpha:{
+                    msg:'Status can not be string'
+                }
+            }
         },
         crtDate:{
             type: DATEONLY,

@@ -16,6 +16,9 @@ const PAssignment = con.define(
               model: 'Project',
               key: 'projID',
             },
+            validate:{isInt: {
+              msg: 'Project ID must be an integer'
+          }}
           },
         teamID:{
             type: INTEGER,
@@ -24,6 +27,9 @@ const PAssignment = con.define(
               model: 'Team',
               key: 'TeamID',
             },
+            validate:{isInt: {
+              msg: 'Team ID must be an integer'
+          }}
         },
         empID:{
             type: INTEGER,
@@ -32,6 +38,9 @@ const PAssignment = con.define(
              model: 'Employee',
              key: 'empID',
         },
+        validate:{isInt: {
+          msg: 'Employee ID must be an integer'
+      }}
         },
         crtDate:{
           type: DATEONLY,
