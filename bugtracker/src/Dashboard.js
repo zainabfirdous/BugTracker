@@ -155,6 +155,7 @@ export default function Dashboard() {
 
 
       {/* nav bar */}
+
       <Navbar style={{ backgroundColor: 'aqua' }} collapseOnSelect expand="lg" className="bg-body-tertiary">
         <Container>
           {/* onClick={()=>{ navigate("/BugReport", { replace: false });}} */}
@@ -171,6 +172,7 @@ export default function Dashboard() {
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/Team">Team</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/ProjectAssign">Project Assign</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
             </Nav>
+
           </Navbar.Collapse>
           {/* <div className='row'>
             <div className='col-6'><Nav.Link className='float-right' >{localStorage.user} {localStorage.urole}</Nav.Link></div>

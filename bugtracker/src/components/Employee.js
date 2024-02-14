@@ -17,7 +17,6 @@ export default function Employee() {
   const handleClose = () => setShow(false);
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
 
-
   const [updateEmployee, setUpdateEmployee] = useState({});
 
 
