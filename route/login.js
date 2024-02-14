@@ -10,18 +10,17 @@ const bcrypt = require('bcrypt')
 const Troute = require('./Tester.js')
 const Droute = require('./Developer.js')
 const Aroute = require('./AdminRoute.js')
-
+const jwt = require("jsonwebtoken");
 Router.use("/admin", Aroute); 
 Router.use("/dev", Droute); 
 Router.use("/tester", Troute);
+
 
 
 const LoginUser = async(req, res)=>{
     const {username, password} = req.body
     console.log("username , ", username);
     const emp = await EmpProfile.findOne({where:{username : username}})
-    // console.log("emp.password : ",emp.password)
-    // console.log("user entered hashedPassword : ", password)
     if(emp)
     {
         const isMatched = await bcrypt.compare( password, emp.password)
@@ -29,6 +28,7 @@ const LoginUser = async(req, res)=>{
             const user = await employee.findByPk(emp.empID);
             const urole = await userRole.findByPk(user.roleID);
             console.log("Emp ID : "+ emp.empID )
+            //return 
             return res.json({ token: "thisismytoken" , username : user.fName, urole : urole.roleName, uid:user.empID});
         }else {
             return res.json({ "error": "Wrong Password", Login : false});
