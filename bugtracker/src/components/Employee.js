@@ -22,8 +22,8 @@ export default function Employee() {
 
   const getEmployee = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:5000/get");
-      const resp2 = await axios.get("http://127.0.0.1:5000/getrole");
+      const response = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
+      const resp2 = await axios.get("http://127.0.0.1:5000/admin/getrole");
        console.log(response.data);
       setRoleList(resp2.data);
       setEmployeeList(response.data);
@@ -40,7 +40,7 @@ export default function Employee() {
   const handleDelete = async (employeeID) => {
     console.log("delete : ", employeeID);
     const deletedRecords = await axios.delete(
-      `http://127.0.0.1:5000/delete/${employeeID}`
+      `http://127.0.0.1:5000/admin/deleteEmp/${employeeID}`
     );
     getEmployee();
     if(deletedRecords.data.error){
