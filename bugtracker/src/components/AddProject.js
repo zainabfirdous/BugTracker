@@ -92,7 +92,7 @@ export default function AddProject(props) {
         };
         console.log(updatedData);
         const udpatedRecord = await axios.put(
-          "http://127.0.0.1:5000/updateProject",
+          "http://127.0.0.1:5000/admin/updateProject",
           updatedData
         );
         props.updateProjectList();
@@ -122,7 +122,7 @@ export default function AddProject(props) {
       const addProject = async (project) => {
         console.log(project);
         const response = await axios.post(
-          "http://127.0.0.1:5000/newProject",
+          "http://127.0.0.1:5000/admin/newProject",
           project
         );
         if (response.data.error) {
