@@ -223,7 +223,15 @@ export default function TesterBugPortal() {
                                                                                 <button type="button" onClick={() => handleReopen(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
                                                                             </div>
                                                                         </form>
-                                                                        :
+                                                                        : btItem.status === "Retest" ?
+                                                                        <form className="row mt-4">
+                                                                            <div className="form-group col-sm-12 col-md-2">
+                                                                                <button type="button" onClick={() => handleVerified(btItem.trackID)} className="btn btn-success text-center">Verified</button>
+                                                                            </div>
+                                                                            <div className="form-group col-sm-12 col-md-2">
+                                                                                <button type="button" onClick={() => handleReopen(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
+                                                                            </div>
+                                                                        </form> :
                                                                         <form></form>
                                                                         }
                                                                         
@@ -265,6 +273,8 @@ export default function TesterBugPortal() {
                             >
                                 <option selected value="Resolved">Resolved</option>
                                 <option value="Verified">Verified</option>
+                                <option value="Reopen">Reopen</option>
+                                <option value="Retest">Retest</option>
                                 <option value="Closed">Closed</option>
                                 <option value="All">All</option>
 

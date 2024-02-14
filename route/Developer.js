@@ -160,7 +160,7 @@ const UpdateStatus = async(req, res)=>{
 
 const UpdateRetest = async(req, res)=>{
     try{
-        const updateCount = await Tracker.update({status:'ReTest', 
+        const updateCount = await Tracker.update({status:'Retest', 
         updDate: Sequelize.literal('CURRENT_DATE')},{
             where:{trackID:  req.params.id}
         })
