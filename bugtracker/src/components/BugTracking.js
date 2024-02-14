@@ -112,6 +112,33 @@ export default function BugTracking() {
 
   }
 
+  const handleClosed = async (trackID) => {
+    const response = await axios.put(
+      `http://127.0.0.1:5000/admin/updateTracker/close/${trackID}`
+    );
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(`Bug is Closed`);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+      getData();
+      setShowBugdesc(false);
+    }
+
+  }
+
   const handleDelete = async (trackID) => {
     console.log(trackID);
     const response = await axios.delete(
@@ -393,6 +420,16 @@ export default function BugTracking() {
                                             <button type="button" onClick={() => handlesubmit(btItem.trackID)} className="btn btn-success text-center">Assign Bug</button>
                                           </div>
 
+                                          {
+                                             btItem.status === "Verified" ?
+                                             <div className="form-group col-sm-12 col-md-4">
+                                            <button type="button" onClick={() => handleClosed(btItem.trackID)} className="btn btn-warning text-center">Close Bug</button>
+                                               </div>
+                                            
+                                             :
+                                             <div className="form-group col-sm-12 col-md-4"></div>
+                                          }
+
                                           {("All" === status)
                                             ?
                                             <div className="form-group col-sm-12 col-md-4">
@@ -414,9 +451,7 @@ export default function BugTracking() {
                                               <div className="form-group col-sm-12 col-md-4">
                                                 <button type="button" onClick={() => handleResolved(btItem.trackID)} className="btn btn-success text-center">Mark as Resolved</button>
                                               </div>
-                                            </form>
-
-                                        )
+                                            </form>)
 
                                     }
                                   </div>

@@ -54,7 +54,7 @@ export default function DevBugPortal() {
       setShow(true)
       setIsAlertVisible(true);
       setBgColor("bg-warning");
-      setSetMessage(`Marked as Resolved`);
+      setSetMessage(`Marked as Resolved and Sent for Verification`);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
@@ -62,6 +62,34 @@ export default function DevBugPortal() {
       setShowBugdesc(false);
     }
   }
+
+  const handleRetest = async (trackID) =>{
+    const response = await axios.put(
+        `http://127.0.0.1:5000/dev/updateTracker/RetestBug/${trackID}`
+        
+      );
+      if (response.data.error) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-warning");
+        setSetMessage(response.data.error);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+      else {
+        setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-warning");
+        setSetMessage(`Sent For Retest`);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getData();
+        setShowBugdesc(false);
+      }
+  }
+
   const handleAccept = async (trackID) => {
     const response = await axios.put(
       `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
@@ -256,6 +284,12 @@ export default function DevBugPortal() {
                                             <div className="form-group col-sm-12 col-md-4">
                                               <button type="button" onClick={() => handleResolved(btItem.trackID)} className="btn btn-success text-center">Mark as Resolved</button>
                                             </div>
+                                          </form>:
+                                          btItem.status === "Reopened" ?
+                                          <form className="row mt-4">
+                                            <div className="form-group col-sm-12 col-md-4">
+                                              <button type="button" onClick={() => handleRetest(btItem.trackID)} className="btn btn-success text-center">Retest</button>
+                                            </div>
                                           </form>:<form></form>
 
                                       )
@@ -306,7 +340,7 @@ export default function DevBugPortal() {
               <option value="Open">Open</option>
               <option value="Resolved">Resolved</option>
               <option value="Verified">Verified</option>
-              <option value="Reopen">Reopen</option>
+              <option value="Reopened">Reopen</option>
               <option value="Retest">Retest</option>
               <option value="All">All</option>
             </select>

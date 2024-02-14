@@ -132,7 +132,7 @@ export default function Dashboard() {
           <div className="App">
             {isAlertVisible1 && <Modal show={showprof} onHide={handleCloseprof}>
               <Modal.Header className="bg-white">
-                <Modal.Title></Modal.Title>
+                <Modal.Title>Profile </Modal.Title>
               </Modal.Header>
               <Modal.Body className="bg-white" >ID : {profile.empID}<br></br> Name : {profile.fName} {profile.lName}
                 <br></br>Email :  {profile.email}
@@ -141,6 +141,9 @@ export default function Dashboard() {
                 <br></br> New Password : <input className="form-control m-1" style={{ width: "50%" }}></input> Confirm Password : <input className="form-control m-1" style={{ width: "50%" }}></input>
               </Modal.Body>
               <Modal.Footer className={bgcolor} >
+              <Button variant="success" className='h-1' onClick={()=>{navigate("/UserProject", { replace: true },setShowprof(false));}}>
+                  Projects
+                </Button>
                 <Button variant="warning" className='h-1' onClick={handleCloseprof}>
                   Close
                 </Button>
