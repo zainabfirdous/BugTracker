@@ -490,7 +490,18 @@ const CreateUserProfile = async(req, res)=>{
     }
 }
 
+const role = async (req, res) => {
+    try {
+        const role = await Role.findAll();
+        res.json(role);
 
+    } catch (error) {
+        console.error('Error fetching role:', error);
+        res.json({ error: "Error While Fatching Roles" });
+    }
+}
+
+router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)
 router.get("/adminDashboard/:id", dashboardByID)
 router.get("/getEmployees", allEmp)
