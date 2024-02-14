@@ -13,7 +13,7 @@ const cors = require("cors");
 const app = express();
 
 const {PORT, HOST} = require('./constant.js');
-const router = require('./route/route.js');
+const login = require('./route/login.js');
 
 const bodyParser = require('body-parser');
 
@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({extended:false}));
 
-app.use("/", router);
+app.use("/", login);
 
 app.listen(PORT,HOST,(err)=>{
     if(err) console.log(`Error:${err} xsq`);

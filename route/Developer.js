@@ -125,8 +125,16 @@ const UpdateTrack = async(req, res)=>{
             })
             res.json(updateCount)
         }catch(error){
-            console.error('Error updating bug tracking details: ', error);
-            res.json({ error: "Can't update details" })
+            console.error('Error creating employee:', error);
+            // Check if error is a Sequelize validation error
+            if (error.name === 'SequelizeValidationError') {
+                // Construct an error response with custom error messages
+                const errorMessages = error.errors.map(err => err.message).join('; ');
+                res.status(400).json({ errors: errorMessages });
+            } else {
+                // Handle other types of errors
+                res.status(500).json({ error: "Error While Adding Please Check" });
+            }
         }
     }
 const UpdateStatus = async(req, res)=>{
@@ -137,8 +145,16 @@ const UpdateStatus = async(req, res)=>{
         })
         res.json(updateCount)
     }catch(error){
-        console.error('Error updating bug tracking details: ', error);
-        res.json({ error: "Can't update details" })
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -150,8 +166,36 @@ const UpdateRetest = async(req, res)=>{
         })
         res.json(updateCount)
     }catch(error){
-        console.error('Error updating bug tracking details: ', error);
-        res.json({ error: "Can't update details" })
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
+    }
+}
+
+const UpdatePassword = async(req, res)=>{
+    try{
+        const body = req.body
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updateCount = await EmpProfile.update(body, {
+            where:{empID: body.empID}}) 
+    }catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -163,5 +207,6 @@ const UpdateRetest = async(req, res)=>{
     Drouter.put("/updateTracker/resolved/:id",UpdateTrack )
     Drouter.put("/updateTracker/acceptBug/:id",UpdateStatus )
     Drouter.put("/updateTracker/RetestBug/:id",UpdateRetest )
+    Drouter.put("/updatePassword", UpdatePassword)
 
     module.exports = Drouter;

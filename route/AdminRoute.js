@@ -3,13 +3,16 @@ const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
 const Admin = require('../models/Admin.js')
 const Team = require('../models/Team.js')
+const EmpProfile= require('../models/EmpProfile.js')
 const PAssign = require('../models/ProjectAssign.js')
 const Tracker = require('../models/Tracker.js')
-const currentDate = new Date();
+//const hash = require('./Passwordhashing');
+
 
 
 const express = require('express');
 const { Sequelize } = require('sequelize');
+const hashPassword = require('./Passwordhashing.js');
 const router = express.Router();
 
 
@@ -69,7 +72,15 @@ const CreateEmp =  async (req, res) => {
         res.json(newEmp);
     } catch (error) {
         console.error('Error creating employee:', error);
-        res.json({ error: "Error While Adding Please Check" });
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -96,8 +107,16 @@ const UpdateEmp = async (req, res) => {
         
     res.json(updatedCount);
     } catch (error) {
-        console.error('Error while Updating employee:', error);
-        res.json({ error: "Can't Update" });
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -117,10 +136,17 @@ const CreateProject =  async (req, res) => {
         const newproj = await Project.create(body);
         res.json(newproj);
     } catch (error) {
-        console.error('Error creating project:', error);
-        res.json({ error: "Error While Adding Please Check" });
-    }
-}
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
+}}
 
 const ProjectById = async (req,res) =>{
     const projID = req.params.projID;
@@ -137,8 +163,16 @@ const UpdateProject = async (req, res) => {
     });
     res.json(updatedCount);
     } catch (error) {
-        console.error('Error while Updating project:', error);
-        res.json({ error: "Can't Update" });
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -173,8 +207,16 @@ const UpdateBugs = async (req, res) => {
     });
     res.json(updatedCount);
     } catch (error) {
-        console.error('Error while Updating Bug:', error);
-        res.json({ error: "Can't Update" });
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -218,8 +260,16 @@ const CreatingTeams =  async(req, res)=>{
         const newTeam = await Team.create(body)
         res.json(newTeam)
     }catch (error) {
-        console.error('Error creating team:', error);
-        res.json({ error: "Error While Adding Please Check" });
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -232,8 +282,16 @@ const Updateteam = async(req, res)=>{
         })
         res.json(count);
     }catch(error){
-        console.error('Error while Updating Team:', error);
-        res.json({ error: "Can't Update" });
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -279,8 +337,16 @@ const CreateAssign = async(req, res)=>
         const newPassign = await PAssign.create(body);
         res.json(newPassign);
     }catch (error) {
-        console.error('Error creating team:', error);
-        res.json({ error: "Error While Adding Please Check" });
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
     
 }
@@ -294,8 +360,16 @@ const UpdateProjectAssign = async(req, res)=>{
         })
         res.json(count);
     }catch(error){
-        console.error('Error while Updating Project Assignment details:', error);
-        res.json({ error: "Can't Project Assignment details" });
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -344,8 +418,16 @@ const UpdateTrack = async(req, res)=>{
         })
         res.json(updateCount)
     }catch(error){
-        console.error('Error updating bug tracking details: ', error);
-        res.json({ error: "Can't update details" })
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -358,8 +440,16 @@ const UpdateClose = async(req, res)=>{
         })
         res.json(updateCount)
     }catch(error){
-        console.error('Error updating bug tracking details: ', error);
-        res.json({ error: "Can't update details" })
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -373,6 +463,31 @@ const DeleteTrack =  async(req, res)=>{
         res.json({ error: "This details Can't be Deleted, (FK-In_Use)" });
     }
    
+}
+
+const CreateUserProfile = async(req, res)=>{
+    try{
+        console.log(req.body)
+        const password = req.body.password
+        const id=req.body.empID
+        const user = req.body.username
+        const userProfile = await EmpProfile.create({empID:id, username:user, password: password},{
+            // Explicitly specify the primary key field
+            fields: ['empID','username','password'] 
+        })
+        res.json(userProfile)
+    }catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
+    }
 }
 
 
@@ -406,6 +521,6 @@ router.get("/trackbugs/:id", TrackById)
 router.put("/updateTracker/assigned/:id", UpdateTrack)
 router.put("/updateTracker/close/:id", UpdateClose)
 router.delete("/deletetracks/:id",DeleteTrack)
-
+router.post("/userprofile", CreateUserProfile)
 
 module.exports = router;

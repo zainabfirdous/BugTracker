@@ -22,7 +22,7 @@ export default function Login () {
     e.preventDefault();
     
     const reqBody = {
-      userName: username,
+      username: username,
       password: password,
     };
     try {

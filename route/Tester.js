@@ -3,7 +3,8 @@ const role = require("../models/Role");
 const Tracker = require("../models/Tracker");
 const { QueryTypes } = require('sequelize');
 const sequelize = require('../config/database.js');
-const Bug = require("../models/Bug.js")
+const Bug = require("../models/Bug.js");
+const EmpProfile = require("../models/EmpProfile.js")
 const Sequelize = require('sequelize');
 
 
@@ -30,9 +31,17 @@ const newbugReg = async (req, res) => {
         const body = req.body;
         const newbug = await Bug.create(body);
         res.json(newbug);
-    } catch (error) {
-        console.error('Error creating Bug:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+    } catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -44,9 +53,17 @@ const UpdateBugs = async (req, res) => {
         where: { bugID: body.bugID },
     });
     res.json(updatedCount);
-    } catch (error) {
-        console.error('Error while Updating Bug:', error);
-        res.json({ error: "Can't Update" });
+    } catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -129,7 +146,7 @@ const ProjTeam = async (req, res) => {
             'WHERE pa.projID = :pid ' +
             'AND pa.empID != :eid',
             {
-                replacements: { pid: req.params.pid, eid: req.params.eid },
+                replacements: { pid: req.params.id, eid: req.params.eid },
                 type: QueryTypes.SELECT
             }
         );
@@ -152,9 +169,17 @@ const NewTracking = async (req, res) => {
         req.body.status = "New"
         const newTrack = await Tracker.create(body);
         res.json(newTrack);
-    } catch (error) {
-        console.error('Error creating bug tracker:', error);
-        res.json({ error: "Error While Adding Please Check" });
+    } catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -178,8 +203,16 @@ const UpdateTrack = async(req, res)=>{
         })
         res.json(updateCount)
     }catch(error){
-        console.error('Error updating bug tracking details: ', error);
-        res.json({ error: "Can't update details" })
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -191,8 +224,44 @@ const TrackVerified = async(req, res)=>{
         })
         res.json(updateCount)
     }catch(error){
-        console.error('Error updating bug tracking details: ', error);
-        res.json({ error: "Can't update details" })
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
+    }
+}
+
+const UpdatePassword = async(req, res)=>{
+    try{
+        const body = req.body
+        if (!body.password) {
+            return res.status(400).json({ error: "Password is required for update" });
+        }
+        console.log('inside update method')
+        body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updateCount = await EmpProfile.update({
+            password: body.password,
+            updDate: body.updDate
+        },{
+            where:{empID: body.empID},  individualHooks: true}) 
+        res.json(updateCount)
+    }catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
     }
 }
 
@@ -208,4 +277,5 @@ Trouter.get("/trackBug", trackingall);
 Trouter.post("/newtrack", NewTracking);
 Trouter.put("/updateTrack/verified/:id", UpdateTrack);
 Trouter.put("/updateTrack/reopen/:id", TrackVerified);
+Trouter.put("/updatePassword", UpdatePassword)
 module.exports = Trouter;

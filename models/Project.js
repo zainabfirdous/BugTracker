@@ -12,18 +12,51 @@ const proj = con.define(
     projName:{
         type:STRING,
         allowNull:false,
+        validate: {
+            isAlphanumeric: {
+                msg: 'Project Name must contain only alphabets and numbers'
+            }
+        }
     },
     startDate:{
         type:DATEONLY,
         allowNull:false,
+        validate: {
+            isNotPastDate(value) {
+                const currentDate = new Date();
+                if (new Date(value) < currentDate) {
+                    throw new Error('Start date must be a future date');
+                }
+            },
+            isDate: {
+                msg: 'Start date must be in date format'
+            }
+        }
+
     },
     endDate:{
         type:DATEONLY,
         allowNull:false,
+        validate: {
+            isNotPastDate(value) {
+                const currentDate = new Date();
+                if (new Date(value) < currentDate) {
+                    throw new Error('Start date must be a future date');
+                }
+            },
+            isDate: {
+                msg: 'Start date must be in date format'
+            }
+        }
     },
     status:{
         type:STRING,
         allowNull:false,
+        validate:{
+            isAlpha:{
+                msg:'status must be string'
+            }
+        }
     },
     crtDate:{
         type: DATEONLY,
