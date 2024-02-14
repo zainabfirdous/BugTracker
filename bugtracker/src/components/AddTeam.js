@@ -1,20 +1,119 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
-export default function AddTeam() {
+export default function AddTeam(props) {
   axios.defaults.withCredentials = true;
     const [ isUpdateButton , setIsUpdateButton] = useState("");
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const [message, setSetMessage] = useState("");
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [bgcolor, setBgColor] = useState("");
 
     const [teamID, setTeamID] = useState();
     const [teamName, setTeamName] = useState();
     const [projID, setProjID] = useState();
-    const [admID, setAdmID] = useState();
+    const [projlist, setProjList] = useState([]);
+
+    const getProj = async () => {
+      const resp = await axios.get("http://127.0.0.1:5000/getprojects");
+      setProjList(resp.data);
+    }
+
+    useEffect(() => {
+      if (props.team.teamID) {
+        setTeamID(props.team.teamID);
+        setTeamName(props.team.teamName);
+        setProjID(props.team.projID);
+      setIsUpdateButton(true);
+    } else setIsUpdateButton(false);
+      getProj();
+  }, [props]);
+
+    const handlesubmit = (e) => {
+      e.preventDefault();
+  
+      const team = {
+        teamID : teamID,
+        teamName: teamName,
+        projID: projID,
+        admID : localStorage.getItem("uid")
+      };
+      isUpdateButton ? updateTeam(team) :  addTeam(team);
+    };
+  
+    const addTeam = async (team) => {
+      console.log(team);
+      const response = await axios.post(
+        "http://127.0.0.1:5000/admin/newTeam",
+        team
+      );
+      if (response.data.error) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage(response.data.error);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+      else {
+        resetForm();
+        props.updateTeamList();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Team Registered Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getProj();
+      }
+    }
+
+    const updateTeam = async (team) => {
+      console.log(team);
+      const response = await axios.put(
+        "http://127.0.0.1:5000/admin/updateTeam",
+        team
+      );
+      if (response.data.error) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage(response.data.error);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+      else {
+        resetForm();
+        props.updateTeamList();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Team Updated Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getProj();
+      }
+    }
+
+    const resetForm = () => {
+      setTeamName("");
+      setProjID("");
+    };
 
     const handleInput = (e) => {
         switch (e.target.id) {
-          case "teamID":
-            setTeamID(e.target.value);
-            break;
           case "teamName":
             setTeamName(e.target.value);
             break;
@@ -27,18 +126,25 @@ export default function AddTeam() {
 
   return (
     <>
+     {/* Alert Message */}
+     <div className="App">
+        {isAlertVisible && <Modal show={show} onHide={handleClose}>
+          <Modal.Header className="bg-white">
+            <Modal.Title></Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bg-white" >{message}</Modal.Body>
+          <Modal.Footer className={bgcolor} >
+            <Button variant="warning" className='h-1' onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>}
+      </div>
+
+      {/* Main Body */}
 
 <form className="row mt-4">
-    <div className="form-group col-sm-12 col-md-4">
-      <label htmlFor="teamID">Team Id: </label>
-      <input
-        className="form-control"
-        type="text"
-        id="teamID"
-        value={teamID}
-        onChange={handleInput}
-      />
-    </div>
+    
     <div className="form-group col-sm-12 col-md-4">
       <label htmlFor="teamName">Name: </label>
       <input
@@ -55,19 +161,19 @@ export default function AddTeam() {
 
           <select id="projID" value={projID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
             <option id="projID" selected>Select</option>
-            {/* {rolelist.map((roleItem) => {
+            {projlist.map((projItem) => {
               return (
-                <option value={roleItem.roleID} key={roleItem.roleID}>{roleItem.roleName}</option>
+                <option value={projItem.projID} key={projItem.projID}>{projItem.projID} {projItem.projName}</option>
               );
-            })} */}
+            })}
           </select>
         </div>
     
     <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-      <button type="button" className="btn btn-success text-center"
-    //    onClick={handleSubmit}
+      <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center" }
+        onClick={handlesubmit}
        >
-        {isUpdateButton ? "Update Team" : "Add Team"}
+        {isUpdateButton ? "Update" : "Add Team"}
       </button>
     </div>
   </form>

@@ -1,12 +1,9 @@
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
-    'bugtracker',
+    'bts',
     'root',
-    'root',
-<<<<<<< Updated upstream
-=======
-    'root',
->>>>>>> Stashed changes
+    '2211',
+
     {
         host:'127.0.0.1',
         port:'3306',

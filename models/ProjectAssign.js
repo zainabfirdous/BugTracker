@@ -1,4 +1,4 @@
-const { INTEGER } = require('sequelize');
+const { INTEGER, DATEONLY ,NOW } = require('sequelize');
 const con = require('../config/database.js');
 
 const PAssignment = con.define(
@@ -7,6 +7,7 @@ const PAssignment = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
+            autoIncrement: true
         },
         projID: {
             type: INTEGER,
@@ -15,24 +16,41 @@ const PAssignment = con.define(
               model: 'Project',
               key: 'projID',
             },
+            validate:{isInt: {
+              msg: 'Project ID must be an integer'
+          }}
           },
         teamID:{
             type: INTEGER,
-            allowNull: flase,
+            allowNull: false,
             references: {
               model: 'Team',
               key: 'TeamID',
             },
+            validate:{isInt: {
+              msg: 'Team ID must be an integer'
+          }}
         },
-        EmpID:{
+        empID:{
             type: INTEGER,
             allowNull: false,
             references: {
              model: 'Employee',
              key: 'empID',
         },
-        }
-    },{ tableName: 'projassign',timestamps:false, freezeTableName:false}
+        validate:{isInt: {
+          msg: 'Employee ID must be an integer'
+      }}
+        },
+        crtDate:{
+          type: DATEONLY,
+          defaultValue: NOW
+      },
+      updDate:{
+          type: DATEONLY,
+          defaultValue: null
+      }
+    },{ tableName: 'projectassign',timestamps:false, freezeTableName:false}
 )
 
 module.exports = PAssignment;

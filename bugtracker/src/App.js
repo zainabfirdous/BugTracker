@@ -8,7 +8,12 @@ import Welcome from './components/Welcome'
 import BugRegistration from './components/BugRegistration';
 import Dashboard from './Dashboard';
 import Team from './components/Team';
+import ProjectAssign from './components/ProjectAssign'
 import BugReport from './components/BugReport'
+import BugTracking from './components/BugTracking';
+import TesterBugPortal from './components/TesterBugPortal';
+import DevBugPortal from './components/DevBugPortal';
+import UserProject from './components/UserProject';
 
 function App() {
   
@@ -29,6 +34,13 @@ function App() {
       <Route path="/BugReg" element={<BugRegistration/>}/>
       <Route path="/BugReport" element={<BugReport/>}/>
       <Route path="/Team" element={<Team/>}/>
+      <Route path="/ProjectAssign" element={<ProjectAssign/>}/>
+      <Route path="/BugReport" element={<BugReport/>}/>
+      <Route path='/BugTracking' element={<BugTracking/>}/>
+      <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
+      <Route path='/DevBugPortal' element={<DevBugPortal/>}/>
+      <Route path='/UserProject' element={<UserProject/>}/>
+      
       </Routes>
     </BrowserRouter>
     </>

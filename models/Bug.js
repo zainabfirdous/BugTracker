@@ -1,4 +1,7 @@
-const { INTEGER,STRING} = require('sequelize');
+ 
+const { INTEGER,STRING, DATEONLY ,NOW, TEXT, TIME} = require('sequelize');
+const Sequelize = require('sequelize');
+
 const con = require('../config/database.js');
 
 const Bug = con.define(
@@ -7,36 +10,70 @@ const Bug = con.define(
         type:INTEGER,
         allowNull: false,
         primaryKey: true,
+        autoIncrement: true
         },
     bugName:{
         type:STRING,
         allowNull:false,
+        validate: {
+          isAlphanumeric: {
+              msg: 'Bug Name must contain only alphabets and numbers'
+          }
+      }
     },
     priority:{
-        type:INTEGER,
+        type:STRING,
         allowNull: false,
+        validate:{
+          isAlpha:{
+            msg: 'Priority can contain only string'
+          }
+        }
     },
     bugDesc:{
-        type:STRING,
+        type:TEXT,
         allowNull:false,
+        validate: {
+          isAlphanumeric: {
+              msg: 'Bug Description must contain only alphabets and numbers'
+          }
+      }
     },
     projID: {
         type: INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'Project',
           key: 'projID',
         },
+        validate:{isInt: {
+          msg: 'Project ID must be an integer'
+      }}
       },
-      regBy: {
+    regBy: {
         type: INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'Employee',
           key: 'empID',
         },
+        validate:{isInt: {
+          msg: 'Employee ID must be an integer'
+      }}
     },
-},{ tableName: 'bug',timestamps:false, freezeTableName:false} 
+    crtTime:{
+      type:TIME,
+      defaultValue: Sequelize.literal('CURRENT_TIME')
+    },
+    crtDate:{
+      type: DATEONLY,
+      defaultValue: NOW
+  },
+  updDate:{
+      type: DATEONLY,
+      defaultValue: null
+  }
+},{ tableName: 'bug',timestamps: false, freezeTableName:false} 
 )
 
 

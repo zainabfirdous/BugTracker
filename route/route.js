@@ -6,14 +6,16 @@ const Admin = require('../models/Admin.js');
 const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
 const userrole = require('../models/Role.js')
-const currentDate = new Date();
 const Role = require('../models/Role.js')
+const currentDate = new Date();
 const formattedDate = currentDate.toISOString().split('T')[0];
 // const sequelize = require('sequelize');
 const Troute = require('./Tester.js')
+const Droute = require('./Developer.js')
+const Aroute = require('./AdminRoute.js')
 
-
- 
+router.use("/admin", Aroute); 
+router.use("/dev", Droute); 
 router.use("/tester", Troute);
 router.get("/get", async (req, res) => {
     try {
@@ -34,8 +36,8 @@ router.post("/newEmployee", async (req, res) => {
     try {
         const body = req.body;
         const data = { ...body };
-        data.crtDate = formattedDate;
-        data.updDate = null;
+        //data.crtDate = formattedDate;
+        //data.updDate = null;
         const newEmp = await employee.create(data);
         res.json(newEmp);
     } catch (error) {
@@ -82,8 +84,8 @@ router.post('/login', async (req, res) => {
             const emp = await employee.findByPk(user.empID);
             const urole = await userrole.findByPk(emp.roleID);
           //  console.log(emp.fName + " " + emp.email + " " + urole.roleName);
-           
-            res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
+           console.log("Emp ID : "+ emp.empID )
+            res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName, uid:emp.empID});
            
         } else {
             // Password is incorrect.
@@ -98,7 +100,7 @@ router.post('/login', async (req, res) => {
        
        //res.json({ token: "thisismytoken" , username : emp.fName, urole : urole.roleName});
        
-        res.json({ token: "thisismytoken" , username : adm.fName, urole : "Admin"});
+        res.json({ token: "thisismytoken" , username : adm.fName, urole : "Admin",uid : adm.admID});
             } else {
            // Password is incorrect.
           res.json({ "error": "Wrong Password", Login : false});
@@ -208,13 +210,14 @@ router.post("/newBug", async (req, res) => {
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split('T')[0];
         const data = { ...body };
+        console.log("Date : " + formattedDate);
         data.crtDate = formattedDate;
         data.updDate = null;
         const newbug = await Bug.create(data);
         res.json(newbug);
     } catch (error) {
         console.error('Error creating Bug:', error);
-        res.status(500).send('Internal Server Error');
+        res.json({ error: "Error While Adding Please Check" });
     }
 })
 

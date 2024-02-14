@@ -1,21 +1,65 @@
-const { INTEGER, STRING } = require('sequelize');
+const { INTEGER, STRING, NOW, DATEONLY } = require('sequelize');
 const con = require('../config/database.js');
-
+const hash = require('../route/Passwordhashing');
 const credential = con.define
 ('EmpProfile',{
     empID:{
         type:INTEGER,
         allowNull: false,
-        primaryKey: false,
+        references: {
+            model: 'Employee',
+            key: 'empID',
+       },
     },
-    userName:{
+    username:{
         type:STRING,
         allowNull: false,
+        unique: true,
+        validate: {
+            isAlphanumeric: {
+                msg: 'Username must contain only alphabets and numbers'
+            }
+        }
     },
     password:{
         type:STRING,
         allowNull: false,
+        validate: {
+            isStrongPassword(value) {
+                const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+                if (!regex.test(value)) {
+                    throw new Error('Password must be 8-20 characters long and contain at least 1 alphabets, 1 digits, and 1 special character');
+                }
+            }
+        }
+    },
+    crtDate:{
+        type: DATEONLY,
+        defaultValue: NOW
+    },
+    updDate:{
+        type: DATEONLY,
+        defaultValue: null
     }
-},{ tableName: 'EmpProfile',timestamps:false, freezeTableName:false})
+},{ tableName: 'EmpProfile',timestamps:false, freezeTableName:false, hooks: {
+    async beforeCreate(empProfile) {
+        // Hash the password before saving
+        //const saltRounds = 10;
+        const hashedPassword = await hash(empProfile.password);
+        empProfile.password = hashedPassword;
+    },
+    async beforeUpdate(empProfile) {
+        // Hash the password before updating
+        console.log("inside trigger")
+        if (empProfile.changed('password')) {
+
+            const hashedPassword = await hash(empProfile.password);
+            console.log("hashedPassword : ",hashedPassword)
+            empProfile.password = hashedPassword;
+        }
+    }
+}});
+
+credential.removeAttribute('id');
 
 module.exports=credential;

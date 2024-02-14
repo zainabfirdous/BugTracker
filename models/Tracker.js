@@ -1,4 +1,4 @@
-const { DATEONLY,DATE, INTEGER, TIME, STRING } = require('sequelize');
+const { DATEONLY,DATE, INTEGER, TIME, STRING  ,NOW} = require('sequelize');
 const con = require('../config/database.js');
 
 const tracking = con.define(
@@ -7,6 +7,7 @@ const tracking = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
+            autoIncrement: true
         },
         bugID:{
             type: INTEGER,
@@ -15,14 +16,21 @@ const tracking = con.define(
               model: 'Bug',
               key: 'bugID',
             },
+            validate:{isInt: {
+                msg: 'Bug ID must be an integer'
+            }}
         },
         assignBy:{
             type: INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
               model: 'Employee',
               key: 'empID',
             },
+            defaultValue:null,
+            validate:{isInt: {
+                msg: 'Employee ID must be an integer'
+            }}
         },
         assignTo:{
             type: INTEGER,
@@ -31,30 +39,120 @@ const tracking = con.define(
               model: 'Employee',
               key: 'empID',
             },
+            defaultValue: null,
+            validate:{isInt: {
+                msg: 'Employee ID must be an integer'
+            }}
         },
-        assignTS:{
+        assignDate:{
             type:DATE,
-            allowNull: true
+            allowNull: true,
+            defaultValue: null,
+            validate: {
+                isNotPastDate(value) {
+                    const currentDate = new Date();
+                    if (new Date(value) < currentDate) {
+                        throw new Error('Start date must be a future date');
+                    }
+                },
+                isDate: {
+                    msg: 'Start date must be in date format'
+                }
+            }
+        },
+        assignTime:{
+            type:TIME,
+            allowNull: true,
+            defaultValue: null,
+            validate: {
+                isNotPastTime(value) {
+                    const currentTime = new Date();
+                    const providedTime = new Date(value);
+    
+                    if (providedTime < currentTime) {
+                        throw new Error('Time cannot be in the past');
+                    }
+                }
+            }
         },
         dueDate:{
             type:DATEONLY,
-            allowNull: false
+            allowNull: true,
+            defaultValue: null,
+            validate: {
+                isNotPastDate(value) {
+                    const currentDate = new Date();
+                    if (new Date(value) < currentDate) {
+                        throw new Error('Start date must be a future date');
+                    }
+                },
+                isDate: {
+                    msg: 'Start date must be in date format'
+                }
+            }
         },
         dueTime:{
             type:TIME,
-            allowNull: false
+            allowNull: true,
+            defaultValue: null,
+            validate: {
+                isNotPastTime(value) {
+                    const currentTime = new Date();
+                    const providedTime = new Date(value);
+    
+                    if (providedTime < currentTime) {
+                        throw new Error('Time cannot be in the past');
+                    }
+                }
+            }
         },
         compDate:{
             type:DATEONLY,
-            allowNull:false
+            allowNull:true,
+            defaultValue: null,
+            validate: {
+                isNotPastDate(value) {
+                    const currentDate = new Date();
+                    if (new Date(value) < currentDate) {
+                        throw new Error('Start date must be a future date');
+                    }
+                },
+                isDate: {
+                    msg: 'Start date must be in date format'
+                }
+            }
         },
         compTime:{
             type:TIME,
-            allowNull:false
+            allowNull:true,
+            defaultValue: null,
+            validate: {
+                isNotPastTime(value) {
+                    const currentTime = new Date();
+                    const providedTime = new Date(value);
+    
+                    if (providedTime < currentTime) {
+                        throw new Error('Time cannot be in the past');
+                    }
+                }
+            }
         },
         status:{
             type:STRING,
-            allowNull:false
+            allowNull:false,
+            validate:{
+                isAlpha:{
+                    msg:'Status can not be string'
+                }
+            }
+        },
+        crtDate:{
+            type: DATEONLY,
+            defaultValue: NOW
+        },
+        updDate:{
+            type: DATEONLY,
+            defaultValue: null
         }
     },{ tableName: 'tracking',timestamps:false, freezeTableName:false} 
 )

@@ -35,7 +35,9 @@ export default function ProjectAssign() {
     }
 
     const getSelectData = async () => {
-        const resp1 = await axios.get("http://127.0.0.1:5000/admin/getProjects");
+
+        const resp1 = await axios.get("http://127.0.0.1:5000/getprojects");
+
         const resp2 = await axios.get("http://127.0.0.1:5000/admin/getteams");
         const resp3 = await axios.get("http://127.0.0.1:5000/get");
         setProjList(resp1.data);

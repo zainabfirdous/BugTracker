@@ -21,13 +21,11 @@ export default function Project() {
 
   const getProject = async () => {
     try {
-<<<<<<< Updated upstream
-      const response = await axios.get("http://127.0.0.1:5000/getprojects");
-=======
+
     //  const response1 = await axios.get("http://127.0.0.1:5000/get");
-      const response = await axios.get("http://127.0.0.1:5000/admin/getProjects");
+      const response = await axios.get("http://127.0.0.1:5000/getprojects");
     //  / console.log("Resp : " + response1.data);
->>>>>>> Stashed changes
+
       setProjectList(response.data);
     } catch (err) {
       console.log(err);

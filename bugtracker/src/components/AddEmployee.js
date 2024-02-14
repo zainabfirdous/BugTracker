@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 export default function AddEmployee(props) {
-
+  axios.defaults.withCredentials = true;
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const [message, setSetMessage] = useState("");
@@ -36,7 +36,7 @@ export default function AddEmployee(props) {
 
   const getRole = async () => {
     const resp2 = await axios.get("http://127.0.0.1:5000/getrole");
- //   console.log(resp2);
+    //   console.log(resp2);
     setRoleList(resp2.data);
   }
 
@@ -48,7 +48,7 @@ export default function AddEmployee(props) {
       email: email,
       roleID: roleID,
     };
-   // console.log(updatedData);
+    // console.log(updatedData);
     const udpatedRecord = await axios.put(
       "http://127.0.0.1:5000/updateEmployee",
       updatedData
@@ -107,7 +107,7 @@ export default function AddEmployee(props) {
   };
 
   const addEmployee = async (employee) => {
-    axios.defaults.withCredentials = true;
+
     const response = await axios.post(
       "http://127.0.0.1:5000/newEmployee",
       employee
@@ -148,7 +148,7 @@ export default function AddEmployee(props) {
     };
 
     console.log(object);
-    
+
     if (isUpdateButton) {
       updateEmployee(object);
     } else {
@@ -179,16 +179,23 @@ export default function AddEmployee(props) {
 
 
       <form className="row mt-4">
-        <div className="form-group col-sm-12 col-md-4">
-          <label htmlFor="empID">Employee Id: </label>
-          <input
-            className="form-control"
-            type="text"
-            id="empID"
-            value={empID}
-            onChange={handleInput}
-          />
-        </div>
+        {
+          isUpdateButton ?
+            <div className="form-group col-sm-12 col-md-4">
+              <label htmlFor="empID">Employee Id: </label>
+              <input
+                className="form-control"
+                type="text"
+                id="empID"
+                value={empID}
+                readonly
+              />
+            </div>
+            :
+            <div></div>
+
+        }
+
         <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="firstName">First Name: </label>
           <input
