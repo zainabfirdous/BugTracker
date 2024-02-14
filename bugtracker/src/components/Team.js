@@ -31,7 +31,7 @@ const [updateTeam , setUpdateTeam ] = useState({});
     try {
       const response = await axios.get("http://127.0.0.1:5000/admin/getteams");
       setTeamList(response.data);
-      const resp1 = await axios.get("http://127.0.0.1:5000/getprojects");
+      const resp1 = await axios.get("http://127.0.0.1:5000/admin/getProjects");
       setProjList(resp1.data);
       const resp2 = await axios.get("http://127.0.0.1:5000/admin/adminDashboard");
       setAdmlist(resp2.data);

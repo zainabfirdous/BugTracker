@@ -27,9 +27,9 @@ function BugRegistration() {
 
   const getBug = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:5000/getbugs");
+      const response = await axios.get(`http://127.0.0.1:5000/admin/getbugs`);
       setBugList(response.data);
-      const resp = await axios.get("http://127.0.0.1:5000/getprojects");
+      const resp = await axios.get("http://127.0.0.1:5000/admin/getProjects");
     setProjList(resp.data);
     } catch (err) {
       console.log(err);

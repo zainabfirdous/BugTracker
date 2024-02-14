@@ -23,7 +23,7 @@ export default function Project() {
     try {
 
     //  const response1 = await axios.get("http://127.0.0.1:5000/get");
-      const response = await axios.get("http://127.0.0.1:5000/getprojects");
+      const response = await axios.get("http://127.0.0.1:5000/admin/getProjects");
     //  / console.log("Resp : " + response1.data);
 
       setProjectList(response.data);
@@ -35,7 +35,7 @@ export default function Project() {
   const handleDelete = async (projID) => {
     console.log("delete : ", projID);
     const deletedRecords = await axios.delete(
-      `http://127.0.0.1:5000/deleteproj/${projID}`
+      `http://127.0.0.1:5000/admin/deleteproj/${projID}`
     );
     getProject();
     if(deletedRecords.data.error){
