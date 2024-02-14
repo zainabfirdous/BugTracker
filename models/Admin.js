@@ -36,15 +36,31 @@ const Admin = con.define(
             allowNull: false,
             validate:{
                 isStrongPassword(value) {
-                    const regex = /^(?=.*[A-Za-z]{4})(?=.*\d{4})(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
+                    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
                     if (!regex.test(value)) {
-                        throw new Error('Password must be 8-12 characters long and contain at least 4 alphabets, 4 digits, and 1 special character');
+                        throw new Error('Password must be 8-12 characters long and contain at least 1 alphabets, 1 digits, and 1 special character');
                     }
                 }
                 
             }
         }
-    },{ tableName: 'admin',timestamps:false, freezeTableName:false}
+    },{ tableName: 'admin',timestamps:false, freezeTableName:false, hooks: {
+        async beforeCreate(empProfile) {
+            // Hash the password before saving
+            //const saltRounds = 10;
+            const hashedPassword = await hash(empProfile.password);
+            empProfile.password = hashedPassword;
+        },
+        async beforeUpdate(empProfile) {
+            // Hash the password before updating
+            console.log("inside trigger")
+            if (empProfile.changed('password')) {
+    
+                const hashedPassword = await hash(empProfile.password);
+                console.log("hashedPassword : ",hashedPassword)
+                empProfile.password = hashedPassword;
+            }
+        }}}
 )
 
 module.exports=Admin;

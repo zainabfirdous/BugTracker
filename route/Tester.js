@@ -240,9 +240,17 @@ const TrackVerified = async(req, res)=>{
 const UpdatePassword = async(req, res)=>{
     try{
         const body = req.body
-        req.body.updDate = Sequelize.literal('CURRENT_DATE');
-        const updateCount = await EmpProfile.update(body, {
-            where:{empID: body.empID}}) 
+        if (!body.password) {
+            return res.status(400).json({ error: "Password is required for update" });
+        }
+        console.log('inside update method')
+        body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updateCount = await EmpProfile.update({
+            password: body.password,
+            updDate: body.updDate
+        },{
+            where:{empID: body.empID},  individualHooks: true}) 
+        res.json(updateCount)
     }catch(error){
         console.error('Error creating employee:', error);
         // Check if error is a Sequelize validation error
