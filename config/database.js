@@ -3,6 +3,10 @@ const sequelize = new Sequelize(
     'bugtracker',
     'root',
     'root',
+<<<<<<< Updated upstream
+=======
+    'root',
+>>>>>>> Stashed changes
     {
         host:'127.0.0.1',
         port:'3306',
