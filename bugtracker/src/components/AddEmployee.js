@@ -35,7 +35,7 @@ export default function AddEmployee(props) {
   }, [props]);
 
   const getRole = async () => {
-    const resp2 = await axios.get("http://127.0.0.1:5000/getrole");
+    const resp2 = await axios.get("http://127.0.0.1:5000/admin/getrole");
     //   console.log(resp2);
     setRoleList(resp2.data);
   }
@@ -50,7 +50,7 @@ export default function AddEmployee(props) {
     };
     // console.log(updatedData);
     const udpatedRecord = await axios.put(
-      "http://127.0.0.1:5000/updateEmployee",
+      "http://127.0.0.1:5000/admin/updateEmployee",
       updatedData
     );
     props.updateEmployeeList();
@@ -109,7 +109,7 @@ export default function AddEmployee(props) {
   const addEmployee = async (employee) => {
 
     const response = await axios.post(
-      "http://127.0.0.1:5000/newEmployee",
+      "http://127.0.0.1:5000/admin/newEmployee",
       employee
     );
     if (response.data.error) {
