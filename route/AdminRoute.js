@@ -3,13 +3,16 @@ const Project = require('../models/Project.js')
 const Bug = require('../models/Bug.js')
 const Admin = require('../models/Admin.js')
 const Team = require('../models/Team.js')
+const EmpProfile= require('../models/EmpProfile.js')
 const PAssign = require('../models/ProjectAssign.js')
 const Tracker = require('../models/Tracker.js')
-const currentDate = new Date();
+//const hash = require('./Passwordhashing');
+
 
 
 const express = require('express');
 const { Sequelize } = require('sequelize');
+const hashPassword = require('./Passwordhashing.js');
 const router = express.Router();
 
 
@@ -462,6 +465,31 @@ const DeleteTrack =  async(req, res)=>{
    
 }
 
+const CreateUserProfile = async(req, res)=>{
+    try{
+        console.log(req.body)
+        const password = req.body.password
+        const id=req.body.empID
+        const user = req.body.username
+        const userProfile = await EmpProfile.create({empID:id, username:user, password: password},{
+            // Explicitly specify the primary key field
+            fields: ['empID','username','password'] 
+        })
+        res.json(userProfile)
+    }catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While Adding Please Check" });
+        }
+    }
+}
+
 
 router.get("/adminDashboard", dashboard)
 router.get("/adminDashboard/:id", dashboardByID)
@@ -493,6 +521,6 @@ router.get("/trackbugs/:id", TrackById)
 router.put("/updateTracker/assigned/:id", UpdateTrack)
 router.put("/updateTracker/close/:id", UpdateClose)
 router.delete("/deletetracks/:id",DeleteTrack)
-
+router.post("/userprofile", CreateUserProfile)
 
 module.exports = router;
