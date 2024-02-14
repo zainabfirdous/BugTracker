@@ -2,12 +2,14 @@ const express = require('express');
 const cors = require("cors");
 
 
-// const jwt = require("jsonwebtoken");
-// const dotenv = require('dotenv');
-// dotenv.config();
+
+
 // const jwtSecret = process.env.JWT_SECRET_KEY;
 // const session = require('express-session');
 // const cookieParser = require('cookie-parser');
+
+const dotenv = require('dotenv');
+dotenv.config();
 
 
 const app = express();
@@ -24,7 +26,10 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
+
+
 // app.use(express.json());
+
 
 // app.use(cors());
 
