@@ -15,24 +15,29 @@ const Drouter = express.Router();
 
 const DevProfile = async(req, res)=>{
     try{
-        const empID = req.params.id;
+
+        const empID = req.empID;
+        console.log(empID);
+
+        // const empID = req.params.id;
+
         const dev = await employee.findOne({
              where: { empID:empID }
         })
-        res.json(dev);
+        res.status(200).json(dev);
     }catch(error) {
         console.error('Error fetching employee:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Error while fetching employee details' });
 }}
 
 const tracking = async(req, res)=>{
     try{
         const trackID = req.params.id;
         const Track = await Tracker.findByPk(trackID)
-        res.json(Track);
+        res.status(200).json(Track);
     }catch(error){
         console.error('Error tracking bug:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Error while fetching bug tracker' });
     }
 };
 
@@ -53,11 +58,11 @@ const DevProjects = async(req, res)=>{
         );
     
         // Send the projects as JSON response
-        res.json(projects);
+        res.status(200).json(projects);
       } catch (error) {
         // Handle any errors
         console.error('Error executing raw query:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Error while fetching employee project' });
       }
 }
 
@@ -74,15 +79,15 @@ const DevTeamMembers = async(req, res)=>{
             } 
         );
         if (team.length === 0) {
-            res.send('No team members found')
+            res.status(404).json('No team members found')
             //console.log('No team members found for team ID:', teamId);
         } else{
-            res.json(team);
+            res.status(200).json(team);
         }
     }catch (error) {
         // Handle any errors
         console.error('Error executing raw query:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'error while fetching employee team' });
       }
     
 }
@@ -101,15 +106,15 @@ const DProjTeam = async(req, res)=>{
             } 
         );
         if (pteam.length === 0) {
-            res.send('No team members found')
+            res.status(200).json('No team members found')
             //console.log('No team members found for team ID:', teamId);
         } else{
-            res.json(pteam);
+            res.status(200).json(pteam);
         }
     }catch (error) {
         // Handle any errors
         console.error('Error executing raw query:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Error while fetching project team' });
       }
     }
 
@@ -124,7 +129,7 @@ const UpdateTrack = async(req, res)=>{
         },{
                 where:{trackID: req.params.id}
             })
-            res.json(updateCount)
+            res.status(200).json(updateCount)
         }catch(error){
             console.error('Error creating employee:', error);
             // Check if error is a Sequelize validation error
@@ -134,7 +139,7 @@ const UpdateTrack = async(req, res)=>{
                 res.status(400).json({ errors: errorMessages });
             } else {
                 // Handle other types of errors
-                res.status(500).json({ error: "Error While Adding Please Check" });
+                res.status(500).json({ error: "Error While updating bug tracker" });
             }
         }
     }
@@ -144,7 +149,7 @@ const UpdateStatus = async(req, res)=>{
         updDate: Sequelize.literal('CURRENT_DATE')},{
             where:{trackID:  req.params.id}
         })
-        res.json(updateCount)
+        res.status(200).json(updateCount)
     }catch(error){
         console.error('Error creating employee:', error);
         // Check if error is a Sequelize validation error
@@ -154,7 +159,7 @@ const UpdateStatus = async(req, res)=>{
             res.status(400).json({ errors: errorMessages });
         } else {
             // Handle other types of errors
-            res.status(500).json({ error: "Error While Adding Please Check" });
+            res.status(500).json({ error: "Error While updating bug tracker" });
         }
     }
 }
@@ -165,7 +170,7 @@ const UpdateRetest = async(req, res)=>{
         updDate: Sequelize.literal('CURRENT_DATE')},{
             where:{trackID:  req.params.id}
         })
-        res.json(updateCount)
+        res.status(200).json(updateCount)
     }catch(error){
         console.error('Error creating employee:', error);
         // Check if error is a Sequelize validation error
@@ -175,7 +180,7 @@ const UpdateRetest = async(req, res)=>{
             res.status(400).json({ errors: errorMessages });
         } else {
             // Handle other types of errors
-            res.status(500).json({ error: "Error While Adding Please Check" });
+            res.status(500).json({ error: "Error While updating bug tracker" });
         }
     }
 }
@@ -183,6 +188,12 @@ const UpdateRetest = async(req, res)=>{
 const UpdatePassword = async(req, res)=>{
     try{
         const body = req.body
+
+        req.body.updDate = Sequelize.literal('CURRENT_DATE');
+        const updateCount = await EmpProfile.update(body, {
+            where:{empID: body.empID}}) 
+        res.status(200).json(updateCount)
+
         if (!body.password) {
             return res.status(400).json({ error: "Password is required for update" });
         }
@@ -193,7 +204,8 @@ const UpdatePassword = async(req, res)=>{
             updDate: body.updDate
         },{
             where:{empID: body.empID},  individualHooks: true}) 
-        res.json(updateCount)
+        res.status(200).json(updateCount)
+
     }catch(error){
         console.error('Error creating employee:', error);
         // Check if error is a Sequelize validation error
@@ -203,7 +215,7 @@ const UpdatePassword = async(req, res)=>{
             res.status(400).json({ errors: errorMessages });
         } else {
             // Handle other types of errors
-            res.status(500).json({ error: "Error While Adding Please Check" });
+            res.status(500).json({ error: "Error While updating password" });
         }
     }
 }

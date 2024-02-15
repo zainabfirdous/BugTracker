@@ -23,9 +23,14 @@ const Team = con.define(
         teamName:{
             type:STRING,
             allowNull: false,
-            validate:{isAlpha:{
-                msg:'Team name must contain only alphabetic characters'
-            }}
+            validate:{
+                isAlphanumericWithSpace(value){
+                    const regex = /^[a-zA-Z0-9\s]+$/;
+                    if (!regex.test(value)) {
+                        throw new Error('Team Name must contain only alphabets and numbers');
+                    }
+                }
+            }
         },
         projID:{
             type: INTEGER,

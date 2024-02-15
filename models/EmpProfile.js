@@ -16,8 +16,11 @@ const credential = con.define
         allowNull: false,
         unique: true,
         validate: {
-            isAlphanumeric: {
-                msg: 'Username must contain only alphabets and numbers'
+            isAlphanumericWithSpace(value){
+                const regex = /^[a-zA-Z0-9\s]+$/;
+                if (!regex.test(value)) {
+                    throw new Error('Username must contain only alphabets and numbers');
+                }
             }
         }
     },
