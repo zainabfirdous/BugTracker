@@ -6,12 +6,8 @@ const sequelize = require('../config/database.js');
 const Bug = require("../models/Bug.js");
 const EmpProfile = require("../models/EmpProfile.js")
 const Sequelize = require('sequelize');
-
-
-
 const express = require('express');
 const Trouter = express.Router();
-
 
 const testerProfile = async (req, res) => {
     try {
@@ -257,7 +253,7 @@ const UpdatePassword = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating password" });

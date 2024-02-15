@@ -7,6 +7,7 @@ const EmpProfile= require('../models/EmpProfile.js')
 const PAssign = require('../models/ProjectAssign.js')
 const Tracker = require('../models/Tracker.js')
 //const hash = require('./Passwordhashing');
+const Role = require('../models/Role.js')
 
 
 

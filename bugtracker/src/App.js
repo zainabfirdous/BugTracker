@@ -40,6 +40,7 @@ function App() {
       <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
       <Route path='/DevBugPortal' element={<DevBugPortal/>}/>
       <Route path='/UserProject' element={<UserProject/>}/>
+      {/* <Route path='/BugRegistrationForm' element={<BugRegistrationForm/>}/> */}
       
       </Routes>
     </BrowserRouter>

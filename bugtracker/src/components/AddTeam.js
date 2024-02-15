@@ -19,7 +19,7 @@ export default function AddTeam(props) {
     const [projlist, setProjList] = useState([]);
 
     const getProj = async () => {
-      const resp = await axios.get("http://127.0.0.1:5000/getprojects");
+      const resp = await axios.get("http://127.0.0.1:5000/admin/getProjects");
       setProjList(resp.data);
     }
 
