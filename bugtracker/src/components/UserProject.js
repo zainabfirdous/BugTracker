@@ -16,10 +16,11 @@ export default function UserProject() {
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
   const navigate = useNavigate();
   const [projectList, setProjectList] = useState([]);
+  const [axiosConfig, setAxiosConfig] = useState({});
 
-  const getProject = async () => {
+  const getProject = async (axiosConfig) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/${localStorage.getItem("urole")==="Developer" ? "dev" : "tester"}/${localStorage.getItem("urole")==="Developer" ? "devprojects" : "testerprojects"}/${localStorage.getItem("uid")}`);
+      const response = await axios.get(`http://127.0.0.1:5000/${localStorage.getItem("urole")==="Developer" ? "dev" : "tester"}/${localStorage.getItem("urole")==="Developer" ? "devprojects" : "testerprojects"}`,axiosConfig);
       setProjectList(response.data);
     } catch (err) {
       console.log(err);
@@ -28,7 +29,7 @@ export default function UserProject() {
 
   const handleTeamMemInProject = async (projID) => {
     const projectteamMem = await axios.get(
-      `http://127.0.0.1:5000/dev/projTeam/${projID}/${localStorage.getItem("uid")}`
+      `http://127.0.0.1:5000/dev/projTeam/${projID}/${localStorage.getItem("uid")}`,axiosConfig
     );
     if(projectteamMem.data.error){
       setIsAlertVisible(true);
@@ -75,8 +76,14 @@ export default function UserProject() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
+    const axiosConfig = {
+      headers : {
+        Authorization : token
+      }
+    }
+    setAxiosConfig(axiosConfig);
 
-    getProject();
+    getProject(axiosConfig);
   }, [navigate]);
 
   const [activeTab, setActiveTab] = useState('profile');
