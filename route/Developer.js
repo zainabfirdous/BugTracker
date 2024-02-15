@@ -14,8 +14,12 @@ const Drouter = express.Router();
 
 const DevProfile = async(req, res)=>{
     try{
+
         const empID = req.empID;
         console.log(empID);
+
+        // const empID = req.params.id;
+
         const dev = await employee.findOne({
              where: { empID:empID }
         })
@@ -161,7 +165,7 @@ const UpdateStatus = async(req, res)=>{
 
 const UpdateRetest = async(req, res)=>{
     try{
-        const updateCount = await Tracker.update({status:'ReTest', 
+        const updateCount = await Tracker.update({status:'Retest', 
         updDate: Sequelize.literal('CURRENT_DATE')},{
             where:{trackID:  req.params.id}
         })
@@ -204,7 +208,7 @@ const UpdatePassword = async(req, res)=>{
     Drouter.get("/projTeam/:id/:eid", DProjTeam)
     Drouter.get("/teammembers/:id/:eid", DevTeamMembers);
     Drouter.get("/devprojects/:id", DevProjects);
-    Drouter.get("/devDashboard", DevProfile);
+    Drouter.get("/devDashboard/:id", DevProfile);
     Drouter.get("/trackBug/:id",tracking);
     Drouter.put("/updateTracker/resolved/:id",UpdateTrack )
     Drouter.put("/updateTracker/acceptBug/:id",UpdateStatus )

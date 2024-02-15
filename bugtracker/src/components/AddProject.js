@@ -164,16 +164,21 @@ export default function AddProject(props) {
      
      
     <form className="row mt-4">
+    {
+          isUpdateButton ?
     <div className="form-group col-sm-12 col-md-4">
+   
       <label htmlFor="projID">Project Id: </label>
       <input
         className="form-control"
         type="text"
         id="projID"
         value={projID}
-        onChange={handleInput}
+        readonly
       />
     </div>
+    :
+    <div></div>}
     <div className="form-group col-sm-12 col-md-4">
       <label htmlFor="projName">Name: </label>
       <input

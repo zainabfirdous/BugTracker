@@ -57,8 +57,35 @@ export default function BugTracking() {
     putbugAssign(bugAssign);
   };
 
-  const handleAccept = async (trackID) =>{
+  
 
+  const handleResolved = async (trackID) =>{
+    const response = await axios.put(
+      `http://127.0.0.1:5000/dev/updateTracker/resolved/${trackID}`
+      
+    );
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(`Marked as Resolved`);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+      getData();
+      setShowBugdesc(false);
+    }
+  }
+  const handleAccept = async (trackID) => {
     const response = await axios.put(
       `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
     );
@@ -82,7 +109,34 @@ export default function BugTracking() {
       getData();
       setShowBugdesc(false);
     }
-    
+
+  }
+
+  const handleClosed = async (trackID) => {
+    const response = await axios.put(
+      `http://127.0.0.1:5000/admin/updateTracker/close/${trackID}`
+    );
+    if (response.data.error) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(`Bug is Closed`);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+      getData();
+      setShowBugdesc(false);
+    }
+
   }
 
   const handleDelete = async (trackID) => {
@@ -116,7 +170,7 @@ export default function BugTracking() {
   const putbugAssign = async (bugAssign) => {
     console.log(bugAssign);
     const response = await axios.put(
-      "http://127.0.0.1:5000/admin/updateTracker",
+      `http://127.0.0.1:5000/admin/updateTracker/assigned/${bugAssign.trackID}`,
       bugAssign
     );
     if (response.data.error) {
@@ -177,13 +231,13 @@ export default function BugTracking() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) navigate("/", { replace: true });
-    if(localStorage.getItem("urole")==="Admin"){
+    if (localStorage.getItem("urole") === "Admin") {
       setStatus("New");
-    }else if(localStorage.getItem("urole")==="Developer"){
+    } else if (localStorage.getItem("urole") === "Developer") {
       setStatus("Assigned");
     }
-    else{
-    setStatus("Resolved");
+    else {
+      setStatus("Resolved");
     }
     getData();
   }, [navigate])
@@ -211,7 +265,6 @@ export default function BugTracking() {
           <Modal.Header className="bg-white">
             <Modal.Title></Modal.Title>
           </Modal.Header>
-          <Modal.Body className="bg-white" >{message}</Modal.Body>
           <Modal.Body className="bg-white" >
             <div className="container" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
 
@@ -282,9 +335,29 @@ export default function BugTracking() {
                                               })
                                             }
                                             <div className="col-12">
-                                              <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate}</span></span>
+                                              <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate} {bugItem.crtTime}</span></span>
                                               </h5>
                                             </div>
+                                            {
+                                              btItem.status === "New" ?
+                                              <div></div>
+                                              :
+                                              btItem.status === "Assigned" || btItem.status === "Open" ?
+                                              <div className="col-12">
+                                              <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                              </h5>
+                                              <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                              </h5>
+                                            </div>:btItem.compDate !=null ?
+                                            <div className="col-12">
+                                              <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                              </h5>
+                                              <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                              </h5>
+                                            <h5 className="mt-1">Completed : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.compDate} {btItem.compTime}</span></span>
+                                            </h5>
+                                          </div>
+                                          :<div></div>}
                                             <div className="form-group col-12">
                                               <div className=' border border-warning rounded' style={{ height: '100px', overflow: 'auto' }}>
                                                 {bugItem.bugDesc}
@@ -311,9 +384,12 @@ export default function BugTracking() {
                                             >
                                               <option id="empID" selected>Select</option>
                                               {empList.map((empItem) => {
-                                                return (
-                                                  <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
-                                                );
+                                                if(empItem.roleID===2){
+                                                  return (
+                                                    <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
+                                                  );
+                                                }
+                                                return null;
                                               })}
                                             </select>
                                           </div>
@@ -325,6 +401,7 @@ export default function BugTracking() {
                                               id="dueDate"
                                               value={dueDate}
                                               onChange={handleInput}
+                                              pattern="[A-Za-z]+"
                                             />
                                           </div>
                                           <div className="form-group col-sm-12 col-md-4">
@@ -335,12 +412,23 @@ export default function BugTracking() {
                                               id="dueTime"
                                               value={dueTime}
                                               onChange={handleInput}
+                                              required
                                             />
                                           </div>
 
                                           <div className="form-group col-sm-12 col-md-4">
                                             <button type="button" onClick={() => handlesubmit(btItem.trackID)} className="btn btn-success text-center">Assign Bug</button>
                                           </div>
+
+                                          {
+                                             btItem.status === "Verified" ?
+                                             <div className="form-group col-sm-12 col-md-4">
+                                            <button type="button" onClick={() => handleClosed(btItem.trackID)} className="btn btn-warning text-center">Close Bug</button>
+                                               </div>
+                                            
+                                             :
+                                             <div className="form-group col-sm-12 col-md-4"></div>
+                                          }
 
                                           {("All" === status)
                                             ?
@@ -351,12 +439,19 @@ export default function BugTracking() {
                                             <div></div>}
 
                                         </form>
-                                        :
-                                        <form className="row mt-4">
-                                            <div className="form-group col-sm-12 col-md-4">
-                                              <button type="button" onClick={() => handleAccept(btItem.trackID)} className="btn btn-success text-center">Accept Bug</button>
-                                            </div>
-                                        </form>
+                                        : (
+                                          btItem.status === "Assigned" ?
+                                            <form className="row mt-4">
+                                              <div className="form-group col-sm-12 col-md-4">
+                                                <button type="button" onClick={() => handleAccept(btItem.trackID)} className="btn btn-success text-center">Accept Bug</button>
+                                              </div>
+                                            </form>
+                                            :
+                                            <form className="row mt-4">
+                                              <div className="form-group col-sm-12 col-md-4">
+                                                <button type="button" onClick={() => handleResolved(btItem.trackID)} className="btn btn-success text-center">Mark as Resolved</button>
+                                              </div>
+                                            </form>)
 
                                     }
                                   </div>
@@ -365,15 +460,12 @@ export default function BugTracking() {
                             }
                             return null;
                           }))
-
                       }
                       return null;
                     })
                   }
                 </div>
               </div>
-
-
             </div>
           </Modal.Body>
           <Modal.Footer className={bgcolor} >
@@ -406,6 +498,8 @@ export default function BugTracking() {
                     <option value="Open">Open</option>
                     <option value="Resolved">Resolved</option>
                     <option value="Verified">Verified</option>
+                    <option value="Reopen">Reopen</option>
+                    <option value="Retest">Retest</option>
                     <option value="Closed">Closed</option>
                     <option value="All" >All</option>
                   </select>
@@ -480,8 +574,8 @@ export default function BugTracking() {
                                           return null;
                                         })
                                       }
-                                      <div className="col-lg-12 col-xl-3">
-                                        <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate}</span></span>
+                                      <div className="col-lg-12 col-xl-4">
+                                        <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate} {bugItem.crtTime}</span></span>
                                         </h5>
                                       </div>
                                       <div className="form-group col-lg-12 col-xl-2">
@@ -493,55 +587,6 @@ export default function BugTracking() {
                                 return null;
                               })
                             }
-                            {/* <div><form className="row mt-4">
-                              <div className="form-group col-sm-12 col-md-4">
-                                <label htmlFor="empID">Assign To : </label>
-
-                                <select id="empID" value={empID} className="form-control form-select" variant="info" aria-label="Default select example"
-                                  onChange={handleInput}
-                                >
-                                  <option id="empID" selected>Select</option>
-                                  {empList.map((empItem) => {
-                                    return (
-                                      <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
-                                    );
-                                  })}
-                                </select>
-                              </div>
-                              <div className="form-group col-sm-12 col-md-4">
-                                <label htmlFor="startDate">Due Date : </label>
-                                <input
-                                  className="form-control"
-                                  type="date"
-                                  id="dueDate"
-                                  value={dueDate}
-                                  onChange={handleInput}
-                                />
-                              </div>
-                              <div className="form-group col-sm-12 col-md-4">
-                                <label htmlFor="startDate">Due Time : </label>
-                                <input
-                                  className="form-control"
-                                  type="time"
-                                  id="dueTime"
-                                  value={dueTime}
-                                  onChange={handleInput}
-                                />
-                              </div>
-
-                              <div className="form-group col-sm-12 col-md-4">
-                                <button type="button" onClick={() => handlesubmit(btItem.trackID)} className="btn btn-success text-center">Assign Bug</button>
-                              </div>
-
-                              {("All" === status)
-                                ?
-                                <div className="form-group col-sm-12 col-md-4">
-                                  <button type="button" onClick={() => handleDelete(btItem.trackID)} className="btn btn-danger text-center">Delete Bug</button>
-                                </div>
-                                :
-                                <div></div>}
-
-                            </form></div> */}
                           </div>
                         )
                       }

@@ -23,3 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 ./config/database.js
+./components/bugRegistration.js
+./components/BugReport.js

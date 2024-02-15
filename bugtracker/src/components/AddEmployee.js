@@ -35,8 +35,8 @@ export default function AddEmployee(props) {
   }, [props]);
 
   const getRole = async () => {
-    const resp2 = await axios.get("http://127.0.0.1:5000/getrole");
- //   console.log(resp2);
+    const resp2 = await axios.get("http://127.0.0.1:5000/admin/getrole");
+    //   console.log(resp2);
     setRoleList(resp2.data);
   }
 
@@ -48,9 +48,9 @@ export default function AddEmployee(props) {
       email: email,
       roleID: roleID,
     };
-   // console.log(updatedData);
+    // console.log(updatedData);
     const udpatedRecord = await axios.put(
-      "http://127.0.0.1:5000/updateEmployee",
+      "http://127.0.0.1:5000/admin/updateEmployee",
       updatedData
     );
     props.updateEmployeeList();
@@ -107,9 +107,9 @@ export default function AddEmployee(props) {
   };
 
   const addEmployee = async (employee) => {
-   
+
     const response = await axios.post(
-      "http://127.0.0.1:5000/newEmployee",
+      "http://127.0.0.1:5000/admin/newEmployee",
       employee
     );
     if (response.data.error) {
@@ -148,7 +148,7 @@ export default function AddEmployee(props) {
     };
 
     console.log(object);
-    
+
     if (isUpdateButton) {
       updateEmployee(object);
     } else {
@@ -179,16 +179,23 @@ export default function AddEmployee(props) {
 
 
       <form className="row mt-4">
-        <div className="form-group col-sm-12 col-md-4">
-          <label htmlFor="empID">Employee Id: </label>
-          <input
-            className="form-control"
-            type="text"
-            id="empID"
-            value={empID}
-            onChange={handleInput}
-          />
-        </div>
+        {
+          isUpdateButton ?
+            <div className="form-group col-sm-12 col-md-4">
+              <label htmlFor="empID">Employee Id: </label>
+              <input
+                className="form-control"
+                type="text"
+                id="empID"
+                value={empID}
+                readonly
+              />
+            </div>
+            :
+            <div></div>
+
+        }
+
         <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="firstName">First Name: </label>
           <input
