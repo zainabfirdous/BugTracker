@@ -6,21 +6,29 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import BugRegistrationForm from './components/BugRegistrationForm';
 
 export default function Dashboard() {
 
   const navigate = useNavigate();
 
   const [show, setShow] = useState(false);
+  const [bugShow, setBugShow] = useState(false);
   const [showprof, setShowprof] = useState(false);
   const handleClose = () => setShow(false);
+  const handleCloseBug = () => setBugShow(false);
   const handleCloseprof = () => setShowprof(false);
   const [bgcolor, setBgColor] = useState("");
   const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [isAlertVisibleBug, setIsAlertVisibleBug] = useState(false);
   const [isAlertVisible1, setIsAlertVisible1] = useState(false);
   const [message, setSetMessage] = useState("");
   const [urole, setUrole] = useState("");
   const [profile, setProfile] = useState({});
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword1, setNewPassword1] = useState("");
+  const [newPassword2, setNewPassword2] = useState("");
+
 
   const timeout = () => {
 
@@ -36,9 +44,10 @@ export default function Dashboard() {
         navigate("/AppInfo", { replace: false });
         setMyToken(false);
       }
-    }, 20000);
+    }, 200000);
 
   }
+  
 
   const getData = async () => {
     let empID = parseInt(localStorage.getItem('uid'));
@@ -64,6 +73,79 @@ export default function Dashboard() {
     navigate("/Login", { replace: true });
     timeout();
   };
+
+  const handleCreateBug = () =>{
+    setBugShow(true);
+    setIsAlertVisibleBug(true);
+  }
+
+  const handleUpdatePassword = async () => {
+
+    if (newPassword1 !== newPassword2) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-danger");
+      setSetMessage("Password Not Matching!!!");
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+    else {
+      const body = {
+        empID: localStorage.getItem('uid'),
+        password: newPassword1
+      }
+      try {
+        const response = await axios.put(`http://127.0.0.1:5000/${localStorage.getItem("urole") === "Developer" ? "dev" : "tester"}/updatePassword`, body);
+        // console.log("response : ",response);
+        if (response) {
+          setShow(true)
+          setIsAlertVisible(true);
+          setShow(true);
+          setBgColor("bg-success");
+          setSetMessage("Password updated Successfully!!!");
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
+          setOldPassword("");
+          setNewPassword1("");
+          setNewPassword2("");
+        }
+
+      }
+      catch (e) {
+        console.log(e);
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage(e.response.data.error);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+    }
+  }
+
+  const handelInput = (e) => {
+    switch (e.target.id) {
+      case "oldPassword":
+        setOldPassword(e.target.value);
+        // console.log("oldPassword :",oldPassword);
+        break;
+      case "newPassword1":
+        setNewPassword1(e.target.value);
+        //  console.log("newPassword1 :",newPassword1);
+        break;
+      case "newPassword2":
+        setNewPassword2(e.target.value);
+        // console.log("newPassword2 :",newPassword2);
+        break;
+      default:
+        break;
+    }
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -101,19 +183,18 @@ export default function Dashboard() {
         </Modal>}
       </div>
 
-      {/* <div className="App">
-        {isAlertVisible1 && <Modal show={showprof} onHide={handleClose}>
-          <Modal.Header className="bg-white">
-            <Modal.Title></Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="bg-white" >{message}</Modal.Body>
+      {/* Create Bug */}
+      <div className="App">
+        {isAlertVisibleBug && <Modal  show={bugShow} onHide={handleClose}>
+          
+          <BugRegistrationForm />
           <Modal.Footer className={bgcolor} >
-            <Button variant="warning" className='h-1' onClick={handleClose}>
+            <Button variant="warning" className='h-1' onClick={handleCloseBug}>
               Close
             </Button>
           </Modal.Footer>
         </Modal>}
-      </div> */}
+      </div>
 
       {/* Profile */}
       {
@@ -137,11 +218,37 @@ export default function Dashboard() {
               <Modal.Body className="bg-white" >ID : {profile.empID}<br></br> Name : {profile.fName} {profile.lName}
                 <br></br>Email :  {profile.email}
               </Modal.Body>
-              <Modal.Body className="bg-white m-1" >Change Password : <br></br> Old Password : <input className="form-control m-2" style={{ width: "50%" }}></input>
-                <br></br> New Password : <input className="form-control m-1" style={{ width: "50%" }}></input> Confirm Password : <input className="form-control m-1" style={{ width: "50%" }}></input>
+
+              <Modal.Body className="bg-white" >
+                <div className='row'>
+                  <div className='col-12'>
+                    <label>Change Password </label>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-6'>
+                    <label >Old Password :</label> <input className="form-control" id='oldPassword' value={oldPassword} onChange={handelInput} style={{ width: "100%" }}></input>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-6 mt-1'>
+                    <label >New Password :</label> <input id='newPassword1' value={newPassword1} onChange={handelInput} className="form-control" style={{ width: "100%" }}></input>
+                  </div>
+                  <div className='col-6' mt-1>
+                    <label  > Confirm Password : </label> <input id='newPassword2' value={newPassword2} onChange={handelInput} className="form-control" style={{ width: "100%" }}></input>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-6 mt-2'>
+                    <Button variant="success" className='h-1' onClick={handleUpdatePassword}>
+                      Update Password
+                    </Button>
+                  </div>
+                </div>
+
               </Modal.Body>
               <Modal.Footer className={bgcolor} >
-              <Button variant="success" className='h-1' onClick={()=>{navigate("/UserProject", { replace: true },setShowprof(false));}}>
+                <Button variant="success" className='h-1' onClick={() => { navigate("/UserProject", { replace: true }, setShowprof(false)); }}>
                   Projects
                 </Button>
                 <Button variant="warning" className='h-1' onClick={handleCloseprof}>
@@ -171,6 +278,8 @@ export default function Dashboard() {
                   : (<Nav.Link href="/DevBugPortal">Bug Report</Nav.Link>))) : <Nav.Link></Nav.Link>}
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/Team">Team</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/ProjectAssign">Project Assign</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
+              {localStorage.user ? (urole === "Admin" || urole === "Tester" ? <button class="btn btn-info btn-lg float-right p-1" type="submit" onClick={() => handleCreateBug()}> Create</button> : <div></div>)
+            : <div></div>}
             </Nav>
 
           </Navbar.Collapse>

@@ -64,6 +64,11 @@ export default function Employee() {
   const handleUpdateEmployee = (employee) => {
     console.log(employee);
     // pass employee object to addEmployee component
+    
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
     setUpdateEmployee(employee);
   };
 

@@ -22,6 +22,11 @@ export default function Team() {
 const [updateTeam , setUpdateTeam ] = useState({});
   
   const handleUpdateTeam = (team) =>{
+    
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
     setUpdateTeam(team);
   }
        

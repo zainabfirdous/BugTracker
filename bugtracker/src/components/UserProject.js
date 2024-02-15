@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import styles from "../UserProfile.css";
 
 
 export default function UserProject() {
@@ -77,6 +78,12 @@ export default function UserProject() {
 
     getProject();
   }, [navigate]);
+
+  const [activeTab, setActiveTab] = useState('profile');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
 
   return (
    
@@ -153,6 +160,29 @@ export default function UserProject() {
        </div>
      </div>
    </div>
+
+   <div className={styles['user-profile']}>
+      <div className={styles.sidebar}>
+        <ul>
+          <li className={activeTab === 'profile' ? styles.active : ''} onClick={() => handleTabChange('profile')}>
+            Profile
+          </li>
+          <li className={activeTab === 'project' ? styles.active : ''} onClick={() => handleTabChange('project')}>
+            Project
+          </li>
+          <li className={activeTab === 'team' ? styles.active : ''} onClick={() => handleTabChange('team')}>
+            Team
+          </li>
+          <li className={activeTab === 'setting' ? styles.active : ''} onClick={() => handleTabChange('setting')}>
+            Setting
+          </li>
+        </ul>
+      </div>
+
+      <div className={styles.content}>
+        {/* Content components go here */}
+      </div>
+    </div>
    </>
 
   )
