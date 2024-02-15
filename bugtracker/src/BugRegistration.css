@@ -1,0 +1,38 @@
+
+.bug-registration-form {
+    margin-top: 20px;
+  }
+  
+  .bug-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-title {
+    text-align: center;
+    color: #007bff;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+
+  
+  .btn-warning {
+    background-color: #ffc107;
+    border: 1px solid #ffc107;
+    color: #212529;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    color: #ffffff;
+  }
