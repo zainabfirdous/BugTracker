@@ -26,11 +26,12 @@ export default function Login () {
       password: password,
     };
     try {
+      console.log("Hello ");
       const result = await axios.post(
         "http://127.0.0.1:5000/Login",
         reqBody
       );
-     
+
       if (result.data.token) {
         // redirect to Welcome
         localStorage.setItem("token", result.data.token);

@@ -188,6 +188,7 @@ const UpdateRetest = async(req, res)=>{
 const UpdatePassword = async(req, res)=>{
     try{
         const body = req.body
+
         if (!body.password) {
             return res.status(400).json({ error: "Password is required for update" });
         }
