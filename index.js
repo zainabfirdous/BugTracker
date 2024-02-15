@@ -19,13 +19,10 @@ const login = require('./route/login.js');
 
 const bodyParser = require('body-parser');
 
-// app.use(cors());
-
-
 app.use(bodyParser.json());
 
 app.use(express.json());
-// app.use(cors());
+
 
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -33,19 +30,10 @@ app.use(cors({
     credentials: true
   }));
 
-// app.use(cors(
-//     {
-//         origin: 'http://localhost:3000',
-//         methods: ["POST","GET","PUT","DELETE"],
-//         credentials : true
-//     }
-// ));
-
 app.use(bodyParser.json());
 
 
 app.use(bodyParser.urlencoded({extended:false}));
-
 app.use("/", login);
 
 app.listen(PORT,HOST,(err)=>{
