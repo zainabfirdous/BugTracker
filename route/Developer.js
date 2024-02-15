@@ -190,9 +190,9 @@ const UpdatePassword = async(req, res)=>{
         const body = req.body
 
         req.body.updDate = Sequelize.literal('CURRENT_DATE');
-        const updateCount = await EmpProfile.update(body, {
-            where:{empID: body.empID}}) 
-        res.status(200).json(updateCount)
+        // const updateCount = await EmpProfile.update(body, {
+        //     where:{empID: body.empID}}) 
+        // res.status(200).json(updateCount)
 
         if (!body.password) {
             return res.status(400).json({ error: "Password is required for update" });
