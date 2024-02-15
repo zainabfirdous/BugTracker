@@ -53,7 +53,7 @@ const DevProjects = async(req, res)=>{
           'JOIN Employee e ON pa.empID = e.empID ' +
           'WHERE e.empID = :empID',
           {
-            replacements: { empID: req.params.id }, // Replace :employeeId with the desired employee ID
+            replacements: { empID: req.empID }, // Replace :employeeId with the desired employee ID
             type: QueryTypes.SELECT
           }
         );
@@ -189,7 +189,9 @@ const UpdateRetest = async(req, res)=>{
 const UpdatePassword = async(req, res)=>{
     try{
         const body = req.body
+
         if (!body.Oldpassword) {
+
             return res.status(400).json({ error: "Password is required for update" });
         }
         //console.log('inside update method')
@@ -223,8 +225,8 @@ const UpdatePassword = async(req, res)=>{
 
     Drouter.get("/projTeam/:id/:eid", DProjTeam)
     Drouter.get("/teammembers/:id/:eid", DevTeamMembers);
-    Drouter.get("/devprojects/:id", DevProjects);
-    Drouter.get("/devDashboard/:id", DevProfile);
+    Drouter.get("/devprojects", DevProjects);
+    Drouter.get("/devDashboard", DevProfile);
     Drouter.get("/trackBug/:id",tracking);
     Drouter.put("/updateTracker/resolved/:id",UpdateTrack )
     Drouter.put("/updateTracker/acceptBug/:id",UpdateStatus )
