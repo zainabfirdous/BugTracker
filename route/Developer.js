@@ -7,6 +7,7 @@ const Sequelize = require('sequelize');
 const currentDate = new Date();
 const formattedDate = currentDate.toISOString().split('T')[0];
 const EmpProfile = require("../models/EmpProfile.js")
+const bcrypt = require('bcrypt')
 
 
 const express = require('express');
@@ -189,17 +190,25 @@ const UpdatePassword = async(req, res)=>{
     try{
         const body = req.body
 
-        if (!body.password) {
+        if (!body.Oldpassword) {
+
             return res.status(400).json({ error: "Password is required for update" });
         }
         //console.log('inside update method')
+        const empID = req.empID
+        const empPassword = await EmpProfile.findOne({where:{empID: empID}})
+        const isMatched = await bcrypt.compare( body.Oldpassword, empPassword.password)
+        if(isMatched){
         body.updDate = Sequelize.literal('CURRENT_DATE');
         const updateCount = await EmpProfile.update({
-            password: body.password,
+            password: body.Newpassword,
             updDate: body.updDate
         },{
             where:{empID: body.empID},  individualHooks: true}) 
-        res.status(200).json(updateCount)
+        return res.status(200).json(updateCount)}
+        else{
+            return res.status(401).json({error: "Incorrect Old Password"})
+        }
     }catch(error){
         console.error('Error creating employee:', error);
         // Check if error is a Sequelize validation error
