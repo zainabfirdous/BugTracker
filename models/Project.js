@@ -13,8 +13,11 @@ const proj = con.define(
         type:STRING,
         allowNull:false,
         validate: {
-            isAlphanumeric: {
-                msg: 'Project Name must contain only alphabets and numbers'
+            isAlphanumericWithSpace(value){
+                const regex = /^[a-zA-Z0-9\s]+$/;
+                if (!regex.test(value)) {
+                    throw new Error('Project Name must contain only alphabets and numbers');
+                }
             }
         }
     },

@@ -12,21 +12,24 @@ const Emp = con.define
     fName:{
         type:STRING,
         allowNull: false,
-        validate:{isAlpha:{
+        validate:{
+            isAlpha:{
             msg:'First name must contain only alphabetic characters'
         }}
     },
     lName:{
         type:STRING,
         allowNull: false,
-        validate:{isAlpha:{
+        validate:{
+            isAlpha:{
             msg:'Last name must contain only alphabetic characters'
         }}
     },
     email:{
         type:STRING,
         allowNull: false,
-        validate:{isEmail:{
+        validate:{
+            isEmail:{
             msg: 'Invalid email format'
         }}
     },
