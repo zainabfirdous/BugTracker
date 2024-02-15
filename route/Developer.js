@@ -189,15 +189,10 @@ const UpdatePassword = async(req, res)=>{
     try{
         const body = req.body
 
-        req.body.updDate = Sequelize.literal('CURRENT_DATE');
-        // const updateCount = await EmpProfile.update(body, {
-        //     where:{empID: body.empID}}) 
-        // res.status(200).json(updateCount)
-
         if (!body.password) {
             return res.status(400).json({ error: "Password is required for update" });
         }
-        console.log('inside update method')
+        //console.log('inside update method')
         body.updDate = Sequelize.literal('CURRENT_DATE');
         const updateCount = await EmpProfile.update({
             password: body.password,
@@ -205,14 +200,13 @@ const UpdatePassword = async(req, res)=>{
         },{
             where:{empID: body.empID},  individualHooks: true}) 
         res.status(200).json(updateCount)
-
     }catch(error){
         console.error('Error creating employee:', error);
         // Check if error is a Sequelize validation error
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating password" });

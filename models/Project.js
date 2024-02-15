@@ -26,32 +26,32 @@ const proj = con.define(
         allowNull:false,
         validate: {
             isNotPastDate(value) {
+                if (value !== null) {
                 const currentDate = new Date();
                 if (new Date(value) < currentDate) {
                     throw new Error('Start date must be a future date');
                 }
-            },
             isDate: {
                 msg: 'Start date must be in date format'
-            }
+            }}
         }
-
+    }
     },
     endDate:{
         type:DATEONLY,
         allowNull:false,
         validate: {
             isNotPastDate(value) {
+                if (value !== null) {
                 const currentDate = new Date();
                 if (new Date(value) < currentDate) {
                     throw new Error('Start date must be a future date');
                 }
-            },
             isDate: {
                 msg: 'Start date must be in date format'
-            }
+            }}
         }
-    },
+    }},
     status:{
         type:STRING,
         allowNull:false,
