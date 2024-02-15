@@ -121,23 +121,25 @@ export default function AddProject(props) {
 
       const addProject = async (project) => {
         console.log(project);
-        const response = await axios.post(
-          "http://127.0.0.1:5000/admin/newProject",
-          project
-        );
-        if (response.data.error) {
+        try{
+          const response = await axios.post(
+            "http://127.0.0.1:5000/admin/newProject",
+            project
+          );
+          console.log(response);
+          props.updateProjectList();
+          resetForm();
+        }
+        catch(e){
           setShow(true)
           setIsAlertVisible(true);
           setShow(true);
           setBgColor("bg-warning");
-          setSetMessage(response.data.error);
+          setSetMessage(e.response.data.error);
           setTimeout(() => {
             setIsAlertVisible(false);
           }, 5000);
-        }
-        else{
-          props.updateProjectList();
-          resetForm();
+
         }
       };
 

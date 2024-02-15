@@ -66,6 +66,11 @@ export default function Project() {
     console.log(project);
     // pass employee object to addEmployee component
     setUpdateProject(project);
+    
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   useEffect(() => {

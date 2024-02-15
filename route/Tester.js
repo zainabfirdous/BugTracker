@@ -6,12 +6,8 @@ const sequelize = require('../config/database.js');
 const Bug = require("../models/Bug.js");
 const EmpProfile = require("../models/EmpProfile.js")
 const Sequelize = require('sequelize');
-
-
-
 const express = require('express');
 const Trouter = express.Router();
-
 
 const testerProfile = async (req, res) => {
     try {
@@ -187,7 +183,7 @@ const DeleteBug =  async (req, res) => {
     try {
         const id = req.params.id;
         const deletedCount = await Bug.destroy({ where: { bugID: id } });
-        res.json(deletedCount);
+        res.status(200).json(deletedCount);
     } catch (error) {
         console.error('Error while deleting bug:', error);
         res.json({ error: "This Bug Can't be Deleted, (FK-In_Use)" });
@@ -257,7 +253,7 @@ const UpdatePassword = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While Adding Please Check" });
