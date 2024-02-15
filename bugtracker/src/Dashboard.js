@@ -28,10 +28,10 @@ export default function Dashboard() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword1, setNewPassword1] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
+  const [axiosConfig, setAxiosConfig] = useState({});
 
 
   const timeout = () => {
-
     setTimeout(() => {
       const token = localStorage.getItem("token");
       //   console.log(token);
@@ -47,16 +47,28 @@ export default function Dashboard() {
     }, 200000);
 
   }
-  
 
-  const getData = async () => {
-    let empID = parseInt(localStorage.getItem('uid'));
-    const data = await axios.get(`http://127.0.0.1:5000/dev/devDashboard/${empID}`);
-    setProfile(data.data);
+
+  const getData = async (axiosConfig) => {
+    try {
+      const data = await axios.get(`http://127.0.0.1:5000/dev/devDashboard`, axiosConfig);
+      console.log(data);
+      setProfile(data.data);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   useEffect(() => {
-    getData();
+    const token = localStorage.getItem('token');
+
+    const axiosConfig = {
+      headers: {
+        Authorization: token
+      }
+    }
+    setAxiosConfig(axiosConfig);
+    getData(axiosConfig);
   }, [])
 
 
@@ -74,7 +86,7 @@ export default function Dashboard() {
     timeout();
   };
 
-  const handleCreateBug = () =>{
+  const handleCreateBug = () => {
     setBugShow(true);
     setIsAlertVisibleBug(true);
   }
@@ -97,7 +109,7 @@ export default function Dashboard() {
         password: newPassword1
       }
       try {
-        const response = await axios.put(`http://127.0.0.1:5000/${localStorage.getItem("urole") === "Developer" ? "dev" : "tester"}/updatePassword`, body);
+        const response = await axios.put(`http://127.0.0.1:5000/${localStorage.getItem("urole") === "Developer" ? "dev" : "tester"}/updatePassword`, body, axiosConfig);
         // console.log("response : ",response);
         if (response) {
           setShow(true)
@@ -185,8 +197,8 @@ export default function Dashboard() {
 
       {/* Create Bug */}
       <div className="App">
-        {isAlertVisibleBug && <Modal  show={bugShow} onHide={handleClose}>
-          
+        {isAlertVisibleBug && <Modal show={bugShow} onHide={handleClose}>
+
           <BugRegistrationForm />
           <Modal.Footer className={bgcolor} >
             <Button variant="warning" className='h-1' onClick={handleCloseBug}>
@@ -279,7 +291,7 @@ export default function Dashboard() {
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/Team">Team</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/ProjectAssign">Project Assign</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
               {localStorage.user ? (urole === "Admin" || urole === "Tester" ? <button class="btn btn-info btn-lg float-right p-1" type="submit" onClick={() => handleCreateBug()}> Create</button> : <div></div>)
-            : <div></div>}
+                : <div></div>}
             </Nav>
 
           </Navbar.Collapse>
