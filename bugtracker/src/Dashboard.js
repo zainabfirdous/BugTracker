@@ -16,7 +16,8 @@ export default function Dashboard() {
 
   const contextdata = useContext(NoteContext);
   const {setUserInfo } = useContext(NoteContext);
-  console.log("contextdata dash : ", contextdata.token);
+  
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
 
   const [urole, setUser] = useState("");
   const [isLogin, setIsLogin] = useState(false);
