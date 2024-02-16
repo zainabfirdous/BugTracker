@@ -3,9 +3,18 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
+
 export default function AddTeam(props) {
+
+
+  const contextdata = useContext(NoteContext);
+  //  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
+
   axios.defaults.withCredentials = true;
-    const [ isUpdateButton , setIsUpdateButton] = useState("");
+  const [isUpdateButton, setIsUpdateButton] = useState("");
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -13,55 +22,46 @@ export default function AddTeam(props) {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [bgcolor, setBgColor] = useState("");
 
-    const [teamID, setTeamID] = useState();
-    const [teamName, setTeamName] = useState();
-    const [projID, setProjID] = useState();
-    const [projlist, setProjList] = useState([]);
+  const [teamID, setTeamID] = useState();
+  const [teamName, setTeamName] = useState();
+  const [projID, setProjID] = useState();
+  const [projlist, setProjList] = useState([]);
 
-    const getProj = async () => {
-      const resp = await axios.get("http://127.0.0.1:5000/admin/getProjects");
-      setProjList(resp.data);
-    }
+  const getProj = async () => {
+    const resp = await axios.get("/admin/getProjects");
+    setProjList(resp.data);
+  }
 
-    useEffect(() => {
-      if (props.team.teamID) {
-        setTeamID(props.team.teamID);
-        setTeamName(props.team.teamName);
-        setProjID(props.team.projID);
+  useEffect(() => {
+    if (props.team.teamID) {
+      setTeamID(props.team.teamID);
+      setTeamName(props.team.teamName);
+      setProjID(props.team.projID);
       setIsUpdateButton(true);
     } else setIsUpdateButton(false);
-      getProj();
+    getProj();
   }, [props]);
 
-    const handlesubmit = (e) => {
-      e.preventDefault();
-  
-      const team = {
-        teamID : teamID,
-        teamName: teamName,
-        projID: projID,
-        admID : localStorage.getItem("uid")
-      };
-      isUpdateButton ? updateTeam(team) :  addTeam(team);
+  const handlesubmit = (e) => {
+    e.preventDefault();
+
+    const team = {
+      teamID: teamID,
+      teamName: teamName,
+      projID: projID,
+      admID: localStorage.getItem("uid")
     };
-  
-    const addTeam = async (team) => {
-      console.log(team);
+    isUpdateButton ? updateTeam(team) : addTeam(team);
+  };
+
+  const addTeam = async (team) => {
+    console.log(team);
+    try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/admin/newTeam",
+        "/admin/newTeam",
         team
       );
-      if (response.data.error) {
-        setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-warning");
-        setSetMessage(response.data.error);
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
-      }
-      else {
+      if (response) {
         resetForm();
         props.updateTeamList();
         setShow(true)
@@ -74,25 +74,26 @@ export default function AddTeam(props) {
         }, 5000);
         getProj();
       }
+    } catch (e) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
     }
+  }
 
-    const updateTeam = async (team) => {
-      console.log(team);
+  const updateTeam = async (team) => {
+    console.log(team);
+    try {
       const response = await axios.put(
-        "http://127.0.0.1:5000/admin/updateTeam",
+        "/admin/updateTeam",
         team
       );
-      if (response.data.error) {
-        setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-warning");
-        setSetMessage(response.data.error);
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
-      }
-      else {
+      if (response) {
         resetForm();
         props.updateTeamList();
         setShow(true)
@@ -105,29 +106,39 @@ export default function AddTeam(props) {
         }, 5000);
         getProj();
       }
+    } catch (e) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
     }
+  }
 
-    const resetForm = () => {
-      setTeamName("");
-      setProjID("");
-    };
+  const resetForm = () => {
+    setTeamName("");
+    setProjID("");
+  };
 
-    const handleInput = (e) => {
-        switch (e.target.id) {
-          case "teamName":
-            setTeamName(e.target.value);
-            break;
-          case "projID":
-            setProjID(e.target.value);
-            break;
-            default : break;
-        }
-      };
+  const handleInput = (e) => {
+    switch (e.target.id) {
+      case "teamName":
+        setTeamName(e.target.value);
+        break;
+      case "projID":
+        setProjID(e.target.value);
+        break;
+      default: break;
+    }
+  };
 
   return (
     <>
-     {/* Alert Message */}
-     <div className="App">
+      {/* Alert Message */}
+      <div className="App">
         {isAlertVisible && <Modal show={show} onHide={handleClose}>
           <Modal.Header className="bg-white">
             <Modal.Title></Modal.Title>
@@ -143,20 +154,20 @@ export default function AddTeam(props) {
 
       {/* Main Body */}
 
-<form className="row mt-4">
-    
-    <div className="form-group col-sm-12 col-md-4">
-      <label htmlFor="teamName">Name: </label>
-      <input
-        className="form-control"
-        type="text"
-        id="teamName"
-        value={teamName}
-        onChange={handleInput}
-      />
-    </div>
+      <form className="row mt-4">
 
-    <div className="form-group col-sm-12 col-md-4">
+        <div className="form-group col-sm-12 col-md-4">
+          <label htmlFor="teamName">Name: </label>
+          <input
+            className="form-control"
+            type="text"
+            id="teamName"
+            value={teamName}
+            onChange={handleInput}
+          />
+        </div>
+
+        <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="projID">Project : </label>
 
           <select id="projID" value={projID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
@@ -168,16 +179,16 @@ export default function AddTeam(props) {
             })}
           </select>
         </div>
-    
-    <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-      <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center" }
-        onClick={handlesubmit}
-       >
-        {isUpdateButton ? "Update" : "Add Team"}
-      </button>
-    </div>
-  </form>
-    
+
+        <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
+          <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"}
+            onClick={handlesubmit}
+          >
+            {isUpdateButton ? "Update" : "Add Team"}
+          </button>
+        </div>
+      </form>
+
 
     </>
   )

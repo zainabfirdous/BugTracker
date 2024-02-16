@@ -4,8 +4,15 @@ import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function ProjectAssign() {
+  
+  const contextdata = useContext(NoteContext);
+  //  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
+
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const [message, setSetMessage] = useState("");
@@ -25,6 +32,12 @@ export default function ProjectAssign() {
   const [empList, setEmpList] = useState([]);
   const [assignProjList, setAssignProjList] = useState([]);
 
+  useEffect(() => {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    getSelectData();
+  }, [navigate,contextdata]);
+
   const handleUpdateProject = async (aplItem) => {
 
     window.scrollTo({
@@ -40,25 +53,20 @@ export default function ProjectAssign() {
   }
 
   const getSelectData = async () => {
-
-    const resp1 = await axios.get("http://127.0.0.1:5000/admin/getProjects");
-
-    const resp2 = await axios.get("http://127.0.0.1:5000/admin/getteams");
-    const resp3 = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
-    setProjList(resp1.data);
-    setTeamList(resp2.data);
-    setEmpList(resp3.data);
-    const resp4 = await axios.get("http://127.0.0.1:5000/admin/projectAssign");
-    setAssignProjList(resp4.data);
-    console.log(resp4.data)
+    try{
+      const resp1 = await axios.get("/admin/getProjects");
+      const resp2 = await axios.get("/admin/getteams");
+      const resp3 = await axios.get("/admin/getEmployees");
+      const resp4 = await axios.get("/admin/projectAssign");
+      setProjList(resp1.data);
+      setTeamList(resp2.data);
+      setEmpList(resp3.data);
+      setAssignProjList(resp4.data);
+    }
+    catch(e){
+      console.log(e.message);
+    }
   }
-
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    getSelectData();
-  }, [navigate]);
 
   const handlesubmit = (e) => {
     e.preventDefault();
@@ -75,21 +83,12 @@ export default function ProjectAssign() {
   };
 
   const handleDelete = async (assignID) => {
-    const response = await axios.delete(
-      `http://127.0.0.1:5000/admin/deleteprojAssign/${assignID}`
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-    else {
-      setShow(true)
+    try{
+      const response = await axios.delete(
+        `/admin/deleteprojAssign/${assignID}`
+      );
+      if(response){
+        setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
@@ -98,66 +97,79 @@ export default function ProjectAssign() {
         setIsAlertVisible(false);
       }, 5000);
       getSelectData();
+      }
+    }catch(e){
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
     }
   }
 
   const updateProjAssign = async (projectAssign) => {
     const data = { ...projectAssign };
     data.assignID = assignID;
-    const response = await axios.put(
-      "http://127.0.0.1:5000/admin/updateProjAssign",
-      data
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-    else {
-      getSelectData();
-      resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage("Assignment Updated Successfully");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      setIsUpdateButton(false);
-    }
+    try{
+      const response = await axios.put(
+        "/admin/updateProjAssign",
+        data
+      );
+      if(response){
+        getSelectData();
+        resetForm();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Assignment Updated Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        setIsUpdateButton(false);
+      }
 
+    }catch(e){
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
   }
 
   const addProjAssign = async (projAssign) => {
     console.log(projAssign);
-    const response = await axios.post(
-      "http://127.0.0.1:5000/admin/newPorjectAssign",
-      projAssign
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+    try{
+      const response = await axios.post(
+        "/admin/newPorjectAssign",
+        projAssign
+      );
+      if(response){
+        getSelectData();
+        resetForm();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Project Assigned Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
     }
-    else {
-      getSelectData();
-      resetForm();
+    catch(e){
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage("Project Assigned Successfully");
+      setSetMessage(e.response.data.error);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);

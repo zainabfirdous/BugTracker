@@ -8,9 +8,11 @@ const currentDate = new Date();
 const formattedDate = currentDate.toISOString().split('T')[0];
 const EmpProfile = require("../models/EmpProfile.js")
 const bcrypt = require('bcrypt')
+const Bug = require("../models/Bug.js");
 
 
 const express = require('express');
+
 const Drouter = express.Router();
 
 
@@ -189,9 +191,7 @@ const UpdateRetest = async(req, res)=>{
 const UpdatePassword = async(req, res)=>{
     try{
         const body = req.body
-
         if (!body.Oldpassword) {
-
             return res.status(400).json({ error: "Password is required for update" });
         }
         //console.log('inside update method')
@@ -204,7 +204,7 @@ const UpdatePassword = async(req, res)=>{
             password: body.Newpassword,
             updDate: body.updDate
         },{
-            where:{empID: body.empID},  individualHooks: true}) 
+            where:{empID: req.empID},  individualHooks: true}) 
         return res.status(200).json(updateCount)}
         else{
             return res.status(401).json({error: "Incorrect Old Password"})
@@ -223,10 +223,45 @@ const UpdatePassword = async(req, res)=>{
     }
 }
 
+
+const Bugs = async (req, res) => {
+    try {
+        const bug = await Bug.findAll();
+        res.status(200).json(bug);
+    } catch (error) {
+        console.error('Error fetching bugs:', error);
+        res.status(500).json({ error: "Error While fetching bugs" });
+    }
+}
+
+const Track = async(req, res)=>{
+    try{
+        const Track = await Tracker.findAll()
+        res.status(200).json(Track);
+    }catch(error){
+        console.error('Error tracking bug:', error);
+        res.status(500).json({ error: "Error While fetching bug trackers" });
+    }
+}
+
+const allEmp =  async (req, res) => {
+    try {
+        const employees = await employee.findAll();
+        res.status(200).json(employees);
+    } catch (error) {
+        console.error('Error fetching employees:', error);
+        res.status(500).json({ error: "Error While fetching employees" });
+    }
+}
+
+
+    Drouter.get("/getEmployees", allEmp)
+    Drouter.get("/getbugs", Bugs)
     Drouter.get("/projTeam/:id/:eid", DProjTeam)
     Drouter.get("/teammembers/:id/:eid", DevTeamMembers);
     Drouter.get("/devprojects", DevProjects);
     Drouter.get("/devDashboard", DevProfile);
+    Drouter.get("/trackbugs", Track)
     Drouter.get("/trackBug/:id",tracking);
     Drouter.put("/updateTracker/resolved/:id",UpdateTrack )
     Drouter.put("/updateTracker/acceptBug/:id",UpdateStatus )
