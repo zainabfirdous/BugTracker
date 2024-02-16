@@ -250,7 +250,7 @@ const UpdatePassword = async(req, res)=>{
             password: body.Newpassword,
             updDate: body.updDate
         },{
-            where:{empID: body.empID},  individualHooks: true}) 
+            where:{empID: req.empID},  individualHooks: true}) 
         return res.status(200).json(updateCount)}
         else{
             return res.status(401).json({error: "Incorrect Old Password"})

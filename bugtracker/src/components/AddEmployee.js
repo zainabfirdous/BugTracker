@@ -2,8 +2,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
+
 
 export default function AddEmployee(props) {
+
+  
+  const contextdata = useContext(NoteContext);
+//  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
   axios.defaults.withCredentials = true;
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -28,14 +36,13 @@ export default function AddEmployee(props) {
       setEmail(props.employee.email);
       setRoleID(props.employee.roleID);
       setRoleList(props.rolelist);
-
       setIsUpdateButton(true);
     } else setIsUpdateButton(false);
     getRole();
   }, [props]);
 
   const getRole = async () => {
-    const resp2 = await axios.get("http://127.0.0.1:5000/admin/getrole");
+    const resp2 = await axios.get("/admin/getrole");
     //   console.log(resp2);
     setRoleList(resp2.data);
   }
@@ -50,7 +57,7 @@ export default function AddEmployee(props) {
     };
     // console.log(updatedData);
     const udpatedRecord = await axios.put(
-      "http://127.0.0.1:5000/admin/updateEmployee",
+      "/admin/updateEmployee",
       updatedData
     );
     props.updateEmployeeList();
@@ -108,23 +115,32 @@ export default function AddEmployee(props) {
 
   const addEmployee = async (employee) => {
 
-    const response = await axios.post(
-      "http://127.0.0.1:5000/admin/newEmployee",
-      employee
-    );
-    if (response.data.error) {
+    try{
+      const response = await axios.post(
+        "/admin/newEmployee",
+        employee);
+        if(response){
+          setShow(true)
+          setIsAlertVisible(true);
+          setShow(true);
+          setBgColor("bg-warning");
+          setSetMessage("Employee Added");
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
+          props.updateEmployeeList();
+          resetForm();
+        }
+       
+    }catch(e){
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage(response.data.error);
+      setSetMessage(e.response.data.error);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
-    }
-    else {
-      props.updateEmployeeList();
-      resetForm();
     }
   };
 

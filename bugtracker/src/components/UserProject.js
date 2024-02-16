@@ -5,9 +5,16 @@ import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import styles from "../UserProfile.css";
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
+
 
 
 export default function UserProject() {
+
+  const contextdata = useContext(NoteContext);
+//  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
 
      //axios.defaults.withCredentials = true;
   const [message, setSetMessage] = useState("");
@@ -16,11 +23,16 @@ export default function UserProject() {
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
   const navigate = useNavigate();
   const [projectList, setProjectList] = useState([]);
-  const [axiosConfig, setAxiosConfig] = useState({});
+  
+  useEffect(() => {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    getProject(contextdata);
+  }, [navigate,contextdata]);
 
-  const getProject = async (axiosConfig) => {
+  const getProject = async (contextdata) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/${localStorage.getItem("urole")==="Developer" ? "dev" : "tester"}/${localStorage.getItem("urole")==="Developer" ? "devprojects" : "testerprojects"}`,axiosConfig);
+      const response = await axios.get(`/${contextdata.urole==="Developer" ? "dev" : "tester"}/${localStorage.getItem("urole")==="Developer" ? "devprojects" : "testerprojects"}`);
       setProjectList(response.data);
     } catch (err) {
       console.log(err);
@@ -29,7 +41,7 @@ export default function UserProject() {
 
   const handleTeamMemInProject = async (projID) => {
     const projectteamMem = await axios.get(
-      `http://127.0.0.1:5000/dev/projTeam/${projID}/${localStorage.getItem("uid")}`,axiosConfig
+      `/dev/projTeam/${projID}/${localStorage.getItem("uid")}`
     );
     if(projectteamMem.data.error){
       setIsAlertVisible(true);
@@ -73,18 +85,7 @@ export default function UserProject() {
 
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    const axiosConfig = {
-      headers : {
-        Authorization : token
-      }
-    }
-    setAxiosConfig(axiosConfig);
-
-    getProject(axiosConfig);
-  }, [navigate]);
+ 
 
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -117,6 +118,10 @@ export default function UserProject() {
    >
       <div className="container">
        <div class="table-responsive">
+        <h1>{contextdata.token}</h1>
+        <h1>{contextdata.urole}</h1>
+        <h1>{contextdata.uid}</h1>
+        <h1>{contextdata.user}</h1>
        <table className="table table-striped table-bordered table-hover mt-4">
          <thead>
          <tr><th style={{textAlign:'center',backgroundColor:'honeydew'}} colspan="6">Projects</th></tr>

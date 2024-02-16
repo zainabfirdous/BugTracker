@@ -5,9 +5,16 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 
 export default function Team() {
+  
+  const contextdata = useContext(NoteContext);
+  //  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
+
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
@@ -20,25 +27,28 @@ export default function Team() {
   const [admlist, setAdmlist] = useState([]);
 
 const [updateTeam , setUpdateTeam ] = useState({});
+
+useEffect(() => {
+  const token = contextdata.token;
+  if (token===null) navigate("/", { replace: true });
+  getData();
+}, [navigate,contextdata]);
   
   const handleUpdateTeam = (team) =>{
-    
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
     setUpdateTeam(team);
   }
-       
-  
-
+    
   const getData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:5000/admin/getteams");
+      const response = await axios.get("/admin/getteams");
       setTeamList(response.data);
-      const resp1 = await axios.get("http://127.0.0.1:5000/admin/getProjects");
+      const resp1 = await axios.get("/admin/getProjects");
       setProjList(resp1.data);
-      const resp2 = await axios.get("http://127.0.0.1:5000/admin/adminDashboard");
+      const resp2 = await axios.get("/admin/adminDashboard");
       setAdmlist(resp2.data);
       
     } catch (err) {
@@ -49,7 +59,7 @@ const [updateTeam , setUpdateTeam ] = useState({});
   const handleDelete = async (teamID) =>{
 
     const response = await axios.delete(
-      `http://127.0.0.1:5000/admin/deleteteam/${teamID}`
+      `/admin/deleteteam/${teamID}`
     );
     if (response.data.error) {
       setShow(true)
@@ -73,13 +83,6 @@ const [updateTeam , setUpdateTeam ] = useState({});
       getData();
     }
   }
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    getData();
-}, [navigate]);
-
 
   return (
     <>

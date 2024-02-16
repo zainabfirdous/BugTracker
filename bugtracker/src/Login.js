@@ -1,9 +1,14 @@
-import { useState,useEffect,React } from "react";
+import { useState,useEffect,React, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
+import NoteContext from './Context/NoteContext'
 
 export default function Login () {
+
+  const { token, user, setUserInfo } = useContext(NoteContext);
+
+  
   axios.withCredentials = true;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,16 +36,19 @@ export default function Login () {
         "http://127.0.0.1:5000/Login",
         reqBody
       );
-
       if (result.data.token) {
-        // redirect to Welcome
-        localStorage.setItem("token", result.data.token);
-        localStorage.setItem("user", result.data.username);
-        localStorage.setItem("urole", result.data.urole);
-        localStorage.setItem("uid", result.data.uid);
-        sessionStorage.setItem("ID",result.data.ssid);
-        //navigate("/Welcome", { replace: true });
-        window.location.href = "/Welcome";
+        setUserInfo((prevUserInfo) => ({
+          ...prevUserInfo,
+          user: result.data.username,
+          urole: result.data.urole ,
+          uid : result.data.uid ,
+          token : result.data.token
+        }));
+        console.log("user : ",user);
+        console.log("token : ",token);
+
+        navigate("/Welcome", { replace: true });
+      //  window.location.href = "/Welcome";
         setTimeout(() => {
           localStorage.clear();
       }, 600000);
@@ -49,7 +57,7 @@ export default function Login () {
         setSetMessage(result.data.error);
         setTimeout(() => {
             setIsAlertVisible(false);
-        }, 40000);
+        }, 400000);
       }
 
       // console.log(result);

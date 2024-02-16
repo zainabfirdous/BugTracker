@@ -4,7 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
+
 export default function BugReport() {
+
+    
+  const contextdata = useContext(NoteContext);
+  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
 
     const navigate = useNavigate();
     const [bugList, setBugList] = useState([]);
@@ -12,9 +20,9 @@ export default function BugReport() {
     const [empList, setEmpList] = useState([]);
 
     const getData = async () => {
-        const data1 = await axios.get("http://127.0.0.1:5000/admin/getbugs");
-        const data2 = await axios.get("http://127.0.0.1:5000/admin/trackbugs");
-        const data3 = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
+        const data1 = await axios.get("/admin/getbugs");
+        const data2 = await axios.get("/admin/trackbugs");
+        const data3 = await axios.get("/admin/getEmployees");
         setBugList(data1.data);
         setBugTrackList(data2.data);
         setEmpList(data3.data);
@@ -24,8 +32,8 @@ export default function BugReport() {
 
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) navigate("/", { replace: true });
+        // const token = localStorage.getItem("token");
+        // if (!token) navigate("/", { replace: true });
         getData();
     }, [navigate])
 

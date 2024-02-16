@@ -7,8 +7,19 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import BugRegistrationForm from './components/BugRegistrationForm';
+import React from 'react';
+import { useContext } from 'react';
+import NoteContext from '../src/Context/NoteContext'
+
 
 export default function Dashboard() {
+
+  const contextdata = useContext(NoteContext);
+  const {setUserInfo } = useContext(NoteContext);
+  console.log("contextdata dash : ", contextdata.token);
+
+  const [urole, setUser] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,66 +34,73 @@ export default function Dashboard() {
   const [isAlertVisibleBug, setIsAlertVisibleBug] = useState(false);
   const [isAlertVisible1, setIsAlertVisible1] = useState(false);
   const [message, setSetMessage] = useState("");
-  const [urole, setUrole] = useState("");
   const [profile, setProfile] = useState({});
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword1, setNewPassword1] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
-  const [axiosConfig, setAxiosConfig] = useState({});
 
 
   const timeout = () => {
     setTimeout(() => {
-      const token = localStorage.getItem("token");
+      const token = contextdata.token;
       //   console.log(token);
-      if (!token) {
-        localStorage.clear();
+      if (token === null) {
         setShow(true)
         setIsAlertVisible(true);
         setBgColor("bg-warning");
         setSetMessage("Session Time Out");
-        navigate("/AppInfo", { replace: false });
-        setMyToken(false);
+        navigate("/Login", { replace: false });
+        setIsLogin(false);
       }
-    }, 200000);
-
-  }
-
-
-  const getData = async (axiosConfig) => {
-    try {
-      const data = await axios.get(`http://127.0.0.1:5000/dev/devDashboard`, axiosConfig);
-      console.log(data);
-      setProfile(data.data);
-    } catch (e) {
-      console.log(e);
-    }
+    }, 1000 * 60 * 60);
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    const axiosConfig = {
-      headers: {
-        Authorization: token
-      }
+    const token = contextdata.token;
+    // if (token === null) navigate("/", { replace: true });
+    if (token !== null) {
+      setIsLogin(true);
     }
-    setAxiosConfig(axiosConfig);
-    getData(axiosConfig);
-  }, [])
+
+    getData(contextdata);
+    setUser(contextdata.urole);
+  }, [contextdata, navigate])
 
 
-  const handleProfile = () => {
+  const handleLogout = () => {
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      user: null,
+      urole: null,
+      uid : null,
+      token : null
+    }));
+    console.log("Hey : hhh")
+    setIsLogin(false);
+   navigate("/AppInfo", { replace: true });
+  };
+
+
+
+  const getData = async (contextdata) => {
+    
+  }
+
+
+  const handleProfile = async () => {
     setShowprof(true)
     setIsAlertVisible1(true);
     setBgColor("bg-warning");
-    setSetMessage("Session Time Out");
+    try {
+      const data = await axios.get(`/${contextdata.urole === "Admin" ? "admin/adminDashboard/id" : contextdata.urole === "Developer" ? "dev/devDashboard" : "tester/testerDashboard"}`);
+      console.log("Hello : ",data.data);
+      setProfile(data.data);
+    } catch (e) {
+    }
   }
 
-  const [ismytoken, setMyToken] = useState(false);
-
   const handleLogin = () => {
-    navigate("/Login", { replace: true });
+    navigate("/Login");
     timeout();
   };
 
@@ -105,11 +123,11 @@ export default function Dashboard() {
     }
     else {
       const body = {
-        empID: localStorage.getItem('uid'),
-        password: newPassword1
+        Newpassword: newPassword1,
+        Oldpassword: oldPassword
       }
       try {
-        const response = await axios.put(`http://127.0.0.1:5000/${localStorage.getItem("urole") === "Developer" ? "dev" : "tester"}/updatePassword`, body, axiosConfig);
+        const response = await axios.put(`/${contextdata.urole === "Developer" ? "dev" : "tester"}/updatePassword`, body);
         // console.log("response : ",response);
         if (response) {
           setShow(true)
@@ -159,24 +177,6 @@ export default function Dashboard() {
     }
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    // const user = localStorage.getItem("user"); 
-    // const urole = localStorage.getItem("urole");
-    setUrole(localStorage.getItem("urole"));
-    //  console.log(token + " " + ismytoken);
-    if (token) {
-      setMyToken(true);
-    }
-    //    console.log(token + " " + ismytoken);
-  }, [ismytoken]);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/AppInfo", { replace: false });
-    setMyToken(false);
-  };
-
   return (
     <>
 
@@ -217,7 +217,7 @@ export default function Dashboard() {
                 <Modal.Title></Modal.Title>
               </Modal.Header>
               <Modal.Body className="bg-white" >ID : {profile.admID}<br></br> Name : {profile.fName} {profile.lName}
-                <br></br>Email :  {profile.email}
+                <br></br>Email :   {profile.email}
               </Modal.Body>
             </Modal>}
           </div>
@@ -275,19 +275,37 @@ export default function Dashboard() {
 
       {/* nav bar */}
 
-      <Navbar style={{ backgroundColor: 'aqua' }} collapseOnSelect expand="lg" className="bg-body-tertiary">
+      {/* <Navbar style={{ backgroundColor: 'aqua' }} collapseOnSelect expand="lg" className="bg-body-tertiary">
         <Container>
-          {/* onClick={()=>{ navigate("/BugReport", { replace: false });}} */}
           {localStorage.user ? <Navbar.Brand href="/BugReport" >Bug Tracking</Navbar.Brand> : <Navbar.Brand href="/AppInfo">Bug Tracking</Navbar.Brand>}
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav >
-              {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/Employee" >Employee</Nav.Link> : <div></div>) : <Nav.Link href="/AppInfo">Features</Nav.Link>}
+              {localStorage.user ? (urole === "Admin" ? <div onClick={() => navigate('/Employee')}>
+                <Nav.Link>Employee</Nav.Link>
+              </div> : <div></div>) : <Nav.Link href="/AppInfo">Features</Nav.Link>}
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/Project">Project</Nav.Link> : <div></div>) : <Nav.Link href="/AppInfo">About Us</Nav.Link>}
               {localStorage.user ? (urole === "Admin" || urole === "Tester" ? <Nav.Link href="/BugReg">Bug Register</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
-              {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/BugTracking">Bug Report</Nav.Link>
-                : (urole === "Tester" ? (<Nav.Link href="/TesterBugPortal">Bug Report</Nav.Link>)
-                  : (<Nav.Link href="/DevBugPortal">Bug Report</Nav.Link>))) : <Nav.Link></Nav.Link>}
+
+              {localStorage.user ? (
+                urole === "Admin" ? (
+                  <div onClick={() => navigate('/BugTracking')}>
+                    <Nav.Link>Bug Report</Nav.Link>
+                  </div>
+                ) : (
+                  urole === "Tester" ? (
+                    <div onClick={() => navigate('/TesterBugPortal')}>
+                      <Nav.Link>Bug Report</Nav.Link>
+                    </div>
+                  ) : (
+                    <div onClick={() => navigate('/DevBugPortal')}>
+                      <Nav.Link>Bug Report</Nav.Link>
+                    </div>
+                  )
+                )
+              ) : (
+                <Nav.Link></Nav.Link>
+              )}
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/Team">Team</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
               {localStorage.user ? (urole === "Admin" ? <Nav.Link href="/ProjectAssign">Project Assign</Nav.Link> : <div></div>) : <Nav.Link></Nav.Link>}
               {localStorage.user ? (urole === "Admin" || urole === "Tester" ? <button class="btn btn-info btn-lg float-right p-1" type="submit" onClick={() => handleCreateBug()}> Create</button> : <div></div>)
@@ -295,12 +313,111 @@ export default function Dashboard() {
             </Nav>
 
           </Navbar.Collapse>
-          {/* <div className='row'>
-            <div className='col-6'><Nav.Link className='float-right' >{localStorage.user} {localStorage.urole}</Nav.Link></div>
-          </div> */}
           <Nav.Link className='float-right text-uppercase' > <button class="btn bg-aqua" style={{ backgroundColor: 'aqua' }} type="submit"
             onClick={() => handleProfile()}>{localStorage.user}<br></br>{localStorage.urole} </button> </Nav.Link>
           {localStorage.user ? <button class="btn btn-success btn-lg float-right" type="submit" onClick={() => handleLogout()}> Logout</button>
+            : <button class="btn btn-success btn-lg float-right" type="submit" onClick={() => handleLogin()}> Login</button>}
+
+        </Container>
+      </Navbar> */}
+      <Navbar style={{ backgroundColor: 'aqua' }} collapseOnSelect expand="lg" className="bg-body-tertiary">
+        <Container>
+          {isLogin ? (
+            <Navbar.Brand onClick={() => navigate('/BugReport')}>Bug Tracking</Navbar.Brand>
+          ) : (
+            <Navbar.Brand onClick={() => navigate('/AppInfo')}>Bug Tracking</Navbar.Brand>
+          )}
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav >
+              {isLogin ? (
+                urole === "Admin" ? (
+                  <div onClick={() => navigate('/Employee')}>
+                    <Nav.Link>Employee</Nav.Link>
+                  </div>
+                ) : <div></div>
+              ) : (
+                <Nav.Link onClick={() => navigate('/AppInfo')}>Features</Nav.Link>
+              )}
+
+              {isLogin ? (
+                urole === "Admin" ? (
+                  <Nav.Link onClick={() => navigate('/Project')}>Project</Nav.Link>
+                ) : <div></div>
+              ) : (
+                <Nav.Link onClick={() => navigate('/AppInfo')}>About Us</Nav.Link>
+              )}
+
+              {isLogin ? (
+                urole === "Admin" || urole === "Tester" ? (
+                  <Nav.Link onClick={() => navigate('/BugReg')}>Bug Register</Nav.Link>
+                ) : <div></div>
+              ) : (
+                <Nav.Link></Nav.Link>
+              )}
+              {isLogin ? (
+                urole === "Admin" ? (
+                  <div onClick={() => navigate('/BugTracking')}>
+                    <Nav.Link>Bug Report</Nav.Link>
+                  </div>
+                ) : (
+                  urole === "Tester" ? (
+                    <div onClick={() => navigate('/TesterBugPortal')}>
+                      <Nav.Link>Bug Report</Nav.Link>
+                    </div>
+                  ) : (
+                    <div onClick={() => navigate('/DevBugPortal')}>
+                      <Nav.Link>Bug Report</Nav.Link>
+                    </div>
+                  )
+                )
+              ) : (
+                <Nav.Link></Nav.Link>
+              )}
+
+              {isLogin ? (
+                urole === "Admin" ? (
+                  <Nav.Link onClick={() => navigate('/Team')}>Team</Nav.Link>
+                ) : <div></div>
+              ) : (
+                <Nav.Link></Nav.Link>
+              )}
+
+              {isLogin ? (
+                urole === "Admin" ? (
+                  <Nav.Link onClick={() => navigate('/ProjectAssign')}>Project Assign</Nav.Link>
+                ) : <div></div>
+              ) : (
+                <Nav.Link></Nav.Link>
+              )}
+
+              {isLogin ? (
+                urole === "Admin" || urole === "Tester" ? (
+                  <button
+                    className="btn btn-info btn-lg float-right p-1"
+                    type="submit"
+                    onClick={() => handleCreateBug()}
+                  >
+                    Create
+                  </button>
+                ) : <div></div>
+              ) : <div></div>}
+            </Nav>
+
+          </Navbar.Collapse>
+          {/* <div className='row'>
+            <div className='col-6'><Nav.Link className='float-right' >{localStorage.user} {localStorage.urole}</Nav.Link></div>
+          </div> */}
+          {
+
+            isLogin ?
+              <Nav.Link className='float-right text-uppercase' > <button class="btn bg-aqua" style={{ backgroundColor: 'aqua' }} type="submit"
+                onClick={() => handleProfile()}>{contextdata.user}<br></br>{contextdata.urole} </button> </Nav.Link>
+                :
+                <Nav.Link className='float-right text-uppercase' >  </Nav.Link>
+          }
+
+          {isLogin ? <button class="btn btn-success btn-lg float-right" type="submit" onClick={() => handleLogout()}> Logout</button>
             : <button class="btn btn-success btn-lg float-right" type="submit" onClick={() => handleLogin()}> Login</button>}
 
         </Container>

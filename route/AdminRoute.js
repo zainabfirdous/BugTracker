@@ -30,7 +30,7 @@ const dashboard = async(req, res)=>{
 
 const dashboardByID = async(req, res)=>{
     try{
-        const admID = req.params.id;
+        const admID = req.empID;
         const admin = await Admin.findByPk(admID)
         res.status(200).json(admin);
     }catch(error)
@@ -507,7 +507,7 @@ const role = async (req, res) => {
 
 router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)
-router.get("/adminDashboard/:id", dashboardByID)
+router.get("/adminDashboard/id", dashboardByID)
 router.get("/getEmployees", allEmp)
 router.get("/getEmpByID/:id", EmpById)
 router.post("/newEmployee",CreateEmp)

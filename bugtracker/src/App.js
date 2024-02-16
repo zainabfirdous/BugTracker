@@ -14,20 +14,21 @@ import BugTracking from './components/BugTracking';
 import TesterBugPortal from './components/TesterBugPortal';
 import DevBugPortal from './components/DevBugPortal';
 import UserProject from './components/UserProject';
+import NoteState from '../src/Context/NoteState'
 
 function App() {
-  
 
   return (
     <>
-    
+    <NoteState >
     <BrowserRouter>
     <Dashboard/>
       <Routes>
-      {localStorage.user ? <Route path="/" element={<Welcome />} /> : <Route path="/" element={<AppInfo />} /> }
+      <Route path="/" element={<AppInfo />} />
+      {/* {localStorage.user ? <Route path="/" element={<Welcome />} /> : <Route path="/" element={<AppInfo />} /> } */}
       <Route path="/Login" element={<Login />} />
       <Route path="/AppInfo" element={<AppInfo />} />
-      {localStorage.user ? <Route path="/Welcome" element={<Welcome />} /> : <Route path="/AppInfo" element={<AppInfo />} /> }
+      {/* {localStorage.user ? <Route path="/Welcome" element={<Welcome />} /> : <Route path="/AppInfo" element={<AppInfo />} /> } */}
       <Route path="/Welcome" element={<Welcome />} />
       <Route path="/Employee" element={<Employee />} />
       <Route path="/Project" element={<Project />} />
@@ -44,6 +45,7 @@ function App() {
       
       </Routes>
     </BrowserRouter>
+    </NoteState >
     </>
   );
 }

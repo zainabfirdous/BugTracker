@@ -4,9 +4,14 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function DevBugPortal() {
 
+  const contextdata = useContext(NoteContext);
+  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
     
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -119,9 +124,9 @@ export default function DevBugPortal() {
 
 
   const getData = async () => {
-    const data1 = await axios.get("http://127.0.0.1:5000/admin/getbugs");
-    const data2 = await axios.get("http://127.0.0.1:5000/admin/trackbugs");
-    const data3 = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
+    const data1 = await axios.get("/dev/getbugs");
+    const data2 = await axios.get("/dev/trackbugs");
+    const data3 = await axios.get("/dev/getEmployees");
     setBugList(data1.data);
     setBugTrackList(data2.data);
     setEmpList(data3.data);
@@ -130,8 +135,8 @@ export default function DevBugPortal() {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
+    // const token = localStorage.getItem("token");
+    // if (!token) navigate("/", { replace: true });
     if (localStorage.getItem("urole") === "Developer") {
         setStatus("Assigned");
     } 

@@ -5,8 +5,14 @@ import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import "../BugRegistration.css";
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 function BugRegistration() {
+
+  const contextdata = useContext(NoteContext);
+  //  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -27,23 +33,23 @@ function BugRegistration() {
 
   const [isUpdate, setIsUpdate] = useState(false);
 
+  useEffect(() => {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    getBug();
+
+  }, [navigate,contextdata]);
+
   const getBug = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/admin/getbugs`);
+      const response = await axios.get(`/admin/getbugs`);
       setBugList(response.data);
-      const resp = await axios.get("http://127.0.0.1:5000/admin/getProjects");
+      const resp = await axios.get("/admin/getProjects");
       setProjList(resp.data);
     } catch (err) {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    getBug();
-
-  }, [navigate]);
 
   const handleUpdate = async (bug) => {
     setIsUpdate(true);
@@ -66,7 +72,7 @@ function BugRegistration() {
       priority: priority,
       bugDesc: bugDesc,
       projID: projID,
-      regBy: localStorage.getItem("uid")
+      regBy: contextdata.uid
     };
     try{
       console.log(bugData);
@@ -123,7 +129,7 @@ function BugRegistration() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/tester/newBug",
+        "/tester/newBug",
         bug
       );
       console.log(response.data);
@@ -159,7 +165,7 @@ function BugRegistration() {
     }
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/tester/newtrack",
+        "/tester/newtrack",
         bugTract
       );
       console.log(response);
@@ -259,7 +265,7 @@ function BugRegistration() {
 
       <div className="bug-registration-form" >
         <div className="row" >
-          <div className="offset-4 col-md-12 col-lg-4">
+          <div className="offset-md-3 offset-xl-4 col-sm-12 col-md-6 col-xl-4">
             <form className="bug-form" onSubmit={handlesubmit}>
               <div className="form-group">
                 <h3 className="form-title">Bug Registration</h3>
