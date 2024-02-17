@@ -155,6 +155,7 @@ export default function BugTracking() {
       }
 
     } catch (e) {
+      console.log("Eorrrr : ",e)
       setIsAlertVisible(true);
       setShow(true);
       setSetMessage(`${e.response.data.error}`);
@@ -328,7 +329,7 @@ export default function BugTracking() {
 
                                   <div>
                                     {
-                                      localStorage.getItem("urole") === "Admin"
+                                      contextdata.urole === "Admin"
                                         ?
                                         <form className="row mt-4">
                                           <div className="form-group col-sm-12 col-md-4">
@@ -435,7 +436,7 @@ export default function BugTracking() {
         <div className='col-md-12 m-2 p-1' >
           <div className="bg-light border border-primary rounded m-xl-5" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
             {
-              localStorage.getItem("urole") === "Admin" ?
+               contextdata.urole === "Admin" ?
                 <span className=" m-1"><span className="m-2">
                   <select className="border border-warning rounded m-4 pl-5 pr-5 pt-2 pb-2"
                     id="status"

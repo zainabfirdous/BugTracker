@@ -49,7 +49,7 @@ export default function AddTeam(props) {
       teamID: teamID,
       teamName: teamName,
       projID: projID,
-      admID: localStorage.getItem("uid")
+      admID: contextdata.uid
     };
     isUpdateButton ? updateTeam(team) : addTeam(team);
   };

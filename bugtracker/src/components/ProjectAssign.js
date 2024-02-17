@@ -58,6 +58,7 @@ export default function ProjectAssign() {
       const resp2 = await axios.get("/admin/getteams");
       const resp3 = await axios.get("/admin/getEmployees");
       const resp4 = await axios.get("/admin/projectAssign");
+     // console.log("resp1 L ",resp1);
       setProjList(resp1.data);
       setTeamList(resp2.data);
       setEmpList(resp3.data);
@@ -293,9 +294,9 @@ export default function ProjectAssign() {
             </thead>
             <tbody>
               {assignProjList.map((aplItem) => {
-                let uid = parseInt(localStorage.getItem("uid"));
+                let uid = contextdata.uid
                 let uid2 = parseInt(aplItem.empID);
-                const urole = localStorage.getItem("urole")
+                const urole = contextdata.urole;
                 //  console.log("uid2:", uid2);
                 //  console.log("uid:", uid);
                 // console.log("Comparison:", uid2 === uid);
