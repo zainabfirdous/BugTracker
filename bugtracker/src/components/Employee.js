@@ -12,7 +12,6 @@ import NoteContext from '../Context/NoteContext';
 export default function Employee() {
 
   const contextdata = useContext(NoteContext);
-//  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
 
   axios.defaults.withCredentials = true;
@@ -37,7 +36,6 @@ export default function Employee() {
     try {
       const response = await axios.get("/admin/getEmployees");
       const resp2 = await axios.get("/admin/getrole");
-       console.log(response.data);
       setRoleList(resp2.data);
       setEmployeeList(response.data);
     } catch (err) {
@@ -46,7 +44,6 @@ export default function Employee() {
   };
 
   const handleDelete = async (employeeID) => {
-    console.log("delete : ", employeeID);
     try{
       const deletedRecords = await axios.delete(
         `/admin/deleteEmp/${employeeID}`
@@ -69,9 +66,6 @@ export default function Employee() {
   }
 
   const handleUpdateEmployee = (employee) => {
-    console.log(employee);
-    // pass employee object to addEmployee component
-    
     window.scrollTo({
       top: 0,
       behavior: 'smooth',

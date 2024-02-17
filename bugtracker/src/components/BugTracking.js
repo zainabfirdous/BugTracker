@@ -11,7 +11,6 @@ import NoteContext from '../Context/NoteContext';
 export default function BugTracking() {
 
   const contextdata = useContext(NoteContext);
-  //  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
 
   axios.defaults.withCredentials = true;
@@ -30,8 +29,6 @@ export default function BugTracking() {
     setShowTrackID(showTrackID);
     setShowBugdesc(true)
     setVisibleBugdesc(true);
-    console.log("showTrackID : ", showTrackID)
-    // setBgColor("bg-warning");
   }
 
   const [bugList, setBugList] = useState([]);
@@ -107,7 +104,6 @@ export default function BugTracking() {
   }
 
   const handleDelete = async (trackID) => {
-    console.log(trackID);
     try {
       const response = await axios.delete(
         `/admin/deletetracks/${trackID}`
@@ -136,7 +132,6 @@ export default function BugTracking() {
   };
 
   const putbugAssign = async (bugAssign) => {
-    console.log(bugAssign);
     try {
       const response = await axios.put(
         `/admin/updateTracker/assigned/${bugAssign.trackID}`,
@@ -179,23 +174,25 @@ export default function BugTracking() {
         break;
       case "dueDate":
         setDueDate(e.target.value);
-        // console.log(dueDate);
         break;
       case "dueTime":
         setDueTime(e.target.value);
-        //  console.log(dueTime);
         break;
       default: break;
     }
   }
 
   const getData = async () => {
+    try{
     const data1 = await axios.get("/admin/getbugs");
     const data2 = await axios.get("/admin/trackbugs");
     const data3 = await axios.get("/admin/getEmployees");
     setBugList(data1.data);
     setBugTrackList(data2.data);
     setEmpList(data3.data);
+    }catch(e){
+      console.log("Error in Tracking : ",e)
+    }
   }
 
   return (
@@ -233,7 +230,6 @@ export default function BugTracking() {
                         return (
                           bugList.map((bugItem) => {
                             if (bugItem.bugID === btItem.bugID) {
-                              //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                               return (
                                 <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                                   <div className="row mt-1">
@@ -278,7 +274,6 @@ export default function BugTracking() {
                                             </div>
                                             {
                                               empList.map((empItem) => {
-                                                //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                                 if (empItem.empID === btItem.assignTo && status !== "New") {
                                                   return (
                                                     <div className="col-12">
@@ -478,7 +473,6 @@ export default function BugTracking() {
                   return (
                     bugList.map((bugItem) => {
                       if (bugItem.bugID === btItem.bugID) {
-                        //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                         return (
                           <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                             <div className="row mt-1">
@@ -514,7 +508,6 @@ export default function BugTracking() {
                                       </div>
                                       {
                                         empList.map((empItem) => {
-                                          //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                           if (empItem.empID === btItem.assignTo && status !== "New") {
                                             return (
                                               <div className="col-lg-12 col-xl-4">

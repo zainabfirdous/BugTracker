@@ -10,7 +10,6 @@ import NoteContext from '../Context/NoteContext';
 export default function DevBugPortal() {
 
   const contextdata = useContext(NoteContext);
-  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
     
   axios.defaults.withCredentials = true;
@@ -29,7 +28,6 @@ export default function DevBugPortal() {
     setShowTrackID(showTrackID);
     setShowBugdesc(true)
     setVisibleBugdesc(true);
-    console.log("showTrackID : ", showTrackID)
   }
 
   const [bugList, setBugList] = useState([]);
@@ -124,12 +122,16 @@ export default function DevBugPortal() {
 
 
   const getData = async () => {
+    try{
     const data1 = await axios.get("/dev/getbugs");
     const data2 = await axios.get("/dev/trackbugs");
     const data3 = await axios.get("/dev/getEmployees");
     setBugList(data1.data);
     setBugTrackList(data2.data);
     setEmpList(data3.data);
+    }catch(e){
+      console.log("Error in Dev Bug :",e);
+    }
   }
 
   useEffect(() => {
@@ -177,7 +179,6 @@ export default function DevBugPortal() {
                       return (
                         bugList.map((bugItem) => {
                           if (bugItem.bugID === btItem.bugID) {
-                            //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                             return (
                               <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                                 <div className="row mt-1">
@@ -222,7 +223,6 @@ export default function DevBugPortal() {
                                           </div>
                                           {
                                             empList.map((empItem) => {
-                                              //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                               if (empItem.empID === btItem.assignTo && status !== "New") {
                                                 return (
                                                   <div className="col-12">
@@ -356,7 +356,6 @@ export default function DevBugPortal() {
                 return (
                   bugList.map((bugItem) => {
                     if (bugItem.bugID === btItem.bugID) {
-                      //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                       return (
                         <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                           <div className="row mt-1">
@@ -392,7 +391,6 @@ export default function DevBugPortal() {
                                     </div>
                                     {
                                       empList.map((empItem) => {
-                                        //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                         if (empItem.empID === btItem.assignTo && status !== "New") {
                                           return (
                                             <div className="col-lg-12 col-xl-4">

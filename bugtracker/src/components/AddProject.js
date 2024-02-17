@@ -93,7 +93,7 @@ export default function AddProject(props) {
       status: status,
     };
 
-    console.log(object);
+   // console.log(object);
     if (isUpdateButton) {
       updateProject(object);
     } else {
@@ -138,13 +138,13 @@ export default function AddProject(props) {
   };
 
   const addProject = async (project) => {
-    console.log(project);
+ //   console.log(project);
     try {
       const response = await axios.post(
         "/admin/newProject",
         project
       );
-      console.log(response);
+     if(response){
       props.updateProjectList();
       resetForm();
       setShow(true)
@@ -155,6 +155,7 @@ export default function AddProject(props) {
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
+     }
     }
     catch (e) {
       setShow(true)

@@ -12,7 +12,6 @@ import NoteContext from '../Context/NoteContext';
 export default function Team() {
 
   const contextdata = useContext(NoteContext);
-  //  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
 
   axios.defaults.withCredentials = true;
