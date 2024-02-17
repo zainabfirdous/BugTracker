@@ -202,6 +202,26 @@ const Bugs = async (req, res) => {
     }
 }
 
+
+const newbugReg = async (req, res) => {
+    try {
+        const body = req.body;
+        const newbug = await Bug.create(body);
+        res.status(200).json(newbug);
+    } catch(error){
+        console.error('Error creating Bug:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ error: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While registering new bug" });
+        }
+    }
+}
+
 const UpdateBugs = async (req, res) => {
     try {
         const body = req.body;
@@ -519,6 +539,7 @@ router.get("/getprojbyid/:projID", ProjectById)
 router.put("/updateProject", UpdateProject)
 router.delete("/deleteproj/:id", DeleteProject)
 router.get("/getbugs", Bugs)
+router.post("/newBug", newbugReg);
 router.put("/updateBug", UpdateBugs)
 router.delete("/deletebug/:id", DeleteBug)
 router.get("/BugbyID/:id", BugByID)

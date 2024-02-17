@@ -43,7 +43,7 @@ export default function DevBugPortal() {
 
   const handleResolved = async (trackID) =>{
     const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/resolved/${trackID}`
+      `/dev/updateTracker/resolved/${trackID}`
       
     );
     if (response.data.error) {
@@ -130,18 +130,16 @@ export default function DevBugPortal() {
     setBugList(data1.data);
     setBugTrackList(data2.data);
     setEmpList(data3.data);
-    //console.log(data1.data);
-    // console.log(data2.data);
   }
 
   useEffect(() => {
-    // const token = localStorage.getItem("token");
-    // if (!token) navigate("/", { replace: true });
-    if (localStorage.getItem("urole") === "Developer") {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    if (contextdata.urole === "Developer") {
         setStatus("Assigned");
     } 
     getData();
-  }, [navigate])
+  }, [navigate,contextdata])
 
 
   return (
@@ -275,7 +273,7 @@ export default function DevBugPortal() {
 
                                 <div>
                                   {
-                                    localStorage.getItem("urole") === "Developer"
+                                    contextdata.urole === "Developer"
                                       ?
                                       (
                                         btItem.status === "Assigned" ?
@@ -296,11 +294,9 @@ export default function DevBugPortal() {
                                               <button type="button" onClick={() => handleRetest(btItem.trackID)} className="btn btn-success text-center">Retest</button>
                                             </div>
                                           </form>:<form></form>
-
                                       )
                                       :
                                       <form></form>
-
                                   }
                                 </div>
                               </div>
@@ -332,7 +328,7 @@ export default function DevBugPortal() {
       <div className='col-md-12 m-2 p-1' >
         <div className="bg-light border border-primary rounded m-xl-5" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
           {
-            localStorage.getItem("urole") === "Developer" ?
+            contextdata.urole === "Developer" ?
             <span className=" m-1"><span className="m-2">
             <select className="border border-warning rounded m-4 pl-5 pr-5 pt-2 pb-2"
               id="status"
@@ -355,7 +351,7 @@ export default function DevBugPortal() {
           }
           {
             bugTrackList.map((btItem) => {
-                let uid = parseInt(localStorage.getItem('uid'));
+                let uid = contextdata.uid;
               if (("All" === status && btItem.assignTo === uid) || ( btItem.status === status && btItem.assignTo === uid)) {
                 return (
                   bugList.map((bugItem) => {
