@@ -42,10 +42,10 @@ function BugRegistration() {
 
   const getBug = async (contextdata) => {
     try {
-      const response = await axios.get(`/${contextdata.urole==="Admin" ? "/admin/getbugs" : "tester/getbugs"}`);
+      const response = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getbugs" : "tester/getbugs"}`);
       // console.log("Bugs : ",response.data);
       setBugList(response.data);
-      const resp = await axios.get(`/${contextdata.urole==="Admin" ? "/admin/getProjects" : "tester/getProjects"}`);
+      const resp = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getProjects" : "tester/getProjects"}`);
      // console.log("Projects : ",resp.data);
       setProjList(resp.data);
     } catch (err) {
