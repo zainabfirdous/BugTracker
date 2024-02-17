@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import styles from "../UserProfile.css";
 import { useContext } from 'react';
 import NoteContext from '../Context/NoteContext';
 
@@ -16,7 +15,7 @@ export default function UserProject() {
 //  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
 
-     //axios.defaults.withCredentials = true;
+  axios.defaults.withCredentials = true;
   const [message, setSetMessage] = useState("");
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -27,13 +26,16 @@ export default function UserProject() {
   useEffect(() => {
     const token = contextdata.token;
     if (token===null) navigate("/", { replace: true });
-    getProject(contextdata);
+    console.log("contextdata : ",contextdata);
+     getProject(contextdata);
   }, [navigate,contextdata]);
 
   const getProject = async (contextdata) => {
+    console.log("contextdata.urole : ",contextdata.urole);
     try {
-      const response = await axios.get(`/${contextdata.urole==="Developer" ? "dev" : "tester"}/${localStorage.getItem("urole")==="Developer" ? "devprojects" : "testerprojects"}`);
+      const response = await axios.get(`/${contextdata.urole==="Developer" ? "dev/devprojects" : "tester/testerprojects"}`);
       setProjectList(response.data);
+      console.log("My respo",response.data);
     } catch (err) {
       console.log(err);
     }
@@ -85,14 +87,6 @@ export default function UserProject() {
 
   };
 
- 
-
-  const [activeTab, setActiveTab] = useState('profile');
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
-
   return (
    
     <>
@@ -118,10 +112,10 @@ export default function UserProject() {
    >
       <div className="container">
        <div class="table-responsive">
-        <h1>{contextdata.token}</h1>
-        <h1>{contextdata.urole}</h1>
-        <h1>{contextdata.uid}</h1>
-        <h1>{contextdata.user}</h1>
+        <h5>{contextdata.token}</h5>
+        <h5>{contextdata.urole}</h5>
+        <h5>{contextdata.uid}</h5>
+        <h5>{contextdata.user}</h5>
        <table className="table table-striped table-bordered table-hover mt-4">
          <thead>
          <tr><th style={{textAlign:'center',backgroundColor:'honeydew'}} colspan="6">Projects</th></tr>
@@ -172,29 +166,7 @@ export default function UserProject() {
        </div>
      </div>
    </div>
-
-   <div className={styles['user-profile']}>
-      <div className={styles.sidebar}>
-        <ul>
-          <li className={activeTab === 'profile' ? styles.active : ''} onClick={() => handleTabChange('profile')}>
-            Profile
-          </li>
-          <li className={activeTab === 'project' ? styles.active : ''} onClick={() => handleTabChange('project')}>
-            Project
-          </li>
-          <li className={activeTab === 'team' ? styles.active : ''} onClick={() => handleTabChange('team')}>
-            Team
-          </li>
-          <li className={activeTab === 'setting' ? styles.active : ''} onClick={() => handleTabChange('setting')}>
-            Setting
-          </li>
-        </ul>
-      </div>
-
-      <div className={styles.content}>
-        {/* Content components go here */}
-      </div>
-    </div>
+   
    </>
 
   )

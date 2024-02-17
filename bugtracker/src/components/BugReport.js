@@ -3,26 +3,25 @@ import "../Login.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import { useContext } from 'react';
 import NoteContext from '../Context/NoteContext';
 
 export default function BugReport() {
 
     
-  const contextdata = useContext(NoteContext);
-  console.log("contextdata : ",contextdata);
-  axios.defaults.headers.common['Authorization'] = contextdata.token;
+    const contextdata = useContext(NoteContext);
+    console.log("contextdata : ",contextdata);
+    axios.defaults.headers.common['Authorization'] = contextdata.token;
 
     const navigate = useNavigate();
     const [bugList, setBugList] = useState([]);
     const [bugTrackList, setBugTrackList] = useState([]);
     const [empList, setEmpList] = useState([]);
 
-    const getData = async () => {
-        const data1 = await axios.get("/admin/getbugs");
-        const data2 = await axios.get("/admin/trackbugs");
-        const data3 = await axios.get("/admin/getEmployees");
+    const getData = async (contextdata) => {
+        const data1 = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getbugs" : contextdata.urole==="Developer" ? "/dev/getbugs" : "tester/getbugs"}`);
+        const data2 = await axios.get(`${contextdata.urole==="Admin" ? "/admin/trackbugs" : contextdata.urole==="Developer" ? "/dev/trackbugs" : "tester/getbugs"}`);
+        const data3 = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getEmployees" : contextdata.urole==="Developer" ? "/dev/getEmployees" : "tester/getbugs"}`);
         setBugList(data1.data);
         setBugTrackList(data2.data);
         setEmpList(data3.data);
@@ -32,10 +31,11 @@ export default function BugReport() {
 
 
     useEffect(() => {
-        // const token = localStorage.getItem("token");
-        // if (!token) navigate("/", { replace: true });
-        getData();
-    }, [navigate])
+        const token = contextdata.token;
+        if (token===null) navigate("/", { replace: true });
+        console.log("Role : ",contextdata.urole)
+        getData(contextdata);
+    }, [navigate,contextdata])
 
     return (
         <>
@@ -50,10 +50,10 @@ export default function BugReport() {
                                     if (btItem.status === "New") {
                                         return (
                                             bugList.map((bugItem) => {
-                                                let uid = parseInt(localStorage.getItem("uid"));
-                                                if (localStorage.getItem("urole")==="Admin" ? 
+                                                let uid = contextdata.uid;
+                                                if (contextdata.urole==="Admin" ? 
                                                 bugItem.bugID === btItem.bugID : 
-                                                localStorage.getItem("urole")==="Tester" ?
+                                                contextdata.urole==="Tester" ?
                                                  bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
                                                  bugItem.bugID === btItem.bugID && btItem.assignTo === uid ) {
                                                     return (
@@ -122,11 +122,11 @@ export default function BugReport() {
                                     if (btItem.status === "Assigned" || btItem.status === "Open" || btItem.status === "Resolved") {
                                         return (
                                             bugList.map((bugItem) => {
-                                                let uid = parseInt(localStorage.getItem("uid"));
+                                                let uid = contextdata.uid;
                                     
-                                                if (localStorage.getItem("urole")==="Admin" ? 
+                                                if (contextdata.urole==="Admin" ? 
                                                 bugItem.bugID === btItem.bugID : 
-                                                localStorage.getItem("urole")==="Tester" ?
+                                                contextdata.urole==="Tester" ?
                                                  bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
                                                  bugItem.bugID === btItem.bugID && btItem.assignTo === uid  ) {
                                                     //           console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
@@ -218,11 +218,11 @@ export default function BugReport() {
                                     if (btItem.status === "Verified" || btItem.status === "Closed") {
                                         return (
                                             bugList.map((bugItem) => {
-                                                let uid = parseInt(localStorage.getItem("uid"));
+                                                let uid = contextdata.uid;
                                     
-                                                if (localStorage.getItem("urole")==="Admin" ? 
+                                                if (contextdata.urole==="Admin" ? 
                                                 bugItem.bugID === btItem.bugID : 
-                                                localStorage.getItem("urole")==="Tester" ?
+                                                contextdata.urole==="Tester" ?
                                                  bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
                                                  bugItem.bugID === btItem.bugID && btItem.assignTo === uid  ) {
                                                     //       console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)

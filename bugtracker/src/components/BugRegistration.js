@@ -36,15 +36,17 @@ function BugRegistration() {
   useEffect(() => {
     const token = contextdata.token;
     if (token===null) navigate("/", { replace: true });
-    getBug();
+    getBug(contextdata);
 
   }, [navigate,contextdata]);
 
-  const getBug = async () => {
+  const getBug = async (contextdata) => {
     try {
-      const response = await axios.get(`/admin/getbugs`);
+      const response = await axios.get(`/${contextdata.urole==="Admin" ? "/admin/getbugs" : "tester/getbugs"}`);
+      // console.log("Bugs : ",response.data);
       setBugList(response.data);
-      const resp = await axios.get("/admin/getProjects");
+      const resp = await axios.get(`/${contextdata.urole==="Admin" ? "/admin/getProjects" : "tester/getProjects"}`);
+     // console.log("Projects : ",resp.data);
       setProjList(resp.data);
     } catch (err) {
       console.log(err);
@@ -75,9 +77,9 @@ function BugRegistration() {
       regBy: contextdata.uid
     };
     try{
-      console.log(bugData);
+      console.log("bugData : ",bugData);
     const response = await axios.put(
-      "http://127.0.0.1:5000/tester/updateBug",
+      `${contextdata.urole==="Admin" ? "/admin/updateBug" : "/tester/updateBug"}`,
       bugData
     );
     console.log(response);
@@ -90,6 +92,8 @@ function BugRegistration() {
     setTimeout(() => {
       setIsAlertVisible(false);
     }, 5000);
+    setPriorityBGColor("");
+    setIsUpdate(false);
     getBug();
 
     }catch(e){
@@ -119,7 +123,7 @@ function BugRegistration() {
       priority: priority,
       bugDesc: bugDesc,
       projID: projID,
-      regBy: localStorage.getItem("uid")
+      regBy: contextdata.uid
     };
     addBug(bugData);
   };
@@ -128,8 +132,9 @@ function BugRegistration() {
     console.log(bug);
 
     try {
+      console.log("contextdata.urole : ",contextdata.urole)
       const response = await axios.post(
-        "/tester/newBug",
+        `${contextdata.urole==="Admin" ? "/admin/newBug" : "/tester/newBug"}`,
         bug
       );
       console.log(response.data);
@@ -152,7 +157,7 @@ function BugRegistration() {
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage(e.response.data.errors);
+      setSetMessage(e.response);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
@@ -177,7 +182,7 @@ function BugRegistration() {
   const handleDelete = async (bugID) => {
     try {
       const response = await axios.delete(
-        `http://127.0.0.1:5000/tester/deletebug/${bugID}`
+        `${contextdata.urole==="Admin" ? `/admin/deletebug/${bugID}` : `/tester/deletebug/${bugID}`}`
       );
       // console.log(response.data);
       addBugTrack(response.data.bugID);
@@ -371,7 +376,7 @@ function BugRegistration() {
             </thead>
             <tbody>
               {bugList.map((bugItem) => {
-                let uid = parseInt(localStorage.getItem("uid"));
+                let uid = contextdata.uid;
                 let uid2 = parseInt(bugItem.regBy);
                 const urole = localStorage.getItem("urole")
                 //  console.log("uid2:", uid2);

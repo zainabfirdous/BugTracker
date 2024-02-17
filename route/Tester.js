@@ -9,6 +9,7 @@ const Sequelize = require('sequelize');
 const express = require('express');
 const Trouter = express.Router();
 const bcrypt = require('bcrypt')
+const Project = require('../models/Project.js')
 
 const testerProfile = async (req, res) => {
     try {
@@ -23,13 +24,24 @@ const testerProfile = async (req, res) => {
     }
 }
 
+
+const Bugs = async (req, res) => {
+    try {
+        const bug = await Bug.findAll();
+        res.status(200).json(bug);
+    } catch (error) {
+        console.error('Error fetching bugs:', error);
+        res.status(500).json({ error: "Error While fetching bugs" });
+    }
+}
+
 const newbugReg = async (req, res) => {
     try {
         const body = req.body;
         const newbug = await Bug.create(body);
         res.status(200).json(newbug);
     } catch(error){
-        console.error('Error creating employee:', error);
+        console.error('Error creating Bug:', error);
         // Check if error is a Sequelize validation error
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
@@ -85,6 +97,16 @@ const trackingall = async (req, res) => {
     }
 }
 
+const Projects = async (req, res) => {
+    try {
+        const proj = await Project.findAll();
+        res.status(200).json(proj);
+    } catch (error) {
+        console.error('Error fetching Projects:', error);
+        res.status(500).json({ error: "Error While fetching projects" });
+    }
+}
+
 const TesterProjects = async (req, res) => {
     try {
         const projects = await sequelize.query(
@@ -94,7 +116,7 @@ const TesterProjects = async (req, res) => {
             'JOIN Employee e ON pa.empID = e.empID ' +
             'WHERE e.empID = :empID',
             {
-                replacements: { empID: req.params.id }, 
+                replacements: { empID: req.empID }, 
                 type: QueryTypes.SELECT
             }
         );
@@ -187,7 +209,7 @@ const DeleteBug =  async (req, res) => {
         res.status(200).json(deletedCount);
     } catch (error) {
         console.error('Error while deleting bug:', error);
-        res.status(500).json({ error: "Error While deleting bug" });
+        res.status(500).json({ error: "Contact To Admin!!!" });
     }
     
 }
@@ -269,10 +291,25 @@ const UpdatePassword = async(req, res)=>{
     }
 }
 
+
+const allEmp =  async (req, res) => {
+    try {
+        const employees = await employee.findAll();
+        res.status(200).json(employees);
+    } catch (error) {
+        console.error('Error fetching employees:', error);
+        res.status(500).json({ error: "Error While fetching employees" });
+    }
+}
+
+
+Trouter.get("/getEmployees", allEmp)
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
-Trouter.get("/testerprojects/:id", TesterProjects);
+Trouter.get("/getProjects", Projects)
+Trouter.get("/testerprojects", TesterProjects);
 Trouter.get("/testerDashboard", testerProfile);
+Trouter.get("/getbugs", Bugs)
 Trouter.post("/newBug", newbugReg);
 Trouter.put("/updateBug", UpdateBugs);
 Trouter.delete("/deletebug/:id", DeleteBug);

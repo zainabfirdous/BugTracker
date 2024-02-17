@@ -4,8 +4,14 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function TesterBugPortal() {
+
+    const contextdata = useContext(NoteContext);
+    //  console.log("contextdata : ",contextdata);
+    axios.defaults.headers.common['Authorization'] = contextdata.token;
 
     axios.defaults.withCredentials = true;
     const navigate = useNavigate();
@@ -36,7 +42,7 @@ export default function TesterBugPortal() {
 
     const handleReopen = async (trackID) =>{
         const response = await axios.put(
-          `http://127.0.0.1:5000/tester/updateTrack/reopen/${trackID}`
+          `/tester/updateTrack/reopen/${trackID}`
 
         );
         if (response.data.error) {
@@ -63,7 +69,7 @@ export default function TesterBugPortal() {
 
     const handleVerified = async (trackID) => {
         const response = await axios.put(
-            `http://127.0.0.1:5000/tester/updateTrack/verified/${trackID}`
+            `/tester/updateTrack/verified/${trackID}`
         );
         if (response.data.error) {
             setShow(true)
@@ -91,24 +97,25 @@ export default function TesterBugPortal() {
 
 
     const getData = async () => {
-        const data1 = await axios.get("http://127.0.0.1:5000/admin/getbugs");
-        const data2 = await axios.get("http://127.0.0.1:5000/admin/trackbugs");
-        const data3 = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
+        const data1 = await axios.get("/tester/getbugs");
+        const data2 = await axios.get("/tester/trackBug");
+        const data3 = await axios.get("/tester/getEmployees");
         setBugList(data1.data);
         setBugTrackList(data2.data);
         setEmpList(data3.data);
-        //console.log(data1.data);
-        // console.log(data2.data);
+        console.log("setBugList : ",data1.data);
+        console.log("setBugTrackList : ",data2.data);
+        console.log("setEmpList : ",data3.data);
     }
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) navigate("/", { replace: true });
-        if (localStorage.getItem("urole") === "Tester") {
+        const token = contextdata.token;
+        if (token===null) navigate("/", { replace: true });
+        if (contextdata.urole === "Tester") {
             setStatus("Resolved");
         }
-        getData();
-    }, [navigate])
+        getData(contextdata);
+    }, [navigate,contextdata])
 
 
     return (
@@ -273,7 +280,7 @@ export default function TesterBugPortal() {
                             >
                                 <option selected value="Resolved">Resolved</option>
                                 <option value="Verified">Verified</option>
-                                <option value="Reopen">Reopen</option>
+                                <option value="Reopened">Reopen</option>
                                 <option value="Retest">Retest</option>
                                 <option value="Closed">Closed</option>
                                 <option value="All">All</option>
@@ -287,7 +294,7 @@ export default function TesterBugPortal() {
                                 if ("All" === status || btItem.status === status) {
                                     return (
                                         bugList.map((bugItem) => {
-                                            let uid = parseInt(localStorage.getItem('uid'));
+                                            let uid = contextdata.uid;
                                             if (bugItem.bugID === btItem.bugID && bugItem.regBy === uid ) {
                                                 //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                 return (
