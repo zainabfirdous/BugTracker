@@ -42,84 +42,84 @@ export default function DevBugPortal() {
 
 
   const handleResolved = async (trackID) =>{
-    const response = await axios.put(
-      `/dev/updateTracker/resolved/${trackID}`
-      
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Marked as Resolved and Sent for Verification`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
-  }
 
-  const handleRetest = async (trackID) =>{
-    const response = await axios.put(
-        `http://127.0.0.1:5000/dev/updateTracker/RetestBug/${trackID}`
-        
+    try{
+      const response = await axios.put(
+        `/dev/updateTracker/resolved/${trackID}`
       );
-      if (response.data.error) {
+      if(response){
         setShow(true)
         setIsAlertVisible(true);
         setBgColor("bg-warning");
-        setSetMessage(response.data.error);
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
-      }
-      else {
-        setShow(true)
-        setIsAlertVisible(true);
-        setBgColor("bg-warning");
-        setSetMessage(`Sent For Retest`);
+        setSetMessage(`Marked as Resolved and Sent for Verification`);
         setTimeout(() => {
           setIsAlertVisible(false);
         }, 5000);
         getData();
         setShowBugdesc(false);
       }
+    }catch(e){
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+  }
+
+  const handleRetest = async (trackID) =>{
+    try{
+      const response = await axios.put(
+        `/dev/updateTracker/RetestBug/${trackID}`);
+        if(response){
+          setShow(true)
+          setIsAlertVisible(true);
+          setBgColor("bg-warning");
+          setSetMessage(`Sent For Retest`);
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
+          getData();
+          setShowBugdesc(false);
+        }
+    }catch(e){
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
   }
 
   const handleAccept = async (trackID) => {
-    const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
-    );
-    if (response.data.error) {
+    try{
+      const response = await axios.put(
+        `/dev/updateTracker/acceptBug/${trackID}`
+      );
+      if(response){
+        setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-warning");
+        setSetMessage(`Accepted`);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getData();
+        setShowBugdesc(false);
+      }   
+    }catch(e){
       setShow(true)
       setIsAlertVisible(true);
       setBgColor("bg-warning");
-      setSetMessage(response.data.error);
+      setSetMessage(e.response.data.error);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
     }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Accepted`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
-
   }
 
 

@@ -147,6 +147,14 @@ export default function AddProject(props) {
       console.log(response);
       props.updateProjectList();
       resetForm();
+      setShow(true)
+      setIsAlertVisible(true);
+      setShow(true);
+      setBgColor("bg-success");
+      setSetMessage("Project Added");
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
     }
     catch (e) {
       setShow(true)
@@ -157,7 +165,6 @@ export default function AddProject(props) {
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
-
     }
   };
 

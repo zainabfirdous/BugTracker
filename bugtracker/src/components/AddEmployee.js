@@ -55,36 +55,33 @@ export default function AddEmployee(props) {
       email: email,
       roleID: roleID,
     };
-    // console.log(updatedData);
-    const udpatedRecord = await axios.put(
-      "/admin/updateEmployee",
-      updatedData
-    );
-    props.updateEmployeeList();
-    resetForm();
-    if (udpatedRecord.data.error) {
+    try{
+      const udpatedRecord = await axios.put(
+        "/admin/updateEmployee",
+        updatedData
+      );
+      if(udpatedRecord){
+        props.updateEmployeeList();
+        resetForm();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-info");
+        setSetMessage("Employee updated successfully!");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+    }catch(e){
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage(`${udpatedRecord.data.error}`);
+      setSetMessage(`${e.response.data.error}`);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
-
     }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-info");
-      setSetMessage("Employee updated successfully!");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-
-    }
-
   };
 
   const handleInput = (e) => {
@@ -255,7 +252,7 @@ export default function AddEmployee(props) {
           </select>
         </div>
         <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-          <button type="button" className="btn btn-success text-center" onClick={handleSubmit}>
+          <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center" } onClick={handleSubmit}>
             {isUpdateButton ? "Update Employee" : "Add Employee"}
           </button>
         </div>

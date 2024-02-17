@@ -47,27 +47,26 @@ export default function Employee() {
 
   const handleDelete = async (employeeID) => {
     console.log("delete : ", employeeID);
-    const deletedRecords = await axios.delete(
-      `/admin/deleteEmp/${employeeID}`
-    );
-    getEmployee();
-    if(deletedRecords.data.error){
-      setIsAlertVisible(true);
-      setShow(true);
-        setSetMessage(`${deletedRecords.data.error}`);
-        setTimeout(() => {
-            setIsAlertVisible(false);
-        }, 5000);
-    }
-    else{
+    try{
+      const deletedRecords = await axios.delete(
+        `/admin/deleteEmp/${employeeID}`
+      );
+      getEmployee();
       setIsAlertVisible(true);
       setShow(true);
         setSetMessage(`${deletedRecords.data} Employee deleted successfully`);
         setTimeout(() => {
             setIsAlertVisible(false);
         }, 5000);
+    }catch(e){
+      setIsAlertVisible(true);
+      setShow(true);
+        setSetMessage(`${e.response.data.error}`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
     }
-  };
+  }
 
   const handleUpdateEmployee = (employee) => {
     console.log(employee);

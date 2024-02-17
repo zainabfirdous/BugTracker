@@ -29,7 +29,7 @@ const tracking = con.define(
             },
             defaultValue:null,
             validate:{isInt: {
-                msg: 'Employee ID must be an integer'
+                msg: 'Admin Not found!!!'
             }}
         },
         assignTo:{
@@ -41,7 +41,7 @@ const tracking = con.define(
             },
             defaultValue: null,
             validate:{isInt: {
-                msg: 'Employee ID must be an integer'
+                msg: 'Employee Not found!!!'
             }}
         },
         assignDate:{
