@@ -28,8 +28,12 @@ export default function AddTeam(props) {
   const [projlist, setProjList] = useState([]);
 
   const getProj = async () => {
+    try{
     const resp = await axios.get("/admin/getProjects");
     setProjList(resp.data);
+    }catch(e){
+      console.log("Error Team Add : ",e)
+    }
   }
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export default function AddTeam(props) {
   };
 
   const addTeam = async (team) => {
-    console.log(team);
+  //  console.log(team);
     try {
       const response = await axios.post(
         "/admin/newTeam",
@@ -87,7 +91,7 @@ export default function AddTeam(props) {
   }
 
   const updateTeam = async (team) => {
-    console.log(team);
+  //  console.log(team);
     try {
       const response = await axios.put(
         "/admin/updateTeam",

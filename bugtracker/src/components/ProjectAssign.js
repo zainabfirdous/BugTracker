@@ -10,7 +10,6 @@ import NoteContext from '../Context/NoteContext';
 export default function ProjectAssign() {
   
   const contextdata = useContext(NoteContext);
-  //  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
 
   axios.defaults.withCredentials = true;
@@ -58,7 +57,6 @@ export default function ProjectAssign() {
       const resp2 = await axios.get("/admin/getteams");
       const resp3 = await axios.get("/admin/getEmployees");
       const resp4 = await axios.get("/admin/projectAssign");
-     // console.log("resp1 L ",resp1);
       setProjList(resp1.data);
       setTeamList(resp2.data);
       setEmpList(resp3.data);
@@ -146,7 +144,6 @@ export default function ProjectAssign() {
   }
 
   const addProjAssign = async (projAssign) => {
-    console.log(projAssign);
     try{
       const response = await axios.post(
         "/admin/newPorjectAssign",
@@ -297,9 +294,6 @@ export default function ProjectAssign() {
                 let uid = contextdata.uid
                 let uid2 = parseInt(aplItem.empID);
                 const urole = contextdata.urole;
-                //  console.log("uid2:", uid2);
-                //  console.log("uid:", uid);
-                // console.log("Comparison:", uid2 === uid);
                 if (urole === "Admin" || uid2 === uid) {
 
                   return (

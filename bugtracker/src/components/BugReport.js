@@ -10,7 +10,6 @@ export default function BugReport() {
 
     
     const contextdata = useContext(NoteContext);
-    console.log("contextdata : ",contextdata);
     axios.defaults.headers.common['Authorization'] = contextdata.token;
 
     const navigate = useNavigate();
@@ -19,21 +18,22 @@ export default function BugReport() {
     const [empList, setEmpList] = useState([]);
 
     const getData = async (contextdata) => {
+        try{
         const data1 = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getbugs" : contextdata.urole==="Developer" ? "/dev/getbugs" : "tester/getbugs"}`);
         const data2 = await axios.get(`${contextdata.urole==="Admin" ? "/admin/trackbugs" : contextdata.urole==="Developer" ? "/dev/trackbugs" : "tester/getbugs"}`);
         const data3 = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getEmployees" : contextdata.urole==="Developer" ? "/dev/getEmployees" : "tester/getbugs"}`);
         setBugList(data1.data);
         setBugTrackList(data2.data);
         setEmpList(data3.data);
-        console.log(data1.data);
-        console.log(data2.data);
+        }catch(e){
+            console.log("Error in Bug Fatching : ",e)
+        }
     }
 
 
     useEffect(() => {
         const token = contextdata.token;
         if (token===null) navigate("/", { replace: true });
-        console.log("Role : ",contextdata.urole)
         getData(contextdata);
     }, [navigate,contextdata])
 
@@ -129,7 +129,6 @@ export default function BugReport() {
                                                 contextdata.urole==="Tester" ?
                                                  bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
                                                  bugItem.bugID === btItem.bugID && btItem.assignTo === uid  ) {
-                                                    //           console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -170,7 +169,6 @@ export default function BugReport() {
                                                                 }
                                                                 {
                                                                     empList.map((empItem) => {
-                                                                      //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                                                         if (empItem.empID === btItem.assignTo) {
                                                                             return (
                                                                                 <div className="col-12">
@@ -225,7 +223,6 @@ export default function BugReport() {
                                                 contextdata.urole==="Tester" ?
                                                  bugItem.bugID === btItem.bugID && bugItem.regBy=== uid : 
                                                  bugItem.bugID === btItem.bugID && btItem.assignTo === uid  ) {
-                                                    //       console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                     return (
 
                                                         <div className='m-3 login-form rounded' style={{ width: "auto" }}>

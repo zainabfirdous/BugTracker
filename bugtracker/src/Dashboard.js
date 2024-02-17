@@ -44,7 +44,6 @@ export default function Dashboard() {
   const timeout = () => {
     setTimeout(() => {
       const token = contextdata.token;
-      //   console.log(token);
       if (token === null) {
         setShow(true)
         setIsAlertVisible(true);
@@ -76,7 +75,6 @@ export default function Dashboard() {
       uid : null,
       token : null
     }));
-    console.log("Hey : hhh")
     setIsLogin(false);
    navigate("/AppInfo", { replace: true });
   };
@@ -94,8 +92,7 @@ export default function Dashboard() {
     setBgColor("bg-warning");
     try {
       const data = await axios.get(`/${contextdata.urole === "Admin" ? "admin/adminDashboard/id" : contextdata.urole === "Developer" ? "dev/devDashboard" : "tester/testerDashboard"}`);
-      console.log("Hello : ",data.data);
-      setProfile(data.data);
+     setProfile(data.data);
     } catch (e) {
     }
   }
@@ -129,7 +126,6 @@ export default function Dashboard() {
       }
       try {
         const response = await axios.put(`/${contextdata.urole === "Developer" ? "dev" : "tester"}/updatePassword`, body);
-        // console.log("response : ",response);
         if (response) {
           setShow(true)
           setIsAlertVisible(true);
@@ -163,15 +159,12 @@ export default function Dashboard() {
     switch (e.target.id) {
       case "oldPassword":
         setOldPassword(e.target.value);
-        // console.log("oldPassword :",oldPassword);
         break;
       case "newPassword1":
         setNewPassword1(e.target.value);
-        //  console.log("newPassword1 :",newPassword1);
         break;
       case "newPassword2":
         setNewPassword2(e.target.value);
-        // console.log("newPassword2 :",newPassword2);
         break;
       default:
         break;

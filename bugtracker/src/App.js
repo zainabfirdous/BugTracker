@@ -25,10 +25,8 @@ function App() {
     <Dashboard/>
       <Routes>
       <Route path="/" element={<AppInfo />} />
-      {/* {localStorage.user ? <Route path="/" element={<Welcome />} /> : <Route path="/" element={<AppInfo />} /> } */}
       <Route path="/Login" element={<Login />} />
       <Route path="/AppInfo" element={<AppInfo />} />
-      {/* {localStorage.user ? <Route path="/Welcome" element={<Welcome />} /> : <Route path="/AppInfo" element={<AppInfo />} /> } */}
       <Route path="/Welcome" element={<Welcome />} />
       <Route path="/Employee" element={<Employee />} />
       <Route path="/Project" element={<Project />} />
@@ -41,7 +39,6 @@ function App() {
       <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
       <Route path='/DevBugPortal' element={<DevBugPortal/>}/>
       <Route path='/UserProject' element={<UserProject/>}/>
-      {/* <Route path='/BugRegistrationForm' element={<BugRegistrationForm/>}/> */}
       
       </Routes>
     </BrowserRouter>

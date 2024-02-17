@@ -42,9 +42,12 @@ export default function AddEmployee(props) {
   }, [props]);
 
   const getRole = async () => {
-    const resp2 = await axios.get("/admin/getrole");
-    //   console.log(resp2);
-    setRoleList(resp2.data);
+    try{
+      const resp2 = await axios.get("/admin/getrole");
+      setRoleList(resp2.data);
+    }catch(e){
+      console.log("Error : ",e)
+    }
   }
 
   const updateEmployee = async () => {
@@ -88,22 +91,22 @@ export default function AddEmployee(props) {
     switch (e.target.id) {
       case "empID":
         setEmpID(e.target.value);
-        console.log(e.target.value);
+      //  console.log(e.target.value);
         break;
       case "firstName":
         setFirstName(e.target.value);
-        console.log(e.target.value);
+      //  console.log(e.target.value);
         break;
       case "lastName":
         setLastName(e.target.value);
-        console.log(e.target.value);
+      //  console.log(e.target.value);
         break;
       case "email":
         setEmail(e.target.value);
         break;
       case "roleID":
         setRoleID(e.target.value);
-        console.log(e.target.value);
+       // console.log(e.target.value);
         break;
       default: break;
     }
@@ -160,7 +163,7 @@ export default function AddEmployee(props) {
       roleID: roleID,
     };
 
-    console.log(object);
+  //  console.log(object);
 
     if (isUpdateButton) {
       updateEmployee(object);

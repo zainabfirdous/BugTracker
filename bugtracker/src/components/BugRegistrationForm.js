@@ -42,7 +42,7 @@ export default function BugRegistrationForm() {
       const resp = await axios.get(`/${contextdata.urole === "Admin" ? "admin" : "tester"}/getProjects`);
       setProjList(resp.data);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   };
 
@@ -66,14 +66,11 @@ export default function BugRegistrationForm() {
   };
 
   const addBug = async (bug) => {
-    console.log(bug);
-
     try {
       const response = await axios.post(
         "/tester/newBug",
         bug
       );
-      console.log(response.data);
       addBugTrack(response.data.bugID);
       resetForm();
       setShow(true)
@@ -125,7 +122,6 @@ export default function BugRegistrationForm() {
         setpriority(e.target.value);
         switch (e.target.value) {
           case "Low":
-            console.log("Heoollll")
             setPriorityBGColor('skyblue');
             break;
           case "Medium":

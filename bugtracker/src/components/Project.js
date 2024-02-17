@@ -11,7 +11,6 @@ import NoteContext from '../Context/NoteContext';
 export default function Project() {
   
   const contextdata = useContext(NoteContext);
-//  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
   axios.defaults.withCredentials = true;
   const [message, setSetMessage] = useState("");
@@ -41,7 +40,6 @@ export default function Project() {
 
   const handleDelete = async (projID) => {
     try{
-    //  console.log("delete : ", projID);
     const deletedRecords = await axios.delete(
       `/admin/deleteproj/${projID}`
     );
@@ -65,7 +63,6 @@ export default function Project() {
   };
 
   const handleUpdateProject = (project) => {
-    console.log(project);
     setUpdateProject(project);
     window.scrollTo({
       top: 0,

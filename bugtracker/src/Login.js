@@ -1,4 +1,4 @@
-import { useState,useEffect,React, useContext } from "react";
+import { useState,React, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
@@ -6,20 +6,14 @@ import NoteContext from './Context/NoteContext'
 
 export default function Login () {
 
-  const { token, user, setUserInfo } = useContext(NoteContext);
+  const { setUserInfo } = useContext(NoteContext);
 
-  
   axios.withCredentials = true;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setSetMessage] = useState("");
   
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/Login", { replace: true });
-  }, [navigate]);
 
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
 
@@ -31,9 +25,8 @@ export default function Login () {
       password: password,
     };
     try {
-      console.log("Hello ");
       const result = await axios.post(
-        "http://127.0.0.1:5000/Login",
+        "/Login",
         reqBody
       );
       if (result.data.token) {
@@ -44,11 +37,7 @@ export default function Login () {
           uid : result.data.uid ,
           token : result.data.token
         }));
-        console.log("user : ",user);
-        console.log("token : ",token);
-
         navigate("/Welcome", { replace: true });
-      //  window.location.href = "/Welcome";
         setTimeout(() => {
           localStorage.clear();
       }, 600000);
@@ -59,8 +48,6 @@ export default function Login () {
             setIsAlertVisible(false);
         }, 400000);
       }
-
-      // console.log(result);
     } catch (err) {
       console.log(err);
       alert(err.response.statusText);
@@ -71,12 +58,8 @@ export default function Login () {
     navigate("/AppInfo", { replace: true })
   }
 
- 
-
-
   return (
     <>
-
     {/* Alert Message */}
     <div className="App">
            {isAlertVisible && <div className='alert-container'>
@@ -104,8 +87,6 @@ export default function Login () {
             id="username"
             value={username}
             onChange={(e) => {
-              console.log(e.target.value);
-              //   username = e.target.value; /// this will not provider update state
               setUsername(e.target.value);
             }}
           required />
