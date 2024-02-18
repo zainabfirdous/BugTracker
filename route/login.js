@@ -51,7 +51,7 @@ const LoginUser = async(req, res)=>{
             const adm = await Admin.findByPk(admin.admID);
     
            const token = generateToken({ empID: adm.admID, username: adm.email, role: 'Admin'});;
-           return res.status(200).json({ token: token , username : adm.email, urole : "Admin",uid : adm.admID});
+           return res.status(200).json({ token: token , username : adm.fName, urole : "Admin",uid : adm.admID});
          } else {
        return res.status(401).json({ "error": "Wrong Password", Login : false});
           }}

@@ -37,7 +37,7 @@ const Emp = con.define
         type:INTEGER,
         allowNull: false,
         validate:{isInt: {
-            msg: 'Role ID must be an integer'
+            msg: 'Role must be Valid'
         }}
     },
     crtDate:{

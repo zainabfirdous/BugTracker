@@ -2,8 +2,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
+
 
 export default function AddEmployee(props) {
+
+  
+  const contextdata = useContext(NoteContext);
+//  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
   axios.defaults.withCredentials = true;
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -28,16 +36,18 @@ export default function AddEmployee(props) {
       setEmail(props.employee.email);
       setRoleID(props.employee.roleID);
       setRoleList(props.rolelist);
-
       setIsUpdateButton(true);
     } else setIsUpdateButton(false);
     getRole();
   }, [props]);
 
   const getRole = async () => {
-    const resp2 = await axios.get("http://127.0.0.1:5000/admin/getrole");
-    //   console.log(resp2);
-    setRoleList(resp2.data);
+    try{
+      const resp2 = await axios.get("/admin/getrole");
+      setRoleList(resp2.data);
+    }catch(e){
+      console.log("Error : ",e)
+    }
   }
 
   const updateEmployee = async () => {
@@ -48,58 +58,55 @@ export default function AddEmployee(props) {
       email: email,
       roleID: roleID,
     };
-    // console.log(updatedData);
-    const udpatedRecord = await axios.put(
-      "http://127.0.0.1:5000/admin/updateEmployee",
-      updatedData
-    );
-    props.updateEmployeeList();
-    resetForm();
-    if (udpatedRecord.data.error) {
+    try{
+      const udpatedRecord = await axios.put(
+        "/admin/updateEmployee",
+        updatedData
+      );
+      if(udpatedRecord){
+        props.updateEmployeeList();
+        resetForm();
+        setShow(true)
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-info");
+        setSetMessage("Employee updated successfully!");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+      }
+    }catch(e){
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage(`${udpatedRecord.data.error}`);
+      setSetMessage(`${e.response.data.error}`);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
-
     }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-info");
-      setSetMessage("Employee updated successfully!");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-
-    }
-
   };
 
   const handleInput = (e) => {
     switch (e.target.id) {
       case "empID":
         setEmpID(e.target.value);
-        console.log(e.target.value);
+      //  console.log(e.target.value);
         break;
       case "firstName":
         setFirstName(e.target.value);
-        console.log(e.target.value);
+      //  console.log(e.target.value);
         break;
       case "lastName":
         setLastName(e.target.value);
-        console.log(e.target.value);
+      //  console.log(e.target.value);
         break;
       case "email":
         setEmail(e.target.value);
         break;
       case "roleID":
         setRoleID(e.target.value);
-        console.log(e.target.value);
+       // console.log(e.target.value);
         break;
       default: break;
     }
@@ -108,23 +115,32 @@ export default function AddEmployee(props) {
 
   const addEmployee = async (employee) => {
 
-    const response = await axios.post(
-      "http://127.0.0.1:5000/admin/newEmployee",
-      employee
-    );
-    if (response.data.error) {
+    try{
+      const response = await axios.post(
+        "/admin/newEmployee",
+        employee);
+        if(response){
+          setShow(true)
+          setIsAlertVisible(true);
+          setShow(true);
+          setBgColor("bg-warning");
+          setSetMessage("Employee Added");
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
+          props.updateEmployeeList();
+          resetForm();
+        }
+       
+    }catch(e){
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage(response.data.error);
+      setSetMessage(e.response.data.error);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
-    }
-    else {
-      props.updateEmployeeList();
-      resetForm();
     }
   };
 
@@ -147,7 +163,7 @@ export default function AddEmployee(props) {
       roleID: roleID,
     };
 
-    console.log(object);
+  //  console.log(object);
 
     if (isUpdateButton) {
       updateEmployee(object);
@@ -239,7 +255,7 @@ export default function AddEmployee(props) {
           </select>
         </div>
         <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-          <button type="button" className="btn btn-success text-center" onClick={handleSubmit}>
+          <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center" } onClick={handleSubmit}>
             {isUpdateButton ? "Update Employee" : "Add Employee"}
           </button>
         </div>
