@@ -5,8 +5,14 @@ import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import "../BugRegistration.css";
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 function BugRegistration() {
+
+  const contextdata = useContext(NoteContext);
+  //  console.log("contextdata : ",contextdata);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -27,23 +33,25 @@ function BugRegistration() {
 
   const [isUpdate, setIsUpdate] = useState(false);
 
-  const getBug = async () => {
+  useEffect(() => {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    getBug(contextdata);
+
+  }, [navigate,contextdata]);
+
+  const getBug = async (contextdata) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/admin/getbugs`);
+      const response = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getbugs" : "tester/getbugs"}`);
+      // console.log("Bugs : ",response.data);
       setBugList(response.data);
-      const resp = await axios.get("http://127.0.0.1:5000/admin/getProjects");
+      const resp = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getProjects" : "tester/getProjects"}`);
+     // console.log("Projects : ",resp.data);
       setProjList(resp.data);
     } catch (err) {
-      console.log(err);
+    //  console.log(err);
     }
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    getBug();
-
-  }, [navigate]);
 
   const handleUpdate = async (bug) => {
     setIsUpdate(true);
@@ -66,15 +74,15 @@ function BugRegistration() {
       priority: priority,
       bugDesc: bugDesc,
       projID: projID,
-      regBy: localStorage.getItem("uid")
+      regBy: contextdata.uid
     };
     try{
-      console.log(bugData);
+   //   console.log("bugData : ",bugData);
     const response = await axios.put(
-      "http://127.0.0.1:5000/tester/updateBug",
+      `${contextdata.urole==="Admin" ? "/admin/updateBug" : "/tester/updateBug"}`,
       bugData
     );
-    console.log(response);
+   if(response){
     resetForm();
     setShow(true)
     setIsAlertVisible(true);
@@ -84,8 +92,10 @@ function BugRegistration() {
     setTimeout(() => {
       setIsAlertVisible(false);
     }, 5000);
+    setPriorityBGColor("");
+    setIsUpdate(false);
     getBug();
-
+   }
     }catch(e){
       setShow(true)
       setIsAlertVisible(true);
@@ -113,20 +123,21 @@ function BugRegistration() {
       priority: priority,
       bugDesc: bugDesc,
       projID: projID,
-      regBy: localStorage.getItem("uid")
+      regBy: contextdata.uid
     };
     addBug(bugData);
   };
 
   const addBug = async (bug) => {
-    console.log(bug);
+   // console.log(bug);
 
     try {
+   //   console.log("contextdata.urole : ",contextdata.urole)
       const response = await axios.post(
-        "http://127.0.0.1:5000/tester/newBug",
+        `${contextdata.urole==="Admin" ? "/admin/newBug" : "/tester/newBug"}`,
         bug
       );
-      console.log(response.data);
+   //   console.log(response.data);
       addBugTrack(response.data.bugID);
       resetForm();
       setShow(true)
@@ -141,12 +152,12 @@ function BugRegistration() {
       getBug();
     }
     catch (e) {
-      console.log(e)
+   //   console.log(e)
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage(e.response.data.errors);
+      setSetMessage(e.response);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
@@ -159,10 +170,11 @@ function BugRegistration() {
     }
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/tester/newtrack",
+        "/tester/newtrack",
         bugTract
       );
-      console.log(response);
+      if(response){
+      }
     }
     catch (e) {
     }
@@ -171,7 +183,7 @@ function BugRegistration() {
   const handleDelete = async (bugID) => {
     try {
       const response = await axios.delete(
-        `http://127.0.0.1:5000/tester/deletebug/${bugID}`
+        `${contextdata.urole==="Admin" ? `/admin/deletebug/${bugID}` : `/tester/deletebug/${bugID}`}`
       );
       // console.log(response.data);
       addBugTrack(response.data.bugID);
@@ -208,7 +220,6 @@ function BugRegistration() {
         setpriority(e.target.value);
         switch (e.target.value) {
           case "Low":
-            console.log("Heoollll")
             setPriorityBGColor('skyblue');
             break;
           case "Medium":
@@ -259,7 +270,7 @@ function BugRegistration() {
 
       <div className="bug-registration-form" >
         <div className="row" >
-          <div className="offset-4 col-md-12 col-lg-4">
+          <div className="offset-md-3 offset-xl-4 col-sm-12 col-md-6 col-xl-4">
             <form className="bug-form" onSubmit={handlesubmit}>
               <div className="form-group">
                 <h3 className="form-title">Bug Registration</h3>
@@ -365,12 +376,9 @@ function BugRegistration() {
             </thead>
             <tbody>
               {bugList.map((bugItem) => {
-                let uid = parseInt(localStorage.getItem("uid"));
+                let uid = contextdata.uid;
                 let uid2 = parseInt(bugItem.regBy);
-                const urole = localStorage.getItem("urole")
-                //  console.log("uid2:", uid2);
-                //  console.log("uid:", uid);
-                // console.log("Comparison:", uid2 === uid);
+                const urole = contextdata.urole;
                 if (urole === "Admin" || uid2 === uid) {
 
                   return (

@@ -4,8 +4,13 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function TesterBugPortal() {
+
+    const contextdata = useContext(NoteContext);
+    axios.defaults.headers.common['Authorization'] = contextdata.token;
 
     axios.defaults.withCredentials = true;
     const navigate = useNavigate();
@@ -23,7 +28,6 @@ export default function TesterBugPortal() {
         setShowTrackID(showTrackID);
         setShowBugdesc(true)
         setVisibleBugdesc(true);
-        console.log("showTrackID : ", showTrackID)
     }
 
     const [bugList, setBugList] = useState([]);
@@ -34,81 +38,83 @@ export default function TesterBugPortal() {
         setStatus(e.target.value);
     }
 
-    const handleReopen = async (trackID) =>{
-        const response = await axios.put(
-          `http://127.0.0.1:5000/tester/updateTrack/reopen/${trackID}`
-
-        );
-        if (response.data.error) {
-          setShow(true)
-          setIsAlertVisible(true);
-          setBgColor("bg-warning");
-          setSetMessage(response.data.error);
-          setTimeout(() => {
-            setIsAlertVisible(false);
-          }, 5000);
+    const handleReopen = async (trackID) => {
+        try {
+            const response = await axios.put(
+                `/tester/updateTrack/reopen/${trackID}`
+            );
+            if (response) {
+                setShow(true)
+                setIsAlertVisible(true);
+                setBgColor("bg-warning");
+                setSetMessage(`Marked as Reopen`);
+                setTimeout(() => {
+                    setIsAlertVisible(false);
+                }, 5000);
+                getData();
+                setShowBugdesc(false);
+            }
+        } catch (e) {
+            setShow(true)
+            setIsAlertVisible(true);
+            setBgColor("bg-warning");
+            setSetMessage(e.response.data.error);
+            setTimeout(() => {
+                setIsAlertVisible(false);
+            }, 5000);
         }
-        else {
-          setShow(true)
-          setIsAlertVisible(true);
-          setBgColor("bg-warning");
-          setSetMessage(`Marked as Reopen`);
-          setTimeout(() => {
-            setIsAlertVisible(false);
-          }, 5000);
-          getData();
-          setShowBugdesc(false);
-        }
-      }
+    }
 
     const handleVerified = async (trackID) => {
-        const response = await axios.put(
-            `http://127.0.0.1:5000/tester/updateTrack/verified/${trackID}`
-        );
-        if (response.data.error) {
+        try {
+            const response = await axios.put(
+                `/tester/updateTrack/verified/${trackID}`
+            );
+            if (response) {
+                setShow(true)
+                setIsAlertVisible(true);
+                setBgColor("bg-warning");
+                setSetMessage(`Marked as Verified`);
+                setTimeout(() => {
+                    setIsAlertVisible(false);
+                }, 5000);
+                getData();
+                setShowBugdesc(false);
+            }
+        } catch (e) {
             setShow(true)
             setIsAlertVisible(true);
             setBgColor("bg-warning");
-            setSetMessage(response.data.error);
+            setSetMessage(e.response.data.error);
             setTimeout(() => {
                 setIsAlertVisible(false);
             }, 5000);
         }
-        else {
-            setShow(true)
-            setIsAlertVisible(true);
-            setBgColor("bg-warning");
-            setSetMessage(`Marked as Verified`);
-            setTimeout(() => {
-                setIsAlertVisible(false);
-            }, 5000);
-            getData();
-            setShowBugdesc(false);
-        }
-
     }
 
 
 
     const getData = async () => {
-        const data1 = await axios.get("http://127.0.0.1:5000/admin/getbugs");
-        const data2 = await axios.get("http://127.0.0.1:5000/admin/trackbugs");
-        const data3 = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
+        try{
+        const data1 = await axios.get("/tester/getbugs");
+        const data2 = await axios.get("/tester/trackBug");
+        const data3 = await axios.get("/tester/getEmployees");
         setBugList(data1.data);
         setBugTrackList(data2.data);
         setEmpList(data3.data);
-        //console.log(data1.data);
-        // console.log(data2.data);
+        }catch(e){
+            console.log("Error in Tester Bug : ",e);
+        }
     }
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) navigate("/", { replace: true });
-        if (localStorage.getItem("urole") === "Tester") {
+        const token = contextdata.token;
+        if (token === null) navigate("/", { replace: true });
+        if (contextdata.urole === "Tester") {
             setStatus("Resolved");
         }
-        getData();
-    }, [navigate])
+        getData(contextdata);
+    }, [navigate, contextdata])
 
 
     return (
@@ -145,7 +151,6 @@ export default function TesterBugPortal() {
                                                 return (
                                                     bugList.map((bugItem) => {
                                                         if (bugItem.bugID === btItem.bugID) {
-                                                            //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                                                             return (
                                                                 <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                                                                     <div className="row mt-1">
@@ -172,7 +177,8 @@ export default function TesterBugPortal() {
                                                                                                 <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span>
                                                                                             </h5>
                                                                                         </div>
-                                                                                    )}
+                                                                                    )
+                                                                                }
                                                                                 return null;
                                                                             })}
                                                                     </div>
@@ -187,7 +193,6 @@ export default function TesterBugPortal() {
                                                                                         </div>
                                                                                         {
                                                                                             empList.map((empItem) => {
-                                                                                                //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                                                                                 if (empItem.empID === btItem.assignTo && status !== "New") {
                                                                                                     return (
                                                                                                         <div className="col-12">
@@ -215,26 +220,26 @@ export default function TesterBugPortal() {
                                                                     <div>
                                                                         {
                                                                             btItem.status === "Resolved" ?
-                                                                            <form className="row mt-4">
-                                                                            <div className="form-group col-sm-12 col-md-2">
-                                                                                <button type="button" onClick={() => handleVerified(btItem.trackID)} className="btn btn-success text-center">Verified</button>
-                                                                            </div>
-                                                                            <div className="form-group col-sm-12 col-md-2">
-                                                                                <button type="button" onClick={() => handleReopen(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
-                                                                            </div>
-                                                                        </form>
-                                                                        : btItem.status === "Retest" ?
-                                                                        <form className="row mt-4">
-                                                                            <div className="form-group col-sm-12 col-md-2">
-                                                                                <button type="button" onClick={() => handleVerified(btItem.trackID)} className="btn btn-success text-center">Verified</button>
-                                                                            </div>
-                                                                            <div className="form-group col-sm-12 col-md-2">
-                                                                                <button type="button" onClick={() => handleReopen(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
-                                                                            </div>
-                                                                        </form> :
-                                                                        <form></form>
+                                                                                <form className="row mt-4">
+                                                                                    <div className="form-group col-sm-12 col-md-2">
+                                                                                        <button type="button" onClick={() => handleVerified(btItem.trackID)} className="btn btn-success text-center">Verified</button>
+                                                                                    </div>
+                                                                                    <div className="form-group col-sm-12 col-md-2">
+                                                                                        <button type="button" onClick={() => handleReopen(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
+                                                                                    </div>
+                                                                                </form>
+                                                                                : btItem.status === "Retest" ?
+                                                                                    <form className="row mt-4">
+                                                                                        <div className="form-group col-sm-12 col-md-2">
+                                                                                            <button type="button" onClick={() => handleVerified(btItem.trackID)} className="btn btn-success text-center">Verified</button>
+                                                                                        </div>
+                                                                                        <div className="form-group col-sm-12 col-md-2">
+                                                                                            <button type="button" onClick={() => handleReopen(btItem.trackID)} className="btn btn-danger text-center">Reopen</button>
+                                                                                        </div>
+                                                                                    </form> :
+                                                                                    <form></form>
                                                                         }
-                                                                        
+
                                                                     </div>
                                                                 </div>
                                                             )
@@ -273,7 +278,7 @@ export default function TesterBugPortal() {
                             >
                                 <option selected value="Resolved">Resolved</option>
                                 <option value="Verified">Verified</option>
-                                <option value="Reopen">Reopen</option>
+                                <option value="Reopened">Reopen</option>
                                 <option value="Retest">Retest</option>
                                 <option value="Closed">Closed</option>
                                 <option value="All">All</option>
@@ -287,9 +292,8 @@ export default function TesterBugPortal() {
                                 if ("All" === status || btItem.status === status) {
                                     return (
                                         bugList.map((bugItem) => {
-                                            let uid = parseInt(localStorage.getItem('uid'));
-                                            if (bugItem.bugID === btItem.bugID && bugItem.regBy === uid ) {
-                                                //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
+                                            let uid = contextdata.uid;
+                                            if (bugItem.bugID === btItem.bugID && bugItem.regBy === uid) {
                                                 return (
                                                     <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                                                         <div className="row mt-1">
@@ -325,7 +329,6 @@ export default function TesterBugPortal() {
                                                                             </div>
                                                                             {
                                                                                 empList.map((empItem) => {
-                                                                                    //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                                                                     if (empItem.empID === btItem.assignTo && status !== "New") {
                                                                                         return (
                                                                                             <div className="col-lg-12 col-xl-4">

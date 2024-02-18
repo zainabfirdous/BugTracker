@@ -6,9 +6,15 @@ import "./Employee.css";
 import AddEmployee from "./AddEmployee";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function Employee() {
- // axios.defaults.withCredentials = true;
+
+  const contextdata = useContext(NoteContext);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
+
+  axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const [employeeList, setEmployeeList] = useState([]);
   const [rolelist, setRoleList] = useState([]);
@@ -16,55 +22,50 @@ export default function Employee() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
-
   const [updateEmployee, setUpdateEmployee] = useState({});
+
+  
+  useEffect(() => {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    getEmployee();
+  }, [navigate,contextdata]);
 
 
   const getEmployee = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
-      const resp2 = await axios.get("http://127.0.0.1:5000/admin/getrole");
-       console.log(response.data);
+      const response = await axios.get("/admin/getEmployees");
+      const resp2 = await axios.get("/admin/getrole");
       setRoleList(resp2.data);
       setEmployeeList(response.data);
-      
-      // employeeList.map((empItem) =>  {
-      //   return ( 
-      //     console.log(empItem.roleID) );
-      // })
     } catch (err) {
       console.log(err);
     }
   };
 
   const handleDelete = async (employeeID) => {
-    console.log("delete : ", employeeID);
-    const deletedRecords = await axios.delete(
-      `http://127.0.0.1:5000/admin/deleteEmp/${employeeID}`
-    );
-    getEmployee();
-    if(deletedRecords.data.error){
-      setIsAlertVisible(true);
-      setShow(true);
-        setSetMessage(`${deletedRecords.data.error}`);
-        setTimeout(() => {
-            setIsAlertVisible(false);
-        }, 5000);
-    }
-    else{
+    try{
+      const deletedRecords = await axios.delete(
+        `/admin/deleteEmp/${employeeID}`
+      );
+      getEmployee();
       setIsAlertVisible(true);
       setShow(true);
         setSetMessage(`${deletedRecords.data} Employee deleted successfully`);
         setTimeout(() => {
             setIsAlertVisible(false);
         }, 5000);
+    }catch(e){
+      setIsAlertVisible(true);
+      setShow(true);
+        setSetMessage(`${e.response.data.error}`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
     }
-  };
+  }
 
   const handleUpdateEmployee = (employee) => {
-    console.log(employee);
-    // pass employee object to addEmployee component
-    
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -73,12 +74,6 @@ export default function Employee() {
   };
 
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    
-    getEmployee();
-  }, [navigate]);
 
   return (
     <>
