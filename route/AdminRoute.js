@@ -30,7 +30,7 @@ const dashboard = async(req, res)=>{
 
 const dashboardByID = async(req, res)=>{
     try{
-        const admID = req.params.id;
+        const admID = req.empID;
         const admin = await Admin.findByPk(admID)
         res.status(200).json(admin);
     }catch(error)
@@ -76,7 +76,7 @@ const CreateEmp =  async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While creating employee" });
@@ -112,7 +112,7 @@ const UpdateEmp = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating employee" });
@@ -141,7 +141,7 @@ const CreateProject =  async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While creating project" });
@@ -172,7 +172,7 @@ const UpdateProject = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating project" });
@@ -216,7 +216,7 @@ const UpdateBugs = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug" });
@@ -269,7 +269,7 @@ const CreatingTeams =  async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While creating teams" });
@@ -291,7 +291,7 @@ const Updateteam = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating teams" });
@@ -346,7 +346,7 @@ const CreateAssign = async(req, res)=>
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While creating project assignment" });
@@ -369,7 +369,7 @@ const UpdateProjectAssign = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating project assignment" });
@@ -427,7 +427,7 @@ const UpdateTrack = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug tracker" });
@@ -449,7 +449,7 @@ const UpdateClose = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug tracker" });
@@ -486,7 +486,7 @@ const CreateUserProfile = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While Adding employee profile" });
@@ -507,7 +507,7 @@ const role = async (req, res) => {
 
 router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)
-router.get("/adminDashboard/:id", dashboardByID)
+router.get("/adminDashboardbyID", dashboardByID)
 router.get("/getEmployees", allEmp)
 router.get("/getEmpByID/:id", EmpById)
 router.post("/newEmployee",CreateEmp)
