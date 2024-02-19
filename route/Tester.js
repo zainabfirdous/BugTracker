@@ -68,7 +68,7 @@ const UpdateBugs = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug" });
@@ -116,7 +116,9 @@ const TesterProjects = async (req, res) => {
             'JOIN Employee e ON pa.empID = e.empID ' +
             'WHERE e.empID = :empID',
             {
-                replacements: { empID: req.empID }, 
+
+                replacements: { empID: req.empID}, 
+
                 type: QueryTypes.SELECT
             }
         );
@@ -138,7 +140,7 @@ const TeamMembers = async (req, res) => {
             'JOIN projectassign pa ON e.empID = pa.empID ' +
             'WHERE pa.teamID = :teamID  AND pa.empID != :empID',
             {
-                replacements: { teamID: req.params.id, empID: req.params.eid },
+                replacements: { teamID: req.params.id, empID: req.empID},
                 type: QueryTypes.SELECT
             }
         );
@@ -165,7 +167,7 @@ const ProjTeam = async (req, res) => {
             'WHERE pa.projID = :pid ' +
             'AND pa.empID != :eid',
             {
-                replacements: { pid: req.params.id, eid: req.params.eid },
+                replacements: { pid: req.params.id, eid: req.empID },
                 type: QueryTypes.SELECT
             }
         );
@@ -194,7 +196,7 @@ const NewTracking = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While adding new bug tracker" });
@@ -227,7 +229,7 @@ const UpdateTrack = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating tracker" });
@@ -248,7 +250,7 @@ const TrackVerified = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug tracker" });
@@ -303,11 +305,17 @@ const allEmp =  async (req, res) => {
 }
 
 
+Trouter.get("/projTeam/:id", ProjTeam) //api with token
+Trouter.get("/teammembers/:id",TeamMembers); //api with token
+Trouter.get("/myprojects", TesterProjects); //api with token
+
+
 Trouter.get("/getEmployees", allEmp)
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
 Trouter.get("/getProjects", Projects)
 Trouter.get("/testerprojects", TesterProjects);
+
 Trouter.get("/testerDashboard", testerProfile);
 Trouter.get("/getbugs", Bugs)
 Trouter.post("/newBug", newbugReg);

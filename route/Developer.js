@@ -77,7 +77,7 @@ const DevTeamMembers = async(req, res)=>{
             'JOIN projectassign pa ON e.empID = pa.empID '+
             'WHERE pa.teamID = :teamID  AND pa.empID != :empID',
             {
-                replacements:{ teamID: req.params.id, empID : req.params.eid},
+                replacements:{ teamID: req.params.id, empID : req.empID},
                 type: QueryTypes.SELECT
             } 
         );
@@ -104,12 +104,12 @@ const DProjTeam = async(req, res)=>{
             'WHERE pa.projID = :pid '+
             'AND pa.empID != :eid',
             {
-                replacements:{ pid: req.params.id, eid : req.params.eid},
+                replacements:{ pid: req.params.id, eid : req.empID},
                 type: QueryTypes.SELECT
             } 
         );
         if (pteam.length === 0) {
-            res.status(200).json('No team members found')
+            res.status(404).json('No team members found')
             //console.log('No team members found for team ID:', teamId);
         } else{
             res.status(200).json(pteam);
@@ -139,7 +139,7 @@ const UpdateTrack = async(req, res)=>{
             if (error.name === 'SequelizeValidationError') {
                 // Construct an error response with custom error messages
                 const errorMessages = error.errors.map(err => err.message).join('; ');
-                res.status(400).json({ errors: errorMessages });
+                res.status(400).json({ error: errorMessages });
             } else {
                 // Handle other types of errors
                 res.status(500).json({ error: "Error While updating bug tracker" });
@@ -159,7 +159,7 @@ const UpdateStatus = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug tracker" });
@@ -180,7 +180,7 @@ const UpdateRetest = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug tracker" });
@@ -224,6 +224,8 @@ const UpdatePassword = async(req, res)=>{
 }
 
 
+
+
 const Bugs = async (req, res) => {
     try {
         const bug = await Bug.findAll();
@@ -255,11 +257,15 @@ const allEmp =  async (req, res) => {
 }
 
 
+    Drouter.get("/projTeam/:id", DProjTeam) //api with token
+    Drouter.get("/teammembers/:id", DevTeamMembers);//api with token
+    Drouter.get("/myprojects", DevProjects);//api with token
     Drouter.get("/getEmployees", allEmp)
     Drouter.get("/getbugs", Bugs)
     Drouter.get("/projTeam/:id/:eid", DProjTeam)
     Drouter.get("/teammembers/:id/:eid", DevTeamMembers);
     Drouter.get("/devprojects", DevProjects);
+
     Drouter.get("/devDashboard", DevProfile);
     Drouter.get("/trackbugs", Track)
     Drouter.get("/trackBug/:id",tracking);
