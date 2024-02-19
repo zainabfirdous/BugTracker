@@ -70,18 +70,27 @@ const SideBar = ({ children }) => {
         {
             path: '/profile',
             name: 'Profile',
-            // icon: <FcBusinessman />,
+            icon: <FcBusinessman />,
+            subRoutes: [
+                { path: '/manage-account', name: 'Manage Account' }
+            ],},
             // subRoutes: [
             //     { path: '/profile/Login', name: 'Login', icon: <IoIosLogIn /> },
-            //     { path: '/profile/Logout', name: 'Logout', icon: <IoIosLogOut /> },
+            //     { path: '/profile/Logout', name: 'Logout' },
             // ],
-        },
+        
     ];
 
     const userRoutes = [
         { path: '/BugReport', name: 'Dashboard', icon: <FaHome /> },
         { path: '/DevBugPortal', name: 'Bug Tracking', icon: <FaBug /> },
-        { path: '/Profile', name: 'Profile', icon: <FcBusinessman /> },
+        { path: '/Profile', name: 'Profile', icon: <FcBusinessman />,
+        subRoutes: [
+            { path: '/my-projects', name: 'My Projects' },
+            { path: '/my-teams', name: 'My Teams' },
+            { path: '/manage-account', name: 'Manage Account' }
+        ],
+     },
 
     ];
 
@@ -89,8 +98,12 @@ const SideBar = ({ children }) => {
         { path: '/BugReport', name: 'Dashboard', icon: <FaHome /> },
         { path: '/BugReg', name: 'Bug Registr', icon: <FaBug /> },
         { path: '/TesterBugPortal', name: 'Bug Report', icon: <MdBugReport /> },
-        { path: '/Profile', name: 'Profile', icon: <FcBusinessman /> },
-        // Add more tester-specific routes here
+        { path: '/Profile', name: 'Profile', icon: <FcBusinessman />,
+        subRoutes: [
+            { path: '/my-projects', name: 'My Projects' },
+            { path: '/my-teams', name: 'My Teams' },
+            { path: '/manage-account', name: 'Manage Account' }
+        ],},
     ];
 
     const guestRoutes = [

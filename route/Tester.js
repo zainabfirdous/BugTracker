@@ -145,7 +145,7 @@ const TeamMembers = async (req, res) => {
             }
         );
         if (team.length === 0) {
-            res.send('No team members found')
+            res.status(404).json({error:'No team members found'})
             //console.log('No team members found for team ID:', teamId);
         } else {
             res.status(200).json(team);
@@ -161,9 +161,10 @@ const TeamMembers = async (req, res) => {
 const ProjTeam = async (req, res) => {
     try {
         const pteam = await sequelize.query(
-            'SELECT e.empID, e.fName, e.lName, e.email ' +
+            'SELECT e.empID, e.fName, e.lName, e.email, t.teamName ' +
             'FROM Employee e ' +
             'JOIN projectassign pa ON e.empID = pa.empID ' +
+            'JOIN Team t ON pa.teamID = t.teamID '+
             'WHERE pa.projID = :pid ' +
             'AND pa.empID != :eid',
             {
@@ -304,11 +305,53 @@ const allEmp =  async (req, res) => {
     }
 }
 
+const testerteams = async(req, res)=>{
+    try{
+        const team = await sequelize.query(
+            'SELECT t.teamID, t.teamName, p.projName FROM team t '+
+            'JOIN project p ON t.projID = p.projID '+
+            'JOIN ProjectAssign pa ON t.teamID = pa.teamID '+ 
+            'JOIN Employee e ON pa.empID = e.empID '+ 
+            'WHERE e.empID = :empID ',
+            {
+                replacements: { empID: req.empID }, 
+                type: QueryTypes.SELECT
+              }
+            );
+      res.status(200).json(team);
+    } catch (error) {
+    // Handle any errors
+    console.error('Error executing raw query:', error);
+    res.status(500).json({ error: 'Error while fetching employee teams' });
+    }
+    }
+  
+    const projIDteams = async(req, res)=>{
+        try{
+            const team = await sequelize.query(
+               'select t.teamID, t.teamName '+
+               'from team t '+
+                'JOIN projectassign pa on t.teamID = pa.teamID '+
+                'where pa.projID = :projID',
+                {
+                    replacements: { projID: req.params.projID }, 
+                    type: QueryTypes.SELECT
+                  }
+                );
+          res.status(200).json(team);
+        } catch (error) {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error while fetching employee teams' });
+        }
+        }
+
+
+Trouter.get("/projteamsbyID/:projID", projIDteams)
 
 Trouter.get("/projTeam/:id", ProjTeam) //api with token
 Trouter.get("/teammembers/:id",TeamMembers); //api with token
 Trouter.get("/myprojects", TesterProjects); //api with token
-
+Trouter.get('/team', testerteams);
 
 Trouter.get("/getEmployees", allEmp)
 Trouter.get("/projTeam/:id/:eid", ProjTeam)

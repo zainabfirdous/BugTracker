@@ -13,9 +13,12 @@ import BugReport from './components/BugReport'
 import BugTracking from './components/BugTracking';
 import TesterBugPortal from './components/TesterBugPortal';
 import DevBugPortal from './components/DevBugPortal';
-import UserProject from './components/UserProject';
 import NoteState from '../src/Context/NoteState';
 import SideBar from './components/Sidebar';
+
+import EmpProj from './components/EmpProj'
+import EmpTeam from  './components/EmpTeam'
+import MySettings from  './components/MySettings'
 
 function App() {
 
@@ -63,7 +66,10 @@ function App() {
       <Route path='/BugTracking' element={<BugTracking/>}/>
       <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
       <Route path='/DevBugPortal' element={<DevBugPortal/>}/>
-      <Route path='/UserProject' element={<UserProject/>}/>
+      <Route path="/my-projects" element={<EmpProj />} />
+      <Route path="/my-teams" element={<EmpTeam />} />
+      <Route path="/manage-account" element={<MySettings />} /> 
+      {/*<Route path='/UserProject' element={<UserProject/>}/>*/}
       
       </Routes>
       </div>
