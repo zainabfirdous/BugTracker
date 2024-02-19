@@ -233,6 +233,13 @@ export default function ProjectAssign() {
           </div>
           <div className="form-group col-sm-12 col-md-4">
             <label htmlFor="teamID">Team : </label>
+            {/* <input
+                            className="form-control"
+                            type="text"
+                            id="teamID"
+                            value={teamID}
+                            onChange={handleInput}
+                        /> */}
             <select id="teamID" value={teamID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
               <option id="teamID" selected>Select</option>
               {teamList.map((teamItem) => {
@@ -244,6 +251,13 @@ export default function ProjectAssign() {
           </div>
           <div className="form-group col-sm-12 col-md-4">
             <label htmlFor="startDate">Employee : </label>
+            {/* <input
+                            className="form-control"
+                            type="empID"
+                            id="empID"
+                            value={empID}
+                            onChange={handleInput}
+                        /> */}
             <select id="empID" value={empID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
               <option id="empID" selected>Select</option>
               {empList.map((empItem) => {
@@ -285,13 +299,14 @@ export default function ProjectAssign() {
                   return (
                     <tr key={aplItem.assignID}>
                       <td>{aplItem.assignID}</td>
+                      {/* <td>{aplItem.projID}</td> */}
                       {projList.map((projItem) => {
                         if (projItem.projID === aplItem.projID) {
                           return (
                             <td key={aplItem.projID}>{projItem.projID} {projItem.projName}</td>
                           );
                         }
-                        return null; 
+                        return null; // or return <td key={roleItem.roleID}></td>;
                       })}
                       {teamList.map((teamItem) => {
                         if (teamItem.teamID === aplItem.teamID) {
@@ -299,7 +314,7 @@ export default function ProjectAssign() {
                             <td key={aplItem.teamID}>{teamItem.teamID} {teamItem.teamName}</td>
                           );
                         }
-                        return null; 
+                        return null; // or return <td key={roleItem.roleID}></td>;
                       })}
                       {empList.map((empItem) => {
                         if (empItem.empID === aplItem.empID) {
@@ -307,8 +322,10 @@ export default function ProjectAssign() {
                             <td key={aplItem.empID}>{empItem.empID} {empItem.fName}</td>
                           );
                         }
-                        return null; 
+                        return null; // or return <td key={roleItem.roleID}></td>;
                       })}
+                      {/* <td>{aplItem.teamID}</td>
+                  <td>{aplItem.empID}</td> */}
 
                       <td>
                         <div className='row'>

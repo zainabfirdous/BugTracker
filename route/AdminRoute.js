@@ -531,11 +531,7 @@ const role = async (req, res) => {
 
 router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)
-
-//router.get("/adminDashboardbyID", dashboardByID) api with token
-
 router.get("/adminDashboard/id", dashboardByID)
-
 router.get("/getEmployees", allEmp)
 router.get("/getEmpByID/:id", EmpById)
 router.post("/newEmployee",CreateEmp)
