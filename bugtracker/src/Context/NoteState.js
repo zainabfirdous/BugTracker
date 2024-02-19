@@ -9,8 +9,6 @@ const NoteState = (props) => {
         uid: 0,
         user: 'null',
       });
-
-      console.log("Main file : ");
   return (
     <NoteContext.Provider value={{ ...userInfo, setUserInfo }}>
     {props.children}
