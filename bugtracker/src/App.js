@@ -21,12 +21,12 @@ function App() {
 
   return (
     <>
-    <NoteState >
+    <NoteState  >
       
     <Router>
     <SideBar>
     <div className='row'>
-          <div className='col-2'>
+          <div className='col-2' >
             
           </div>
           <div className='col-12'>
@@ -64,7 +64,6 @@ function App() {
       <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
       <Route path='/DevBugPortal' element={<DevBugPortal/>}/>
       <Route path='/UserProject' element={<UserProject/>}/>
-      
       </Routes>
       </div>
       </div>

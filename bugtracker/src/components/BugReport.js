@@ -37,27 +37,43 @@ export default function BugReport() {
         getData(contextdata);
     }, [navigate, contextdata])
 
+    const [status1, setStatus1] = useState("New");
+    const [status2, setStatus2] = useState("Resolved");
+    const [status3, setStatus3] = useState("Closed");
+
     return (
         <>
             <div className='container'>
                 <div className='row mt-4'>
                     <div className='col-md-12 col-lg-4'>
                         <div className="bg-light border border-primary rounded ml-1">
-                            <h3 className="bg-warning border border-warning rounded m-3" style={{ textAlign: 'center' }}>New</h3>
+                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#00ff00' }}>
+                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#00ff00', fontSize: '1.2rem' }}
+                                    id="status"
+                                    name="status"
+                                    value={status1}
+                                    onChange={(e) => { setStatus1(e.target.value) }}
+                                    required
+                                >
+                                    <option value="New" style={{ backgroundColor: '#00ff00' }}>New</option>
+                                    <option value="Assigned" style={{ backgroundColor: '#ffA500' }}>Assigned</option>
+                                    <option value="Open" style={{ backgroundColor: '#FFFF00' }}>Open</option>
+                                </select>
+
+
+                            </h3>
                             <div className=' border border-warning rounded' style={{ maxHeight: '600px', overflow: 'auto' }}>
                                 {
                                     bugTrackList.map((btItem) => {
-                                        if (btItem.status === "New") {
+                                        if (btItem.status === status1) {
                                             return (
                                                 bugList.map((bugItem) => {
                                                     let uid = contextdata.uid;
-                                                     if (contextdata.urole === "Admin" ?
+                                                    if (contextdata.urole === "Admin" ?
                                                         bugItem.bugID === btItem.bugID :
                                                         contextdata.urole === "Tester" ?
                                                             bugItem.bugID === btItem.bugID && bugItem.regBy === uid :
-                                                            bugItem.bugID === btItem.bugID && btItem.assignTo === uid)
-                                                             
-                                                            {
+                                                            bugItem.bugID === btItem.bugID && btItem.assignTo === uid) {
                                                         return (
 
                                                             <div className='m-3 login-form rounded' style={{ width: "auto" }}>
@@ -72,7 +88,12 @@ export default function BugReport() {
                                                                             if (bugItem.bugID === btItem.bugID) {
                                                                                 return (
                                                                                     <div className="col-3">
-                                                                                        <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span></h5>
+                                                                                        <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
+                                                                                            backgroundColor: btItem.status === 'New' ? '#00ff00' :
+                                                                                                btItem.status === 'Assigned' ? '#ffA500' :
+                                                                                                    btItem.status === 'Open' ? '#FFFF00' :
+                                                                                                        '#808080'
+                                                                                        }} ><span className="m-1">{btItem.status}</span></span></h5>
                                                                                     </div>
                                                                                 )
                                                                             }
@@ -80,7 +101,12 @@ export default function BugReport() {
                                                                         })
                                                                     }
                                                                     <div className="col-4">
-                                                                        <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span></h5>
+                                                                        <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
+                                                                            backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                                                                bugItem.priority === "Medium" ? '#ff8c00' :
+                                                                                    bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                                                        '#808080'
+                                                                        }}><span className="m-1">{bugItem.priority}</span></span></h5>
                                                                     </div>
                                                                 </div>
                                                                 <div className="row mt-1">
@@ -98,9 +124,23 @@ export default function BugReport() {
                                                                         })
                                                                     }
                                                                 </div>
-                                                                <h6><span className="float-left border border-warning rounded"><p className='m-1'>{bugItem.crtDate} {bugItem.crtTime}</p></span>
-                                                                    {/* <span className="float-right border border-warning rounded"><p className='m-1'>{bugItem.crtTime}</p></span> */}
-                                                                </h6>
+
+                                                                <div className="row mt-1">
+                                                                    <div className="col-12">
+                                                                        <h6><span className="float-left border border-warning rounded"><p className='m-1'>{bugItem.crtDate} {bugItem.crtTime}</p></span>
+                                                                        </h6> </div>
+                                                                </div>
+
+                                                                {btItem.status !== 'New'
+                                                                    ?
+                                                                    <div className="row mt-1">
+                                                                        <div className="col-12">
+                                                                            <h6 className=""><span className="float-left border border-warning rounded"><p className='m-1'>{btItem.dueDate} {btItem.dueTime}</p></span></h6>
+                                                                        </div>
+                                                                    </div>
+                                                                    :
+                                                                    <div></div>
+                                                                }
                                                             </div>
                                                         )
                                                     }
@@ -115,12 +155,23 @@ export default function BugReport() {
                         </div>
                     </div>
                     <div className='col-md-12 col-lg-4'>
-                        <div className="bg-light border border-primary rounded ml-1">
-                            <h3 className="bg-info border border-info rounded m-3" style={{ textAlign: 'center' }}>Open</h3>
+                        <div className="border border-primary rounded ml-1" >
+                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#008000' }}>
+                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#008000', fontSize: '1.2rem' }}
+                                    id="status"
+                                    name="status"
+                                    value={status2}
+                                    onChange={(e) => { setStatus2(e.target.value) }}
+                                    required
+                                >
+                                    <option value="Resolved" style={{ backgroundColor: '#008000' }}>Resolved</option>
+                                    <option value="Verified" style={{ backgroundColor: '#00cc00' }}>Verified</option>
+                                </select>
+                            </h3>
                             <div className=' border border-warning rounded' style={{ maxHeight: '600px', overflow: 'auto' }}>
                                 {
                                     bugTrackList.map((btItem) => {
-                                        if (btItem.status === "Assigned" || btItem.status === "Open" || btItem.status === "Resolved") {
+                                        if (btItem.status === status2) {
                                             return (
                                                 bugList.map((bugItem) => {
                                                     let uid = contextdata.uid;
@@ -144,7 +195,12 @@ export default function BugReport() {
                                                                             if (bugItem.bugID === btItem.bugID) {
                                                                                 return (
                                                                                     <div className="col-4">
-                                                                                        <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span></h5>
+                                                                                        <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
+                                                                                            backgroundColor:
+                                                                                                btItem.status === 'Resolved' ? '#008000' :
+                                                                                                    btItem.status === 'Verified' ? '#00cc00' :
+                                                                                                        '#808080'
+                                                                                        }} ><span className="m-1">{btItem.status}</span></span></h5>
                                                                                     </div>
                                                                                 )
                                                                             }
@@ -152,7 +208,12 @@ export default function BugReport() {
                                                                         })
                                                                     }
                                                                     <div className="col-4">
-                                                                        <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span></h5>
+                                                                        <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
+                                                                            backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                                                                bugItem.priority === "Medium" ? '#ff8c00' :
+                                                                                    bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                                                        '#808080'
+                                                                        }}><span className="m-1">{bugItem.priority}</span></span></h5>
                                                                     </div>
                                                                 </div>
                                                                 <div className="row mt-1">
@@ -206,11 +267,25 @@ export default function BugReport() {
                     </div>
                     <div className='col-md-12 col-lg-4'>
                         <div className="bg-light border border-primary rounded ml-1">
-                            <h3 className="bg-success border border-warning rounded m-3" style={{ textAlign: 'center' }}>Closed</h3>
+
+                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#FF0000' }}>
+                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#FF0000', fontSize: '1.2rem' }}
+                                    id="status"
+                                    name="status"
+                                    value={status3}
+                                    onChange={(e) => { setStatus3(e.target.value) }}
+                                    required
+                                >
+                                    <option value="Reopen" style={{ backgroundColor: '#FF0000' }}>Reopen</option>
+                                    <option value="Retest" style={{ backgroundColor: '#9370DB' }}>Retest</option>
+                                    <option value="Closed" style={{ backgroundColor: '#186aed' }}>Closed</option>
+                                </select>
+                            </h3>
+
                             <div className=' border border-warning rounded' style={{ maxHeight: '600px', overflow: 'auto' }}>
                                 {
                                     bugTrackList.map((btItem) => {
-                                        if (btItem.status === "Verified" || btItem.status === "Closed") {
+                                        if (btItem.status === status3) {
                                             return (
                                                 bugList.map((bugItem) => {
                                                     let uid = contextdata.uid;
@@ -234,7 +309,13 @@ export default function BugReport() {
                                                                             if (bugItem.bugID === btItem.bugID) {
                                                                                 return (
                                                                                     <div className="col-4">
-                                                                                        <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span></h5>
+                                                                                        <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
+                                                                                            backgroundColor:
+                                                                                                btItem.status === 'Reopen' ? '#FF0000' :
+                                                                                                    btItem.status === 'Retest' ? '#9370DB' :
+                                                                                                        btItem.status === 'Closed' ? '#186aed' :
+                                                                                                            '#808080'
+                                                                                        }} ><span className="m-1">{btItem.status}</span></span></h5>
                                                                                     </div>
                                                                                 )
                                                                             }
@@ -242,7 +323,12 @@ export default function BugReport() {
                                                                         })
                                                                     }
                                                                     <div className="col-4">
-                                                                        <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span></h5>
+                                                                        <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
+                                                                            backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                                                                bugItem.priority === "Medium" ? '#ff8c00' :
+                                                                                    bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                                                        '#808080'
+                                                                        }}><span className="m-1">{bugItem.priority}</span></span></h5>
                                                                     </div>
                                                                 </div>
                                                                 <div className="row mt-1">
