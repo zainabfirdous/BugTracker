@@ -95,15 +95,15 @@ export default function TesterBugPortal() {
 
 
     const getData = async () => {
-        try{
-        const data1 = await axios.get("/tester/getbugs");
-        const data2 = await axios.get("/tester/trackBug");
-        const data3 = await axios.get("/tester/getEmployees");
-        setBugList(data1.data);
-        setBugTrackList(data2.data);
-        setEmpList(data3.data);
-        }catch(e){
-            console.log("Error in Tester Bug : ",e);
+        try {
+            const data1 = await axios.get("/tester/getbugs");
+            const data2 = await axios.get("/tester/trackBug");
+            const data3 = await axios.get("/tester/getEmployees");
+            setBugList(data1.data);
+            setBugTrackList(data2.data);
+            setEmpList(data3.data);
+        } catch (e) {
+            console.log("Error in Tester Bug : ", e);
         }
     }
 
@@ -171,10 +171,25 @@ export default function TesterBugPortal() {
                                                                                     return (
                                                                                         <div className="col-12">
                                                                                             <h5 className="mt-1">Status :
-                                                                                                <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span>
+                                                                                                <span className="rounded m-1" style={{
+                                                                                                    backgroundColor: btItem.status === 'New' ? '#00ff00' :
+                                                                                                        btItem.status === 'Assigned' ? '#ffA500' :
+                                                                                                            btItem.status === 'Open' ? '#FFFF00' :
+                                                                                                                btItem.status === 'Resolved' ? '#008000' :
+                                                                                                                    btItem.status === 'Verified' ? '#00cc00' :
+                                                                                                                        btItem.status === 'Reopen' ? '#FF0000' :
+                                                                                                                            btItem.status === 'Retest' ? '#9370DB' :
+                                                                                                                                btItem.status === 'Closed' ? '#186aed' :
+                                                                                                                                    '#808080'
+                                                                                                }}  ><span className="m-1">{btItem.status}</span></span>
                                                                                             </h5>
                                                                                             <h5 className="mt-1">Priority :
-                                                                                                <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span>
+                                                                                                <span className=" rounded m-1" style={{
+                                                                                                    backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                                                                                        bugItem.priority === "Medium" ? '#ff8c00' :
+                                                                                                            bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                                                                                '#808080'
+                                                                                                }}><span className="m-1">{bugItem.priority}</span></span>
                                                                                             </h5>
                                                                                         </div>
                                                                                     )
@@ -188,7 +203,7 @@ export default function TesterBugPortal() {
                                                                                 return (
                                                                                     <div className="row mt-1">
                                                                                         <div className="col-12">
-                                                                                            <h5 className="mt-1">Tester :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                                                                            <h5 className="mt-1">Tester :<span className="border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                                                                             </h5>
                                                                                         </div>
                                                                                         {
@@ -196,7 +211,7 @@ export default function TesterBugPortal() {
                                                                                                 if (empItem.empID === btItem.assignTo && status !== "New") {
                                                                                                     return (
                                                                                                         <div className="col-12">
-                                                                                                            <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                                                                                            <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                                                                                             </h5>
                                                                                                         </div>
                                                                                                     );
@@ -207,6 +222,26 @@ export default function TesterBugPortal() {
                                                                                             <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate}</span></span>
                                                                                             </h5>
                                                                                         </div>
+                                                                                        {
+                                                                                            btItem.status === "New" ?
+                                                                                                <div></div>
+                                                                                                :
+                                                                                                btItem.status === "Assigned" || btItem.status === "Open" ?
+                                                                                                    <div className="col-12">
+                                                                                                        <h5 className="mt-1">Assign : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                                                                                        </h5>
+                                                                                                        <h5 className="mt-1">Due : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                                                                                        </h5>
+                                                                                                    </div> : btItem.compDate != null ?
+                                                                                                        <div className="col-12">
+                                                                                                            <h5 className="mt-1">Assign : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                                                                                            </h5>
+                                                                                                            <h5 className="mt-1">Due : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                                                                                            </h5>
+                                                                                                            <h5 className="mt-1">Completed : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.compDate} {btItem.compTime}</span></span>
+                                                                                                            </h5>
+                                                                                                        </div>
+                                                                                                        : <div></div>}
                                                                                         <div className="form-group col-12">
                                                                                             <div className=' border border-warning rounded' style={{ height: '100px', overflow: 'auto' }}>
                                                                                                 {bugItem.bugDesc}
@@ -276,12 +311,12 @@ export default function TesterBugPortal() {
                                 onChange={handleStatus}
                                 required
                             >
-                                <option selected value="Resolved">Resolved</option>
-                                <option value="Verified">Verified</option>
-                                <option value="Reopened">Reopen</option>
-                                <option value="Retest">Retest</option>
-                                <option value="Closed">Closed</option>
-                                <option value="All">All</option>
+                                <option value="Resolved" style={{ backgroundColor: '#008000' }}>Resolved</option>
+                                <option value="Verified" style={{ backgroundColor: '#00cc00' }}>Verified</option>
+                                <option value="Reopen" style={{ backgroundColor: '#FF0000' }}>Reopen</option>
+                                <option value="Retest" style={{ backgroundColor: '#9370DB' }}>Retest</option>
+                                <option value="Closed" style={{ backgroundColor: '#186aed' }}>Closed</option>
+                                <option value="All" style={{ backgroundColor: '#808080' }}>All</option>
 
                                 {/* let uid = parseInt(localStorage.getItem('uid'));
                                 if (("All" === status && btItem.assignTo === uid) || ( btItem.status === status && btItem.assignTo === uid)) { */}
@@ -307,8 +342,23 @@ export default function TesterBugPortal() {
                                                                     if (bugItem.bugID === btItem.bugID) {
                                                                         return (
                                                                             <div className="col-3">
-                                                                                <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span>
-                                                                                    <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span>
+                                                                                <h5 className="mt-1"><span className={`border border-warning rounded m-1`} style={{
+                                                                                    backgroundColor: btItem.status === 'New' ? '#00ff00' :
+                                                                                        btItem.status === 'Assigned' ? '#ffA500' :
+                                                                                            btItem.status === 'Open' ? '#FFFF00' :
+                                                                                                btItem.status === 'Resolved' ? '#008000' :
+                                                                                                    btItem.status === 'Verified' ? '#00cc00' :
+                                                                                                        btItem.status === 'Reopen' ? '#FF0000' :
+                                                                                                            btItem.status === 'Retest' ? '#9370DB' :
+                                                                                                                btItem.status === 'Closed' ? '#186aed' :
+                                                                                                                    '#808080'
+                                                                                }} ><span className="m-1">{btItem.status}</span></span>
+                                                                                    <span className="border border-warning rounded m-1" style={{
+                                                                                        backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                                                                            bugItem.priority === "Medium" ? '#ff8c00' :
+                                                                                                bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                                                                    '#808080'
+                                                                                    }}><span className="m-1">{bugItem.priority}</span></span>
                                                                                 </h5>
                                                                             </div>
                                                                         )
@@ -324,7 +374,7 @@ export default function TesterBugPortal() {
                                                                     return (
                                                                         <div className="row mt-1">
                                                                             <div className="col-md-12 col-lg-3">
-                                                                                <h5 className="mt-1">Tester :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                                                                <h5 className="mt-1">Tester :<span className="border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                                                                 </h5>
                                                                             </div>
                                                                             {
@@ -332,7 +382,7 @@ export default function TesterBugPortal() {
                                                                                     if (empItem.empID === btItem.assignTo && status !== "New") {
                                                                                         return (
                                                                                             <div className="col-lg-12 col-xl-4">
-                                                                                                <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                                                                                <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                                                                                 </h5>
                                                                                             </div>
                                                                                         );

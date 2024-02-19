@@ -24,12 +24,12 @@ function App() {
 
   return (
     <>
-    <NoteState >
+    <NoteState  >
       
     <Router>
     <SideBar>
     <div className='row'>
-          <div className='col-2'>
+          <div className='col-2' >
             
           </div>
           <div className='col-12'>
@@ -66,11 +66,13 @@ function App() {
       <Route path='/BugTracking' element={<BugTracking/>}/>
       <Route path='/TesterBugPortal' element={<TesterBugPortal/>}/>
       <Route path='/DevBugPortal' element={<DevBugPortal/>}/>
+
       <Route path="/my-projects" element={<EmpProj />} />
       <Route path="/my-teams" element={<EmpTeam />} />
       <Route path="/manage-account" element={<MySettings />} /> 
       {/*<Route path='/UserProject' element={<UserProject/>}/>*/}
       
+
       </Routes>
       </div>
       </div>

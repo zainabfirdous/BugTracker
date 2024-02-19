@@ -20,7 +20,7 @@ import NoteContext from '../Context/NoteContext';
 import axios from 'axios';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { IoIosLogIn } from "react-icons/io";
+import { IoIosLogIn,IoIosLogOut } from "react-icons/io";
 
 
 const SideBar = ({ children }) => {
@@ -72,6 +72,7 @@ const SideBar = ({ children }) => {
             name: 'Profile',
             icon: <FcBusinessman />,
             subRoutes: [
+
                 { path: '/manage-account', name: 'Manage Account' }
             ],},
             // subRoutes: [
@@ -79,6 +80,9 @@ const SideBar = ({ children }) => {
             //     { path: '/profile/Logout', name: 'Logout' },
             // ],
         
+
+  
+
     ];
 
     const userRoutes = [
@@ -143,7 +147,7 @@ const SideBar = ({ children }) => {
     return (
         <>
 
-            <Navbar expand="xxl" style={{ position: 'absolute', zIndex: 2, marginTop: "20px" }} >
+            <Navbar expand="xxl" style={{ position: 'absolute', zIndex: 2, marginTop: "20px",overflowY:'hidden' }} >
 
                 <Navbar.Toggle
                     aria-controls="basic-navbar-nav m-2"
@@ -263,13 +267,29 @@ const SideBar = ({ children }) => {
                 </Navbar.Collapse>
 
             </Navbar>
-            {/* <div className={isOpen ? 'offset-sm-2 col-10' : 'offset-sm-1 col-11 mt-4'}>
-                <main className="" style={{ width: '100%' }}>
-                    {children}
-                </main>
-            </div> */}
-
-            {children}
+           
+                <div className='row' >
+                    <div className='col-12' style={{backgroundColor:'black',color:'white',height:'50px',position: 'fixed',zIndex:1}}  >
+                       <div className='container'>
+                       <div className='row'>
+                        <div className='offset-1 col-3'>
+                         Hello                                           
+                        </div>
+                        <div className='col-3'>
+                        Hello 
+                        </div>
+                        <div className='col-3'>
+                            Hello 
+                        </div>
+                        </div>
+                       </div>
+                    </div>
+                </div>
+                <div className='mt-5 ml-5' style={{overflow:'hidden'}}>
+                {children}
+                </div>
+         
+           
 
 
             {/* Logout Confirmation Modal */}
