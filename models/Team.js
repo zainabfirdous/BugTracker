@@ -10,7 +10,7 @@ const Team = con.define(
             autoIncrement: true,
             validate:{
                 notNull: {
-                    msg: 'adminID can not be null'
+                    msg: 'adminID can not be empty'
                   }}
         },
         admID:{
@@ -22,7 +22,7 @@ const Team = con.define(
             },
             validate:{
                 notNull: {
-                    msg: 'adminID can not be null'
+                    msg: 'adminID can not be empty'
                   },
                 isInt: {
                 msg: 'admin ID must be an integer'
@@ -33,7 +33,7 @@ const Team = con.define(
             allowNull: false,
             validate:{
                 notNull: {
-                    msg: 'Team Name can not be null'
+                    msg: 'Team Name can not be empty'
                   },
                 isAlphanumericWithSpace(value){
                     const regex = /^[a-zA-Z0-9\s]+$/;

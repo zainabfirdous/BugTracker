@@ -10,7 +10,7 @@ const Emp = con.define
         autoIncrement: true,
         validate:{
             notNull: {
-                msg: 'empID can not be null'
+                msg: 'empID can not be empty'
               }}
     },
     fName:{
@@ -18,7 +18,7 @@ const Emp = con.define
         allowNull: false,
         validate:{
             notNull: {
-                msg: 'First name can not be null', // Custom error message for notNull validation
+                msg: 'First name can not be empty'
               },
             isAlpha:{
             msg:'First name must contain only alphabetic characters'
@@ -29,7 +29,7 @@ const Emp = con.define
         allowNull: false,
         validate:{
             notNull: {
-                msg: 'Last name can not be null'},
+                msg: 'Last name can not be empty'},
             isAlpha:{
             msg:'Last name must contain only alphabetic characters'
         }}
@@ -39,7 +39,7 @@ const Emp = con.define
         allowNull: false,
         validate:{
             notNull: {
-                msg: 'Email can not be null'},
+                msg: 'Email can not be empty'},
             isEmail:{
             msg: 'Invalid email format'
         }}
@@ -49,7 +49,7 @@ const Emp = con.define
         allowNull: false,
         validate:{
             notNull: {
-                msg: 'RoleID can not be null'},
+                msg: 'RoleID can not be empty'},
             isInt: {
             msg: 'Role must be Valid'
         }}

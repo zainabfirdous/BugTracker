@@ -10,7 +10,7 @@ const PAssignment = con.define(
             autoIncrement: true,
             validate:{
               notNull: {
-                msg: 'assignID can not be null'
+                msg: 'assignID can not be empty'
               }}
         },
         projID: {
@@ -22,7 +22,7 @@ const PAssignment = con.define(
             },
             validate:{
               notNull: {
-                msg: 'projID can not be null'
+                msg: 'projID can not be empty'
               },
               isInt: {
               msg: 'Project ID must be an integer'
@@ -37,7 +37,7 @@ const PAssignment = con.define(
             },
             validate:{
               notNull: {
-                msg: 'TeamID can not be null'
+                msg: 'TeamID can not be empty'
               },
               isInt: {
               msg: 'Team ID must be an integer'
@@ -52,7 +52,7 @@ const PAssignment = con.define(
         },
         validate:{
           notNull: {
-            msg: 'empID can not be null'
+            msg: 'empID can not be empty'
           },
           isInt: {
           msg: 'Employee ID must be an integer'

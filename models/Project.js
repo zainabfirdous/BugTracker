@@ -10,7 +10,7 @@ const proj = con.define(
         autoIncrement: true,
         validate: {
             notNull: {
-                msg: 'ProjID can not be null'
+                msg: 'ProjID can not be empty'
               }}
 
     },
@@ -19,7 +19,7 @@ const proj = con.define(
         allowNull:false,
         validate: {
             notNull: {
-                msg: 'Project name can not be null'
+                msg: 'Project name can not be empty'
               },
             isAlphanumericWithSpace(value){
                 const regex = /^[a-zA-Z0-9\s]+$/;
@@ -34,7 +34,7 @@ const proj = con.define(
         allowNull:false,
         validate: {
             notNull: {
-                msg: 'Start Date can not be null'
+                msg: 'Start Date can not be empty'
               },
             isNotPastDate(value) {
                 if (value !== null) {
@@ -53,7 +53,7 @@ const proj = con.define(
         allowNull:false,
         validate: {
             notNull: {
-                msg: 'End Date can not be null'
+                msg: 'End Date can not be empty'
               },
             isNotPastDate(value) {
                 if (value !== null) {
@@ -71,7 +71,7 @@ const proj = con.define(
         allowNull:false,
         validate:{
             notNull: {
-                msg: 'Status can not be null'
+                msg: 'Status can not be empty'
               },
             isAlpha:{
                 msg:'status must be string'
