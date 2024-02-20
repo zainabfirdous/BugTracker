@@ -20,7 +20,7 @@ import NoteContext from '../Context/NoteContext';
 import axios from 'axios';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { IoIosLogIn,IoIosLogOut } from "react-icons/io";
+import { IoIosLogIn } from "react-icons/io";
 
 
 const SideBar = ({ children }) => {
@@ -273,15 +273,12 @@ const SideBar = ({ children }) => {
                     <div className='col-12' style={{backgroundColor:'black',color:'white',height:'50px',position: 'fixed',zIndex:1}}  >
                        <div className='container'>
                        <div className='row'>
-                        {/* <div className='offset-1 col-3'>
-                         Hello                                           
-                        </div>
-                        <div className='col-3'>
-                        Hello 
-                        </div>
-                        <div className='col-3'>
-                            Hello 
-                        </div> */}
+                        { contextdata.token!==null ?
+                        <div className='offset-1 col-12  d-flex justify-content-end ' style={{textAlign:'center'}}>
+                        Welcome, {contextdata.user}  <br></br>  {contextdata.urole}                                      
+                       </div>
+                       :
+                       <></>}
                         </div>
                        </div>
                     </div>
