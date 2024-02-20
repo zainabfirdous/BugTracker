@@ -7,12 +7,19 @@ const Emp = con.define
         type:INTEGER,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        validate:{
+            notNull: {
+                msg: 'empID can not be null'
+              }}
     },
     fName:{
         type:STRING,
         allowNull: false,
         validate:{
+            notNull: {
+                msg: 'First name can not be null', // Custom error message for notNull validation
+              },
             isAlpha:{
             msg:'First name must contain only alphabetic characters'
         }}
@@ -21,6 +28,8 @@ const Emp = con.define
         type:STRING,
         allowNull: false,
         validate:{
+            notNull: {
+                msg: 'Last name can not be null'},
             isAlpha:{
             msg:'Last name must contain only alphabetic characters'
         }}
@@ -29,6 +38,8 @@ const Emp = con.define
         type:STRING,
         allowNull: false,
         validate:{
+            notNull: {
+                msg: 'Email can not be null'},
             isEmail:{
             msg: 'Invalid email format'
         }}
@@ -36,7 +47,10 @@ const Emp = con.define
     roleID:{
         type:INTEGER,
         allowNull: false,
-        validate:{isInt: {
+        validate:{
+            notNull: {
+                msg: 'RoleID can not be null'},
+            isInt: {
             msg: 'Role must be Valid'
         }}
     },
