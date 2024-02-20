@@ -1,3 +1,17 @@
 ALTER TABLE empprofile
 ADD COLUMN crtDate DATE NOT NULL DEFAULT (CURRENT_DATE()),
 ADD COLUMN updDate DATE DEFAULT NULL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
