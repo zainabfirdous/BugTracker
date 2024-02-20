@@ -8,9 +8,9 @@ import NoteContext from '../Context/NoteContext';
 
 export default function AddEmployee(props) {
 
-  
+
   const contextdata = useContext(NoteContext);
-//  console.log("contextdata : ",contextdata);
+  //  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
   axios.defaults.withCredentials = true;
   const [show, setShow] = useState(false);
@@ -28,6 +28,10 @@ export default function AddEmployee(props) {
   const [roleID, setRoleID] = useState();
   const [isUpdateButton, setIsUpdateButton] = useState(false);
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCnf, setPasswordCnf] = useState("");
+
   useEffect(() => {
     if (props.employee.empID) {
       setEmpID(props.employee.empID);
@@ -42,12 +46,22 @@ export default function AddEmployee(props) {
   }, [props]);
 
   const getRole = async () => {
-    try{
+    try {
       const resp2 = await axios.get("/admin/getrole");
       setRoleList(resp2.data);
-    }catch(e){
-      console.log("Error : ",e)
+    } catch (e) {
+      console.log("Error : ", e)
     }
+  }
+
+  const alertShow = (msg) => {
+    setShow(true)
+    setIsAlertVisible(true);
+    setBgColor("bg-info");
+    setSetMessage(msg);
+    setTimeout(() => {
+      setIsAlertVisible(false);
+    }, 5000);
   }
 
   const updateEmployee = async () => {
@@ -58,32 +72,18 @@ export default function AddEmployee(props) {
       email: email,
       roleID: roleID,
     };
-    try{
+    try {
       const udpatedRecord = await axios.put(
         "/admin/updateEmployee",
         updatedData
       );
-      if(udpatedRecord){
+      if (udpatedRecord) {
         props.updateEmployeeList();
         resetForm();
-        setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-info");
-        setSetMessage("Employee updated successfully!");
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow("Employee updated successfully!");
       }
-    }catch(e){
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(`${e.response.data.error}`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+    } catch (e) {
+      alertShow(e.response.data.error);
     }
   };
 
@@ -91,22 +91,34 @@ export default function AddEmployee(props) {
     switch (e.target.id) {
       case "empID":
         setEmpID(e.target.value);
-      //  console.log(e.target.value);
+        //  console.log(e.target.value);
         break;
       case "firstName":
         setFirstName(e.target.value);
-      //  console.log(e.target.value);
+        //  console.log(e.target.value);
         break;
       case "lastName":
         setLastName(e.target.value);
-      //  console.log(e.target.value);
+        //  console.log(e.target.value);
         break;
       case "email":
         setEmail(e.target.value);
         break;
       case "roleID":
         setRoleID(e.target.value);
-       // console.log(e.target.value);
+        // console.log(e.target.value);
+        break;
+      case "username":
+        setUsername(e.target.value);
+        // console.log(e.target.value);
+        break;
+      case "password":
+        setPassword(e.target.value);
+        // console.log(e.target.value);
+        break;
+      case "passwordCnf":
+        setPasswordCnf(e.target.value);
+        // console.log(e.target.value);
         break;
       default: break;
     }
@@ -114,35 +126,44 @@ export default function AddEmployee(props) {
   };
 
   const addEmployee = async (employee) => {
+    if (password !== passwordCnf) {
+      alertShow("Password Not Matching!!!");
+    } else {
+      console.log("Employee : ", employee)
+      try {
+        const response = await axios.post(
+          "/admin/newEmployee",
+          employee);
+        profileAdd(response.data.empID)
 
-    try{
-      const response = await axios.post(
-        "/admin/newEmployee",
-        employee);
-        if(response){
-          setShow(true)
-          setIsAlertVisible(true);
-          setShow(true);
-          setBgColor("bg-warning");
-          setSetMessage("Employee Added");
-          setTimeout(() => {
-            setIsAlertVisible(false);
-          }, 5000);
-          props.updateEmployeeList();
-          resetForm();
-        }
-       
-    }catch(e){
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      } catch (e) {
+        alertShow(e.response.data.error);
+      }
     }
   };
+
+  const profileAdd = async (empID) => {
+    console.log('response empId empId : ', empID);
+    try {
+      const profileLogin = {
+        empID: empID,
+        username: username,
+        password: password
+      }
+      const resp = await axios.post(
+        "/admin/userprofile",
+        profileLogin);
+      if (resp) {
+        props.updateEmployeeList();
+        resetForm();
+        setUsername("");
+        setPassword("");
+        setPasswordCnf("");
+      }
+    } catch (e) {
+      alertShow(e.response.data.error);
+    }
+  }
 
   const resetForm = () => {
     setEmpID("");
@@ -163,7 +184,7 @@ export default function AddEmployee(props) {
       roleID: roleID,
     };
 
-  //  console.log(object);
+    //  console.log(object);
 
     if (isUpdateButton) {
       updateEmployee(object);
@@ -193,8 +214,7 @@ export default function AddEmployee(props) {
 
       {/* Main Body */}
 
-
-      <form className="row mt-4">
+      <form className="row mt-4" onSubmit={handleSubmit}>
         {
           isUpdateButton ?
             <div className="form-group col-sm-12 col-md-4">
@@ -209,7 +229,6 @@ export default function AddEmployee(props) {
             </div>
             :
             <div></div>
-
         }
 
         <div className="form-group col-sm-12 col-md-4">
@@ -220,6 +239,7 @@ export default function AddEmployee(props) {
             id="firstName"
             value={firstName}
             onChange={handleInput}
+            required
           />
         </div>
         <div className="form-group col-sm-12 col-md-4">
@@ -230,6 +250,7 @@ export default function AddEmployee(props) {
             id="lastName"
             value={lastName}
             onChange={handleInput}
+            required
           />
         </div>
         <div className="form-group col-sm-12 col-md-4">
@@ -240,8 +261,10 @@ export default function AddEmployee(props) {
             id="email"
             value={email}
             onChange={handleInput}
+            required
           />
         </div>
+
         <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="roleID">Role : </label>
 
@@ -254,8 +277,49 @@ export default function AddEmployee(props) {
             })}
           </select>
         </div>
+        {
+          isUpdateButton ?
+            <></>
+            :
+            <>
+              <div className="form-group col-sm-12 col-md-4">
+                <label htmlFor="email">Username : </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={handleInput}
+                  required
+                />
+              </div>
+              <div className="form-group col-sm-12 col-md-4">
+                <label htmlFor="email">Password : </label>
+                <input
+                  className="form-control"
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={handleInput}
+                  required
+                />
+              </div>
+              <div className="form-group col-sm-12 col-md-4">
+                <label htmlFor="email">Confirm : </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="passwordCnf"
+                  value={passwordCnf}
+                  onChange={handleInput}
+                  required
+                />
+              </div>
+            </>
+        }
+
         <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-          <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center" } onClick={handleSubmit}>
+          <button type="submit" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"} >
             {isUpdateButton ? "Update Employee" : "Add Employee"}
           </button>
         </div>

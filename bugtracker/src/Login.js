@@ -5,6 +5,7 @@ import axios from "axios";
 import NoteContext from './Context/NoteContext'
 
 export default function Login () {
+  
 
   const { setUserInfo } = useContext(NoteContext);
 
@@ -103,7 +104,7 @@ export default function Login () {
             required />
         </div>
         <div className="form-group row">
-          <div className="col-6">
+          <div className="col-6 d-flex justify-content-end">
           <button
             type="submit"
             // onClick={handleSubmit}
@@ -111,7 +112,7 @@ export default function Login () {
           >
             Login
           </button></div>
-          <div className=" col-6 d-flex justify-content-end"><button
+          <div className=" col-6 "><button
             type="button"
              onClick={handleback}
             className="btn btn-info"

@@ -37,9 +37,10 @@ const SideBar = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        
         const token = contextdata.token;
         const role = contextdata.urole;
-        setIsLoggedIn(!!token); // Check if token exists in localStorage
+        setIsLoggedIn(token); // Check if token exists in localStorage
         setUserRole(role);
     }, [contextdata]);
 
@@ -87,7 +88,7 @@ const SideBar = ({ children }) => {
 
     const testerRoutes = [
         { path: '/BugReport', name: 'Dashboard', icon: <FaHome /> },
-        { path: '/BugReg', name: 'Bug Registr', icon: <FaBug /> },
+        { path: '/BugReg', name: 'Bug Register', icon: <FaBug /> },
         { path: '/TesterBugPortal', name: 'Bug Report', icon: <MdBugReport /> },
         { path: '/Profile', name: 'Profile', icon: <FcBusinessman /> },
         // Add more tester-specific routes here
@@ -255,7 +256,7 @@ const SideBar = ({ children }) => {
                     <div className='col-12' style={{backgroundColor:'black',color:'white',height:'50px',position: 'fixed',zIndex:1}}  >
                        <div className='container'>
                        <div className='row'>
-                        <div className='offset-1 col-3'>
+                        {/* <div className='offset-1 col-3'>
                          Hello                                           
                         </div>
                         <div className='col-3'>
@@ -263,13 +264,14 @@ const SideBar = ({ children }) => {
                         </div>
                         <div className='col-3'>
                             Hello 
-                        </div>
+                        </div> */}
                         </div>
                        </div>
                     </div>
                 </div>
                 <div className='mt-5 ml-5' style={{overflow:'hidden'}}>
                 {children}
+                {console.log(children)}
                 </div>
          
            

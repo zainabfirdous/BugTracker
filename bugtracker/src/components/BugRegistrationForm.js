@@ -53,6 +53,16 @@ export default function BugRegistrationForm() {
     setprojID("");
   };
 
+  const alertShow = (msg) =>{
+    setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-info");
+        setSetMessage(msg);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+  }
+
   const handlesubmit = (e) => {
     e.preventDefault();
     const bugData = {
@@ -73,26 +83,12 @@ export default function BugRegistrationForm() {
       );
       addBugTrack(response.data.bugID);
       resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage("Bug Registered Successfully");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow("Bug Registered Successfully");
       setPriorityBGColor("");
     }
     catch (e) {
+      alertShow(e.response.data.errors);
       console.log(e)
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.errors);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
     }
   }
 
