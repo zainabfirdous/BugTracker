@@ -13,7 +13,7 @@
   }
 
   
-.modal-overlay {
+.modal-overlay{
   position: fixed; /* Position the overlay relative to the viewport */
   top: 0;
   left: 0;
@@ -26,21 +26,24 @@
   z-index: 999; /* Ensure the modal is above other content */
 }
 
-.modal-content {
+.modal-content.react-modal {
   max-width: 62%; /* Adjust the maximum width as desired */
   padding: 20px; /* Add padding to the modal content */
   background-color: #fff; /* White background */
   border-radius: 8px; /* Add border radius for rounded corners */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
 }
-#btn{
+
+#bt1{
   width: 80px;
   margin: 0 auto;
 }
-#heading{
-  margin: 0 auto;
+
+.heading-modal{
+    margin: 0 auto;
 }
   
+
 /* .sidebar {
   position: fixed; 
   left: 0; 
@@ -143,6 +146,10 @@
   text-decoration: underline;
   font-weight: bold;
 }
+
+
+
+
 
 
   

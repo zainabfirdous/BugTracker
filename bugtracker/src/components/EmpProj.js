@@ -140,9 +140,9 @@ const handleClick = async (teamID) => {
                 onRequestClose={() => setIsReactModalOpen(false)}
                 contentLabel="Team Members Modal"
                 overlayClassName="modal-overlay"
-                className="modal-content"
+                className="modal-content react-modal"
             >
-                <h2 id="heading">Team Members</h2>
+                <h2 className='heading-modal'>Team Members</h2>
                 <div class="table-responsive">
                 <table className="table table-striped">
                     <thead>
@@ -166,8 +166,9 @@ const handleClick = async (teamID) => {
                     </tbody>
                 </table>
                 </div>
-                <button id="btn" className='btn btn-dark' onClick={() => setIsReactModalOpen(false)}>Close</button> {/* Close button */}
-            </ReactModal>
+                <button  id="bt1" className='btn btn-dark' onClick={() => setIsReactModalOpen(false)}>Close</button> {/* Close button */}
+                
+                </ReactModal>
     </div>
     </div>
    

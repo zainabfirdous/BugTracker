@@ -7,7 +7,11 @@ const PAssignment = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            validate:{
+              notNull: {
+                msg: 'assignID can not be null'
+              }}
         },
         projID: {
             type: INTEGER,
@@ -16,7 +20,11 @@ const PAssignment = con.define(
               model: 'Project',
               key: 'projID',
             },
-            validate:{isInt: {
+            validate:{
+              notNull: {
+                msg: 'projID can not be null'
+              },
+              isInt: {
               msg: 'Project ID must be an integer'
           }}
           },
@@ -27,7 +35,11 @@ const PAssignment = con.define(
               model: 'Team',
               key: 'TeamID',
             },
-            validate:{isInt: {
+            validate:{
+              notNull: {
+                msg: 'TeamID can not be null'
+              },
+              isInt: {
               msg: 'Team ID must be an integer'
           }}
         },
@@ -38,7 +50,11 @@ const PAssignment = con.define(
              model: 'Employee',
              key: 'empID',
         },
-        validate:{isInt: {
+        validate:{
+          notNull: {
+            msg: 'empID can not be null'
+          },
+          isInt: {
           msg: 'Employee ID must be an integer'
       }}
         },

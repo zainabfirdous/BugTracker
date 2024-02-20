@@ -16,7 +16,11 @@ const tracking = con.define(
               model: 'Bug',
               key: 'bugID',
             },
-            validate:{isInt: {
+            validate:{
+                    notNull: {
+                        msg: 'BugID can not be null'
+                      },
+                isInt: {
                 msg: 'Bug ID must be an integer'
             }}
         },
@@ -28,7 +32,8 @@ const tracking = con.define(
               key: 'empID',
             },
             defaultValue:null,
-            validate:{isInt: {
+            validate:{
+                isInt: {
                 msg: 'Admin Not found!!!'
             }}
         },
@@ -40,7 +45,8 @@ const tracking = con.define(
               key: 'empID',
             },
             defaultValue: null,
-            validate:{isInt: {
+            validate:{
+                isInt: {
                 msg: 'Employee Not found!!!'
             }}
         },
@@ -56,11 +62,11 @@ const tracking = con.define(
                     console.log('current date: ', currentDate)
                     console.log('Value Date: ', new Date(value));
                     if (new Date(value) < currentDate) {
-                        throw new Error('Start date must be a future date');
+                        throw new Error('Assign date must be a future date');
                     }}
                 },
                 isDate: {
-                    msg: 'Start date must be in date format'
+                    msg: 'Assign date must be in date format'
                 }
             }
         },
@@ -89,11 +95,11 @@ const tracking = con.define(
                     if (value !== null) {
                     const currentDate = new Date();
                     if (new Date(value) < currentDate) {
-                        throw new Error('Start date must be a future date');
+                        throw new Error('Due date must be a future date');
                     }}
                 },
                 isDate: {
-                    msg: 'Start date must be in date format'
+                    msg: 'Due date must be in date format'
                 }
             }
         },
@@ -108,7 +114,7 @@ const tracking = con.define(
                     const providedTime = new Date(value);
     
                     if (providedTime < currentTime) {
-                        throw new Error('Time cannot be in the past');
+                        throw new Error('DueTime cannot be in the past');
                     }}
                 }
             }
@@ -121,12 +127,12 @@ const tracking = con.define(
                 isNotPastDate(value) {
                     if (value !== null) {
                     const currentDate = new Date();
-                    if (new Date(value) < currentDate) {
-                        throw new Error('Start date must be a future date');
+                    if (new Date(value) <= currentDate) {
+                        throw new Error('Comp date must be a future date or current date');
                     }}
                 },
                 isDate: {
-                    msg: 'Start date must be in date format'
+                    msg: 'Comp date must be in date format or current date'
                 }
             }
         },
@@ -141,7 +147,7 @@ const tracking = con.define(
                     const providedTime = new Date(value);
     
                     if (providedTime < currentTime) {
-                        throw new Error('Time cannot be in the past');
+                        throw new Error('CompTime cannot be in the past');
                     }}
                 }
             }
@@ -150,6 +156,9 @@ const tracking = con.define(
             type:STRING,
             allowNull:false,
             validate:{
+                notNull: {
+                    msg: 'status can not be null'
+                  },
                 isAlpha:{
                     msg:'Status can not be string'
                 }

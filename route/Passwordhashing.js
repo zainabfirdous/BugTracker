@@ -15,24 +15,3 @@ const hashPassword = async (password) => {
 }
 
 module.exports = hashPassword;
-
-//   const comparePassword = async () => {
-//     try {
-//         const passwordEnteredByUser = "123456@abcde"
-//         const hash = await hashPassword(passwordEnteredByUser)
-        
-//         bcrypt.compare(passwordEnteredByUser, hash, function(err, isMatch) {
-//             if (err) {
-//                 throw err
-//             } else if (!isMatch) {
-//                 console.log("Password doesn't match!")
-//             } else {
-//                 console.log("Password matches!")
-//             }
-//         })
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
-
-// comparePassword()

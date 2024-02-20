@@ -87,19 +87,20 @@ export default function EmpTeam() {
 
     return (
         <>
-        {/* Alert Message */}
-        <div className="App">
-        {isAlertVisible && <Modal show={show} onHide={handleClose}>
-          <Modal.Header className="bg-white">
-            <Modal.Title></Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="bg-white" >{message}</Modal.Body>
-          <Modal.Footer className={bgcolor} >
-            <Button variant="warning" className='h-1' onClick={handleClose}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>}</div>
+           {/* Alert Message */}
+    <div className="App">
+    {isAlertVisible && <Modal show={show} onHide={handleClose}>
+      <Modal.Header className="bg-white">
+        <Modal.Title></Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="bg-white" >{message}</Modal.Body>
+      <Modal.Footer className={bgcolor} >
+        <Button variant="warning" className='h-1' onClick={handleClose}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>}</div>
+   
       
       <div className="container profile-con text-center">
       <div className = "row profile-row">
@@ -134,10 +135,10 @@ export default function EmpTeam() {
                 onRequestClose={() => setIsReactModalOpen(false)}
                 contentLabel="Team Members Modal"
                 overlayClassName="modal-overlay"
-                className="modal-content"
+                className="modal-content react-modal"
             >
-                <h2 id="heading">Team Members</h2>
-               
+                <h2 className='heading-modal'>Team Members</h2>
+                <div class="table-responsive">
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -147,23 +148,20 @@ export default function EmpTeam() {
                         </tr>
                     </thead>
                     <tbody>
-                    {teamMembers !== null && teamMembers.length > 0 ? (
-                      teamMembers.map((member) => (
-                        <tr key={member.empID}>
-                            <td>{member.empID}</td>
-                            <td>{member.fName}&nbsp;&nbsp;{member.lName}</td>
-                            <td>{member.email}</td>
-                        </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="3">No team members found</td>
-                        </tr>
-                    )}
+                    
+                        {teamMembers.map((member) => (
+                            <tr key={member.empID}>
+                                <td>{member.empID}</td>
+                                <td>{member.fName}&nbsp;&nbsp;{member.lName}</td>
+                                <td>{member.email}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-                <button id="btn" className='btn btn-dark' onClick={() => setIsReactModalOpen(false)}>Close</button> {/* Close button */}
-            </ReactModal>
+                </div>
+                <button  id="bt1" className='btn btn-dark' onClick={() => setIsReactModalOpen(false)}>Close</button> {/* Close button */}
+                
+                </ReactModal>
       </div>
       </div>
      
