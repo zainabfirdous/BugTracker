@@ -73,7 +73,7 @@ const SideBar = ({ children }) => {
             icon: <FcBusinessman />,
             subRoutes: [
 
-                { path: '/manage-account', name: 'Manage Account' }
+                { path: '/manage-account', name: 'My Account' }
             ],},
             // subRoutes: [
             //     { path: '/profile/Login', name: 'Login', icon: <IoIosLogIn /> },
@@ -92,7 +92,7 @@ const SideBar = ({ children }) => {
         subRoutes: [
             { path: '/my-projects', name: 'My Projects' },
             { path: '/my-teams', name: 'My Teams' },
-            { path: '/manage-account', name: 'Manage Account' }
+            { path: '/manage-account', name: 'My Account' }
         ],
      },
 
@@ -106,7 +106,7 @@ const SideBar = ({ children }) => {
         subRoutes: [
             { path: '/my-projects', name: 'My Projects' },
             { path: '/my-teams', name: 'My Teams' },
-            { path: '/manage-account', name: 'Manage Account' }
+            { path: '/manage-account', name: 'My Account' }
         ],},
     ];
 
@@ -285,10 +285,10 @@ const SideBar = ({ children }) => {
                        </div>
                     </div>
                 </div>
-                <div className='mt-5 ml-5' style={{overflow:'hidden'}}>
+                <div className='mt-5 ml-5' >
                 {children}
                 </div>
-         
+          
            
 
 

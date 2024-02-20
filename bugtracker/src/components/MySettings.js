@@ -134,7 +134,7 @@ export default function MySettings() {
         <div className='row profile-row'>
             <div className='col '>
             <h2 className="heading">My Account</h2>
-            {contextdata.urole !== 'Admin' && (
+            {contextdata.urole !== 'Admin' && ( 
             <form className='formdiv'>
                 <div className="form-group accform">
                     <label for="empID">Employee ID</label>
@@ -168,7 +168,8 @@ export default function MySettings() {
                 <button type="submit" className="btn btn-dark custom-btn" onClick={handleSubmit}>Update Password</button>
                 </div>
                 </form>
-)}
+                
+ )}
                 {contextdata.urole === 'Admin' && (
                   <form className='formdiv'>
                   <div className="form-group accform">
@@ -191,10 +192,9 @@ export default function MySettings() {
                 )}
                
             </div>
+            </div>
 
         </div>
-
-    </div>
     </>
   )
 }
