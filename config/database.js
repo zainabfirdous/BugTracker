@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
     'bts',
     'root',
-    'root',
+    '1234',
+
 
     {
         host:'127.0.0.1',

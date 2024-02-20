@@ -1,15 +1,19 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useContext } from 'react';
+import NoteContext from './Context/NoteContext';
+import axios from 'axios';
 
 
 export default function AppInfo() {
 
+  const contextdata = useContext(NoteContext);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
+
   const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) navigate("/", { replace: true });
-  }, [navigate]);
+  }, [navigate,contextdata]);
   return (
     <>
      <div className="container mt-5">

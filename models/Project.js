@@ -13,8 +13,11 @@ const proj = con.define(
         type:STRING,
         allowNull:false,
         validate: {
-            isAlphanumeric: {
-                msg: 'Project Name must contain only alphabets and numbers'
+            isAlphanumericWithSpace(value){
+                const regex = /^[a-zA-Z0-9\s]+$/;
+                if (!regex.test(value)) {
+                    throw new Error('Project Name must contain only alphabets and numbers');
+                }
             }
         }
     },
@@ -23,32 +26,32 @@ const proj = con.define(
         allowNull:false,
         validate: {
             isNotPastDate(value) {
+                if (value !== null) {
                 const currentDate = new Date();
                 if (new Date(value) < currentDate) {
                     throw new Error('Start date must be a future date');
                 }
-            },
             isDate: {
                 msg: 'Start date must be in date format'
-            }
+            }}
         }
-
+    }
     },
     endDate:{
         type:DATEONLY,
         allowNull:false,
         validate: {
             isNotPastDate(value) {
+                if (value !== null) {
                 const currentDate = new Date();
                 if (new Date(value) < currentDate) {
                     throw new Error('Start date must be a future date');
                 }
-            },
             isDate: {
                 msg: 'Start date must be in date format'
-            }
+            }}
         }
-    },
+    }},
     status:{
         type:STRING,
         allowNull:false,

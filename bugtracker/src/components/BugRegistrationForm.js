@@ -8,7 +8,8 @@ import "../BugRegistration.css";
 import { useContext } from 'react';
 import NoteContext from '../Context/NoteContext';
 
-function BugRegistration() {
+export default function BugRegistrationForm() {
+
 
   const contextdata = useContext(NoteContext);
   //  console.log("contextdata : ",contextdata);
@@ -22,94 +23,30 @@ function BugRegistration() {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [bgcolor, setBgColor] = useState("");
 
-  const [bugID, setbugID] = useState();
+
   const [bugName, setbugName] = useState();
   const [priority, setpriority] = useState();
   const [bugDesc, setbugDesc] = useState();
   const [projID, setprojID] = useState();
   const [projlist, setProjList] = useState([]);
-  const [bugList, setBugList] = useState([]);
   const [priorityBGColor, setPriorityBGColor] = useState("");
-
-  const [isUpdate, setIsUpdate] = useState(false);
 
   useEffect(() => {
     const token = contextdata.token;
     if (token===null) navigate("/", { replace: true });
-    getBug(contextdata);
-
+    getData(contextdata);
   }, [navigate,contextdata]);
 
-  const getBug = async (contextdata) => {
+  const getData = async (contextdata) => {
     try {
-      const response = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getbugs" : "tester/getbugs"}`);
-      // console.log("Bugs : ",response.data);
-      setBugList(response.data);
-      const resp = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getProjects" : "tester/getProjects"}`);
-     // console.log("Projects : ",resp.data);
+      const resp = await axios.get(`/${contextdata.urole === "Admin" ? "admin" : "tester"}/getProjects`);
       setProjList(resp.data);
     } catch (err) {
-    //  console.log(err);
+      //console.log(err);
     }
   };
 
-  const handleUpdate = async (bug) => {
-    setIsUpdate(true);
-    setbugID(bug.bugID);
-    setbugName(bug.bugName);
-    setpriority(bug.priority);
-    setbugDesc(bug.bugDesc);
-    setprojID(bug.projID);
-
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  }
-
-  const handleUpdateBug = async () => {
-    const bugData = {
-      bugID: bugID,
-      bugName: bugName,
-      priority: priority,
-      bugDesc: bugDesc,
-      projID: projID,
-      regBy: contextdata.uid
-    };
-    try{
-   //   console.log("bugData : ",bugData);
-    const response = await axios.put(
-      `${contextdata.urole==="Admin" ? "/admin/updateBug" : "/tester/updateBug"}`,
-      bugData
-    );
-   if(response){
-    resetForm();
-    setShow(true)
-    setIsAlertVisible(true);
-    setShow(true);
-    setBgColor("bg-warning");
-    setSetMessage("Bug Updated Successfully");
-    setTimeout(() => {
-      setIsAlertVisible(false);
-    }, 5000);
-    setPriorityBGColor("");
-    setIsUpdate(false);
-    getBug();
-   }
-    }catch(e){
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-  }
-
   const resetForm = () => {
-    setbugID("");
     setbugName("");
     setpriority("");
     setbugDesc("");
@@ -129,15 +66,11 @@ function BugRegistration() {
   };
 
   const addBug = async (bug) => {
-   // console.log(bug);
-
     try {
-   //   console.log("contextdata.urole : ",contextdata.urole)
       const response = await axios.post(
-        `${contextdata.urole==="Admin" ? "/admin/newBug" : "/tester/newBug"}`,
+        "/tester/newBug",
         bug
       );
-   //   console.log(response.data);
       addBugTrack(response.data.bugID);
       resetForm();
       setShow(true)
@@ -149,15 +82,14 @@ function BugRegistration() {
         setIsAlertVisible(false);
       }, 5000);
       setPriorityBGColor("");
-      getBug();
     }
     catch (e) {
-   //   console.log(e)
+      console.log(e)
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
       setBgColor("bg-warning");
-      setSetMessage(e.response);
+      setSetMessage(e.response.data.errors);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
@@ -170,45 +102,15 @@ function BugRegistration() {
     }
     try {
       const response = await axios.post(
-        "/tester/newtrack",
+        `/${contextdata.urole === "Admin" ? "admin" : "tester"}/newtrack`,
         bugTract
       );
-      if(response){
-      }
+      console.log(response);
     }
     catch (e) {
     }
   }
 
-  const handleDelete = async (bugID) => {
-    try {
-      const response = await axios.delete(
-        `${contextdata.urole==="Admin" ? `/admin/deletebug/${bugID}` : `/tester/deletebug/${bugID}`}`
-      );
-      // console.log(response.data);
-      addBugTrack(response.data.bugID);
-      resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage("Bug Deleted Successfully");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getBug();
-
-    } catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-  }
 
   const handleInput = (e) => {
     switch (e.target.id) {
@@ -246,8 +148,8 @@ function BugRegistration() {
 
   };
 
-
   return (
+
     <>
 
       {/* Alert Message */}
@@ -269,8 +171,8 @@ function BugRegistration() {
 
 
       <div className="bug-registration-form" >
-        <div className="row" >
-          <div className="offset-md-3 offset-xl-4 col-sm-12 col-md-6 col-xl-4">
+        <div className="row m-2" >
+          <div className="col-md-12">
             <form className="bug-form" onSubmit={handlesubmit}>
               <div className="form-group">
                 <h3 className="form-title">Bug Registration</h3>
@@ -342,101 +244,20 @@ function BugRegistration() {
               </div>
 
               <div className="form-group">
-                {isUpdate ? (
-                  <button type="button" onClick={handleUpdateBug} className="btn btn-warning">
-                    Update
-                  </button>
-                ) : (
-                  <button type="submit" className="btn btn-success">
-                    Register Bug
-                  </button>
-                )}
+                <button type="submit" className="btn btn-success">
+                  Register Bug
+                </button>
               </div>
             </form>
           </div>
         </div>
       </div>
 
-      {/* Table Data */}
 
-      <div
-        className="container"
-      >
-        <div class="table-responsive">
-          <table className="table table-striped table-bordered table-hover mt-4">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Priority</th>
-                <th>Description</th>
-                <th>Project</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bugList.map((bugItem) => {
-                let uid = contextdata.uid;
-                let uid2 = parseInt(bugItem.regBy);
-                const urole = contextdata.urole;
-                if (urole === "Admin" || uid2 === uid) {
-
-                  return (
-                    <tr key={bugItem.bugID}>
-                      <td>{bugItem.bugID}</td>
-                      <td>{bugItem.bugName}</td>
-                      <td>{bugItem.priority}</td>
-                      <td>
-                        <div style={{ height: '100px', width: '400px', overflow: 'auto' }}>
-                          {bugItem.bugDesc}
-                        </div>
-                      </td>
-                      {projlist.map((projItem) => {
-                        if (projItem.projID === bugItem.projID) {
-                          return (
-                            <td key={bugItem.projID}><div style={{ width: '200px' }}>{projItem.projID} : {projItem.projName}</div></td>
-                          );
-                        }
-                        return null; // or return <td key={roleItem.roleID}></td>;
-                      })}
-
-                      <td>
-                        <div style={{ width: '200px' }}>
-                          <div className='row'>
-                            <div className='col-sm-12 col-lg-6'>
-                              <button type="button"
-                                className="btn btn-warning m-1 text-center"
-                                style={{ marginRight: "5px" }}
-                                onClick={() => handleUpdate(bugItem)}
-                              >
-                                Update
-                              </button>
-                            </div>
-                            <div className='col-sm-12 col-lg-6'>
-                              <button type="button"
-                                className="btn btn-danger m-1 text-center"
-                                onClick={() => handleDelete(bugItem.bugID)}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                  );
-                } return null;
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
 
 
     </>
+
   )
 }
-
-export default BugRegistration

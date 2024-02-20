@@ -1,20 +1,19 @@
-import { useState,useEffect,React } from "react";
+import { useState,React, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
+import NoteContext from './Context/NoteContext'
 
 export default function Login () {
+
+  const { setUserInfo } = useContext(NoteContext);
+
   axios.withCredentials = true;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setSetMessage] = useState("");
   
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/Login", { replace: true });
-  }, [navigate]);
 
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
 
@@ -27,19 +26,18 @@ export default function Login () {
     };
     try {
       const result = await axios.post(
-        "http://127.0.0.1:5000/Login",
+        "/Login",
         reqBody
       );
-     
       if (result.data.token) {
-        // redirect to Welcome
-        localStorage.setItem("token", result.data.token);
-        localStorage.setItem("user", result.data.username);
-        localStorage.setItem("urole", result.data.urole);
-        localStorage.setItem("uid", result.data.uid);
-        sessionStorage.setItem("ID",result.data.ssid);
-        //navigate("/Welcome", { replace: true });
-        window.location.href = "/Welcome";
+        setUserInfo((prevUserInfo) => ({
+          ...prevUserInfo,
+          user: result.data.username,
+          urole: result.data.urole ,
+          uid : result.data.uid ,
+          token : result.data.token
+        }));
+        navigate("/Welcome", { replace: true });
         setTimeout(() => {
           localStorage.clear();
       }, 600000);
@@ -48,10 +46,8 @@ export default function Login () {
         setSetMessage(result.data.error);
         setTimeout(() => {
             setIsAlertVisible(false);
-        }, 40000);
+        }, 400000);
       }
-
-      // console.log(result);
     } catch (err) {
       console.log(err);
       alert(err.response.statusText);
@@ -62,12 +58,8 @@ export default function Login () {
     navigate("/AppInfo", { replace: true })
   }
 
- 
-
-
   return (
     <>
-
     {/* Alert Message */}
     <div className="App">
            {isAlertVisible && <div className='alert-container'>
@@ -95,8 +87,6 @@ export default function Login () {
             id="username"
             value={username}
             onChange={(e) => {
-              console.log(e.target.value);
-              //   username = e.target.value; /// this will not provider update state
               setUsername(e.target.value);
             }}
           required />

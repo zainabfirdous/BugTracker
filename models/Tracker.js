@@ -29,7 +29,7 @@ const tracking = con.define(
             },
             defaultValue:null,
             validate:{isInt: {
-                msg: 'Employee ID must be an integer'
+                msg: 'Admin Not found!!!'
             }}
         },
         assignTo:{
@@ -41,7 +41,7 @@ const tracking = con.define(
             },
             defaultValue: null,
             validate:{isInt: {
-                msg: 'Employee ID must be an integer'
+                msg: 'Employee Not found!!!'
             }}
         },
         assignDate:{
@@ -50,10 +50,14 @@ const tracking = con.define(
             defaultValue: null,
             validate: {
                 isNotPastDate(value) {
+                    if (value !== null) {
+                    console.log('Value: ', value)
                     const currentDate = new Date();
+                    console.log('current date: ', currentDate)
+                    console.log('Value Date: ', new Date(value));
                     if (new Date(value) < currentDate) {
                         throw new Error('Start date must be a future date');
-                    }
+                    }}
                 },
                 isDate: {
                     msg: 'Start date must be in date format'
@@ -66,12 +70,13 @@ const tracking = con.define(
             defaultValue: null,
             validate: {
                 isNotPastTime(value) {
+                    if (value !== null) {
                     const currentTime = new Date();
                     const providedTime = new Date(value);
     
-                    if (providedTime < currentTime) {
+                    if ( providedTime < currentTime) {
                         throw new Error('Time cannot be in the past');
-                    }
+                    }}
                 }
             }
         },
@@ -81,10 +86,11 @@ const tracking = con.define(
             defaultValue: null,
             validate: {
                 isNotPastDate(value) {
+                    if (value !== null) {
                     const currentDate = new Date();
                     if (new Date(value) < currentDate) {
                         throw new Error('Start date must be a future date');
-                    }
+                    }}
                 },
                 isDate: {
                     msg: 'Start date must be in date format'
@@ -97,12 +103,13 @@ const tracking = con.define(
             defaultValue: null,
             validate: {
                 isNotPastTime(value) {
+                    if (value !== null) {
                     const currentTime = new Date();
                     const providedTime = new Date(value);
     
                     if (providedTime < currentTime) {
                         throw new Error('Time cannot be in the past');
-                    }
+                    }}
                 }
             }
         },
@@ -112,10 +119,11 @@ const tracking = con.define(
             defaultValue: null,
             validate: {
                 isNotPastDate(value) {
+                    if (value !== null) {
                     const currentDate = new Date();
                     if (new Date(value) < currentDate) {
                         throw new Error('Start date must be a future date');
-                    }
+                    }}
                 },
                 isDate: {
                     msg: 'Start date must be in date format'
@@ -128,12 +136,13 @@ const tracking = con.define(
             defaultValue: null,
             validate: {
                 isNotPastTime(value) {
+                    if (value !== null) {
                     const currentTime = new Date();
                     const providedTime = new Date(value);
     
                     if (providedTime < currentTime) {
                         throw new Error('Time cannot be in the past');
-                    }
+                    }}
                 }
             }
         },

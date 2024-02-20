@@ -4,9 +4,13 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function DevBugPortal() {
 
+  const contextdata = useContext(NoteContext);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
     
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -24,7 +28,6 @@ export default function DevBugPortal() {
     setShowTrackID(showTrackID);
     setShowBugdesc(true)
     setVisibleBugdesc(true);
-    console.log("showTrackID : ", showTrackID)
   }
 
   const [bugList, setBugList] = useState([]);
@@ -37,106 +40,108 @@ export default function DevBugPortal() {
 
 
   const handleResolved = async (trackID) =>{
-    const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/resolved/${trackID}`
-      
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Marked as Resolved and Sent for Verification`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
-  }
 
-  const handleRetest = async (trackID) =>{
-    const response = await axios.put(
-        `http://127.0.0.1:5000/dev/updateTracker/RetestBug/${trackID}`
-        
+    try{
+      const response = await axios.put(
+        `/dev/updateTracker/resolved/${trackID}`
       );
-      if (response.data.error) {
+      if(response){
         setShow(true)
         setIsAlertVisible(true);
         setBgColor("bg-warning");
-        setSetMessage(response.data.error);
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
-      }
-      else {
-        setShow(true)
-        setIsAlertVisible(true);
-        setBgColor("bg-warning");
-        setSetMessage(`Sent For Retest`);
+        setSetMessage(`Marked as Resolved and Sent for Verification`);
         setTimeout(() => {
           setIsAlertVisible(false);
         }, 5000);
         getData();
         setShowBugdesc(false);
       }
+    }catch(e){
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
+  }
+
+  const handleRetest = async (trackID) =>{
+    try{
+      const response = await axios.put(
+        `/dev/updateTracker/RetestBug/${trackID}`);
+        if(response){
+          setShow(true)
+          setIsAlertVisible(true);
+          setBgColor("bg-warning");
+          setSetMessage(`Sent For Retest`);
+          setTimeout(() => {
+            setIsAlertVisible(false);
+          }, 5000);
+          getData();
+          setShowBugdesc(false);
+        }
+    }catch(e){
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
   }
 
   const handleAccept = async (trackID) => {
-    const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
-    );
-    if (response.data.error) {
+    try{
+      const response = await axios.put(
+        `/dev/updateTracker/acceptBug/${trackID}`
+      );
+      if(response){
+        setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-warning");
+        setSetMessage(`Accepted`);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getData();
+        setShowBugdesc(false);
+      }   
+    }catch(e){
       setShow(true)
       setIsAlertVisible(true);
       setBgColor("bg-warning");
-      setSetMessage(response.data.error);
+      setSetMessage(e.response.data.error);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
     }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Accepted`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
-
   }
 
 
   const getData = async () => {
-    const data1 = await axios.get("http://127.0.0.1:5000/admin/getbugs");
-    const data2 = await axios.get("http://127.0.0.1:5000/admin/trackbugs");
-    const data3 = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
+    try{
+    const data1 = await axios.get("/dev/getbugs");
+    const data2 = await axios.get("/dev/trackbugs");
+    const data3 = await axios.get("/dev/getEmployees");
     setBugList(data1.data);
     setBugTrackList(data2.data);
     setEmpList(data3.data);
-    //console.log(data1.data);
-    // console.log(data2.data);
+    }catch(e){
+      console.log("Error in Dev Bug :",e);
+    }
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    if (localStorage.getItem("urole") === "Developer") {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    if (contextdata.urole === "Developer") {
         setStatus("Assigned");
     } 
     getData();
-  }, [navigate])
+  }, [navigate,contextdata])
 
 
   return (
@@ -174,7 +179,6 @@ export default function DevBugPortal() {
                       return (
                         bugList.map((bugItem) => {
                           if (bugItem.bugID === btItem.bugID) {
-                            //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                             return (
                               <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                                 <div className="row mt-1">
@@ -194,12 +198,27 @@ export default function DevBugPortal() {
                                       if (bugItem.bugID === btItem.bugID) {
                                         return (
                                           <div className="col-12">
-                                            <h5 className="mt-1">Status :
-                                              <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span>
-                                            </h5>
-                                            <h5 className="mt-1">Priority :
-                                              <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span>
-                                            </h5>
+                                           <h5 className="mt-1">Status :
+                                                <span className="rounded m-1" style={{
+                                                  backgroundColor: btItem.status === 'New' ? '#00ff00' :
+                                                    btItem.status === 'Assigned' ? '#ffA500' :
+                                                      btItem.status === 'Open' ? '#FFFF00' :
+                                                        btItem.status === 'Resolved' ? '#008000' :
+                                                          btItem.status === 'Verified' ? '#00cc00' :
+                                                            btItem.status === 'Reopen' ? '#FF0000' :
+                                                              btItem.status === 'Retest' ? '#9370DB' :
+                                                                btItem.status === 'Closed' ? '#186aed' :
+                                                                  '#808080'
+                                                }}  ><span className="m-1">{btItem.status}</span></span>
+                                              </h5>
+                                              <h5 className="mt-1">Priority :
+                                                <span className=" rounded m-1" style={{
+                                                  backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                                    bugItem.priority === "Medium" ? '#ff8c00' :
+                                                      bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                        '#808080'
+                                                }}><span className="m-1">{bugItem.priority}</span></span>
+                                              </h5>
                                           </div>
                                         )
                                       }
@@ -214,16 +233,15 @@ export default function DevBugPortal() {
                                       return (
                                         <div className="row mt-1">
                                           <div className="col-12">
-                                            <h5 className="mt-1">Tester :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                            <h5 className="mt-1">Tester :<span className="border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                             </h5>
                                           </div>
                                           {
                                             empList.map((empItem) => {
-                                              //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                               if (empItem.empID === btItem.assignTo && status !== "New") {
                                                 return (
                                                   <div className="col-12">
-                                                    <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                                    <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                                     </h5>
                                                   </div>
                                                 );
@@ -232,7 +250,7 @@ export default function DevBugPortal() {
                                             })
                                           }
                                           <div className="col-12">
-                                            <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate}</span></span>
+                                            <h5 className="mt-1">Create : <span className="border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate}</span></span>
                                             </h5>
                                           </div>
                                           {
@@ -241,17 +259,17 @@ export default function DevBugPortal() {
                                             :
                                             btItem.status === "Assigned" || btItem.status === "Open" ?
                                             <div className="col-12">
-                                            <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                            <h5 className="mt-1">Assign : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
                                             </h5>
-                                            <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                            <h5 className="mt-1">Due : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
                                             </h5>
                                           </div>:btItem.compDate !=null ?
                                           <div className="col-12">
-                                            <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                            <h5 className="mt-1">Assign : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
                                             </h5>
-                                            <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                            <h5 className="mt-1">Due : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
                                             </h5>
-                                          <h5 className="mt-1">Completed : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.compDate} {btItem.compTime}</span></span>
+                                          <h5 className="mt-1">Completed : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.compDate} {btItem.compTime}</span></span>
                                           </h5>
                                         </div>
                                         :<div></div>}
@@ -270,7 +288,7 @@ export default function DevBugPortal() {
 
                                 <div>
                                   {
-                                    localStorage.getItem("urole") === "Developer"
+                                    contextdata.urole === "Developer"
                                       ?
                                       (
                                         btItem.status === "Assigned" ?
@@ -291,11 +309,9 @@ export default function DevBugPortal() {
                                               <button type="button" onClick={() => handleRetest(btItem.trackID)} className="btn btn-success text-center">Retest</button>
                                             </div>
                                           </form>:<form></form>
-
                                       )
                                       :
                                       <form></form>
-
                                   }
                                 </div>
                               </div>
@@ -327,7 +343,7 @@ export default function DevBugPortal() {
       <div className='col-md-12 m-2 p-1' >
         <div className="bg-light border border-primary rounded m-xl-5" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
           {
-            localStorage.getItem("urole") === "Developer" ?
+            contextdata.urole === "Developer" ?
             <span className=" m-1"><span className="m-2">
             <select className="border border-warning rounded m-4 pl-5 pr-5 pt-2 pb-2"
               id="status"
@@ -336,13 +352,14 @@ export default function DevBugPortal() {
               onChange={handleStatus}
               required
             >
-              <option selected value="Assigned">Assigned</option>
-              <option value="Open">Open</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Verified">Verified</option>
-              <option value="Reopened">Reopen</option>
-              <option value="Retest">Retest</option>
-              <option value="All">All</option>
+             <option value="Assigned" style={{ backgroundColor: '#ffA500' }}>Assigned</option>
+                    <option value="Open" style={{ backgroundColor: '#FFFF00' }}>Open</option>
+                    <option value="Resolved" style={{ backgroundColor: '#008000' }}>Resolved</option>
+                    <option value="Verified" style={{ backgroundColor: '#00cc00' }}>Verified</option>
+                    <option value="Reopen" style={{ backgroundColor: '#FF0000' }}>Reopen</option>
+                    <option value="Retest" style={{ backgroundColor: '#9370DB' }}>Retest</option>
+                    <option value="Closed" style={{ backgroundColor: '#186aed' }}>Closed</option>
+                    <option value="All" style={{ backgroundColor: '#808080' }}>All</option>
             </select>
           </span></span>
               :
@@ -350,12 +367,11 @@ export default function DevBugPortal() {
           }
           {
             bugTrackList.map((btItem) => {
-                let uid = parseInt(localStorage.getItem('uid'));
+                let uid = contextdata.uid;
               if (("All" === status && btItem.assignTo === uid) || ( btItem.status === status && btItem.assignTo === uid)) {
                 return (
                   bugList.map((bugItem) => {
                     if (bugItem.bugID === btItem.bugID) {
-                      //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                       return (
                         <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                           <div className="row mt-1">
@@ -369,9 +385,24 @@ export default function DevBugPortal() {
                                 if (bugItem.bugID === btItem.bugID) {
                                   return (
                                     <div className="col-3">
-                                      <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span>
-                                        <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span>
-                                      </h5>
+                                      <h5 className="mt-1"><span className={`border border-warning rounded m-1`} style={{
+                                          backgroundColor: btItem.status === 'New' ? '#00ff00' :
+                                            btItem.status === 'Assigned' ? '#ffA500' :
+                                              btItem.status === 'Open' ? '#FFFF00' :
+                                                btItem.status === 'Resolved' ? '#008000' :
+                                                  btItem.status === 'Verified' ? '#00cc00' :
+                                                    btItem.status === 'Reopen' ? '#FF0000' :
+                                                      btItem.status === 'Retest' ? '#9370DB' :
+                                                        btItem.status === 'Closed' ? '#186aed' :
+                                                          '#808080'
+                                        }} ><span className="m-1">{btItem.status}</span></span>
+                                          <span className="border border-warning rounded m-1" style={{
+                                            backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                              bugItem.priority === "Medium" ? '#ff8c00' :
+                                                bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                  '#808080'
+                                          }}><span className="m-1">{bugItem.priority}</span></span>
+                                        </h5>
                                     </div>
                                   )
                                 }
@@ -386,16 +417,15 @@ export default function DevBugPortal() {
                                 return (
                                   <div className="row mt-1">
                                     <div className="col-md-12 col-lg-3">
-                                      <h5 className="mt-1">Tester :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                      <h5 className="mt-1">Tester :<span className="border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                       </h5>
                                     </div>
                                     {
                                       empList.map((empItem) => {
-                                        //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                         if (empItem.empID === btItem.assignTo && status !== "New") {
                                           return (
                                             <div className="col-lg-12 col-xl-4">
-                                              <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                              <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                               </h5>
                                             </div>
                                           );

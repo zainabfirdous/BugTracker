@@ -16,9 +16,12 @@ const Bug = con.define(
         type:STRING,
         allowNull:false,
         validate: {
-          isAlphanumeric: {
-              msg: 'Bug Name must contain only alphabets and numbers'
-          }
+          isAlphanumericWithSpace(value){
+            const regex = /^[a-zA-Z0-9\s]+$/;
+            if (!regex.test(value)) {
+                throw new Error('Bug Name must contain only alphabets and numbers');
+            }
+        }
       }
     },
     priority:{
@@ -34,9 +37,12 @@ const Bug = con.define(
         type:TEXT,
         allowNull:false,
         validate: {
-          isAlphanumeric: {
-              msg: 'Bug Description must contain only alphabets and numbers'
-          }
+          isAlphanumericWithSpace(value){
+            const regex = /^[a-zA-Z0-9\s]+$/;
+            if (!regex.test(value)) {
+                throw new Error('Bug Description must contain only alphabets and numbers');
+            }
+        }
       }
     },
     projID: {

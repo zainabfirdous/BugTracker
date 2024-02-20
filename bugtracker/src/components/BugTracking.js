@@ -4,11 +4,17 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 
 export default function BugTracking() {
 
+  const contextdata = useContext(NoteContext);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
+
   axios.defaults.withCredentials = true;
+
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -24,8 +30,6 @@ export default function BugTracking() {
     setShowTrackID(showTrackID);
     setShowBugdesc(true)
     setVisibleBugdesc(true);
-    console.log("showTrackID : ", showTrackID)
-    // setBgColor("bg-warning");
   }
 
   const [bugList, setBugList] = useState([]);
@@ -40,6 +44,21 @@ export default function BugTracking() {
   const [dueDate, setDueDate] = useState(Date);
   const [dueTime, setDueTime] = useState("");
 
+  useEffect(() => {
+    const token = contextdata.token;
+    if (token === null) navigate("/", { replace: true });
+
+    if (contextdata.urole === "Admin") {
+      setStatus("New");
+    } else if (contextdata.urole === "Developer") {
+      setStatus("Assigned");
+    }
+    else {
+      setStatus("Resolved");
+    }
+    getData();
+  }, [navigate, contextdata])
+
   const resetinput = () => {
     setEmpId("");
     setDueDate("");
@@ -49,7 +68,7 @@ export default function BugTracking() {
   const handlesubmit = (trackID) => {
     const bugAssign = {
       trackID: trackID,
-      assignBy: localStorage.getItem("uid"),
+      assignBy: contextdata.uid,
       assignTo: empID,
       dueDate: dueDate,
       dueTime: dueTime
@@ -57,141 +76,90 @@ export default function BugTracking() {
     putbugAssign(bugAssign);
   };
 
-  
-
-  const handleResolved = async (trackID) =>{
-    const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/resolved/${trackID}`
-      
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Marked as Resolved`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
-  }
-  const handleAccept = async (trackID) => {
-    const response = await axios.put(
-      `http://127.0.0.1:5000/dev/updateTracker/acceptBug/${trackID}`
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Accepted`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
-
-  }
-
   const handleClosed = async (trackID) => {
-    const response = await axios.put(
-      `http://127.0.0.1:5000/admin/updateTracker/close/${trackID}`
-    );
-    if (response.data.error) {
+    try {
+      const response = await axios.put(
+        `/admin/updateTracker/close/${trackID}`
+      );
+      if (response) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-warning");
+        setSetMessage(`Bug is Closed`);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getData();
+        setShowBugdesc(false);
+      }
+    }
+    catch (e) {
       setShow(true)
       setIsAlertVisible(true);
       setBgColor("bg-warning");
-      setSetMessage(response.data.error);
+      setSetMessage(e.response.data.error);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
     }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Bug is Closed`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
-
   }
 
   const handleDelete = async (trackID) => {
-    console.log(trackID);
-    const response = await axios.delete(
-      `http://127.0.0.1:5000/admin/deletetracks/${trackID}`
-    );
-    if (response.data.error) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-    else {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`Bug ${trackID} Deleted Successfully`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getData();
-      setShowBugdesc(false);
-    }
+    try {
+      const response = await axios.delete(
+        `/admin/deletetracks/${trackID}`
+      );
+      if (response) {
+        setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-warning");
+        setSetMessage(`Bug ${trackID} Deleted Successfully`);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getData();
+        setShowBugdesc(false);
+      }
 
+    } catch (e) {
+      setShow(true)
+      setIsAlertVisible(true);
+      setBgColor("bg-warning");
+      setSetMessage(e.response.data.error);
+      setTimeout(() => {
+        setIsAlertVisible(false);
+      }, 5000);
+    }
   };
 
   const putbugAssign = async (bugAssign) => {
-    console.log(bugAssign);
-    const response = await axios.put(
-      `http://127.0.0.1:5000/admin/updateTracker/assigned/${bugAssign.trackID}`,
-      bugAssign
-    );
-    if (response.data.error) {
+    try {
+      const response = await axios.put(
+        `/admin/updateTracker/assigned/${bugAssign.trackID}`,
+        bugAssign
+      );
+      if (response) {
+        setIsAlertVisible(true);
+        setShow(true);
+        setSetMessage(`Bug Assigned to ${empName} Successfully`);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        setShowBugdesc(false);
+        getData();
+        resetinput();
+      }
+
+    } catch (e) {
+      console.log("Eorrrr : ", e)
       setIsAlertVisible(true);
       setShow(true);
-      setSetMessage(`${response.data.error}`);
+      setSetMessage(`${e.response.data.error}`);
       setTimeout(() => {
         setIsAlertVisible(false);
       }, 5000);
     }
-    else {
-      setIsAlertVisible(true);
-      setShow(true);
-      setSetMessage(`Bug Assigned to ${empName} Successfully`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      setShowBugdesc(false);
-      getData();
-      resetinput();
-    }
+
   }
 
   const handleInput = (e) => {
@@ -207,40 +175,27 @@ export default function BugTracking() {
         break;
       case "dueDate":
         setDueDate(e.target.value);
-        // console.log(dueDate);
         break;
       case "dueTime":
         setDueTime(e.target.value);
-        //  console.log(dueTime);
         break;
       default: break;
     }
   }
 
-  const getData = async () => {
-    const data1 = await axios.get("http://127.0.0.1:5000/admin/getbugs");
-    const data2 = await axios.get("http://127.0.0.1:5000/admin/trackbugs");
-    const data3 = await axios.get("http://127.0.0.1:5000/admin/getEmployees");
-    setBugList(data1.data);
-    setBugTrackList(data2.data);
-    setEmpList(data3.data);
-    //console.log(data1.data);
-    // console.log(data2.data);
-  }
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    if (localStorage.getItem("urole") === "Admin") {
-      setStatus("New");
-    } else if (localStorage.getItem("urole") === "Developer") {
-      setStatus("Assigned");
+  const getData = async () => {
+    try {
+      const data1 = await axios.get("/admin/getbugs");
+      const data2 = await axios.get("/admin/trackbugs");
+      const data3 = await axios.get("/admin/getEmployees");
+      setBugList(data1.data);
+      setBugTrackList(data2.data);
+      setEmpList(data3.data);
+    } catch (e) {
+      console.log("Error in Tracking : ", e)
     }
-    else {
-      setStatus("Resolved");
-    }
-    getData();
-  }, [navigate])
+  }
 
   return (
     <>
@@ -277,7 +232,6 @@ export default function BugTracking() {
                         return (
                           bugList.map((bugItem) => {
                             if (bugItem.bugID === btItem.bugID) {
-                              //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                               return (
                                 <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                                   <div className="row mt-1">
@@ -298,10 +252,25 @@ export default function BugTracking() {
                                           return (
                                             <div className="col-12">
                                               <h5 className="mt-1">Status :
-                                                <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span>
+                                                <span className="rounded m-1" style={{
+                                                  backgroundColor: btItem.status === 'New' ? '#00ff00' :
+                                                    btItem.status === 'Assigned' ? '#ffA500' :
+                                                      btItem.status === 'Open' ? '#FFFF00' :
+                                                        btItem.status === 'Resolved' ? '#008000' :
+                                                          btItem.status === 'Verified' ? '#00cc00' :
+                                                            btItem.status === 'Reopen' ? '#FF0000' :
+                                                              btItem.status === 'Retest' ? '#9370DB' :
+                                                                btItem.status === 'Closed' ? '#186aed' :
+                                                                  '#808080'
+                                                }}  ><span className="m-1">{btItem.status}</span></span>
                                               </h5>
                                               <h5 className="mt-1">Priority :
-                                                <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span>
+                                                <span className=" rounded m-1" style={{
+                                                  backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                                    bugItem.priority === "Medium" ? '#ff8c00' :
+                                                      bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                        '#808080'
+                                                }}><span className="m-1">{bugItem.priority}</span></span>
                                               </h5>
                                             </div>
                                           )
@@ -317,16 +286,15 @@ export default function BugTracking() {
                                         return (
                                           <div className="row mt-1">
                                             <div className="col-12">
-                                              <h5 className="mt-1">Tester :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                              <h5 className="mt-1">Tester :<span className="border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                               </h5>
                                             </div>
                                             {
                                               empList.map((empItem) => {
-                                                //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                                 if (empItem.empID === btItem.assignTo && status !== "New") {
                                                   return (
                                                     <div className="col-12">
-                                                      <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                                      <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className=" border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                                       </h5>
                                                     </div>
                                                   );
@@ -335,29 +303,29 @@ export default function BugTracking() {
                                               })
                                             }
                                             <div className="col-12">
-                                              <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate} {bugItem.crtTime}</span></span>
+                                              <h5 className="mt-1">Create : <span className="border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate} {bugItem.crtTime}</span></span>
                                               </h5>
                                             </div>
                                             {
                                               btItem.status === "New" ?
-                                              <div></div>
-                                              :
-                                              btItem.status === "Assigned" || btItem.status === "Open" ?
-                                              <div className="col-12">
-                                              <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
-                                              </h5>
-                                              <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
-                                              </h5>
-                                            </div>:btItem.compDate !=null ?
-                                            <div className="col-12">
-                                              <h5 className="mt-1">Assign : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
-                                              </h5>
-                                              <h5 className="mt-1">Due : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
-                                              </h5>
-                                            <h5 className="mt-1">Completed : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{btItem.compDate} {btItem.compTime}</span></span>
-                                            </h5>
-                                          </div>
-                                          :<div></div>}
+                                                <div></div>
+                                                :
+                                                btItem.status === "Assigned" || btItem.status === "Open" ?
+                                                  <div className="col-12">
+                                                    <h5 className="mt-1">Assign : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                                    </h5>
+                                                    <h5 className="mt-1">Due : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                                    </h5>
+                                                  </div> : btItem.compDate != null ?
+                                                    <div className="col-12">
+                                                      <h5 className="mt-1">Assign : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.assignDate} {btItem.assignTime}</span></span>
+                                                      </h5>
+                                                      <h5 className="mt-1">Due : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.dueDate} {btItem.dueTime}</span></span>
+                                                      </h5>
+                                                      <h5 className="mt-1">Completed : <span className="border border-warning rounded m-1"><span className="m-1">{btItem.compDate} {btItem.compTime}</span></span>
+                                                      </h5>
+                                                    </div>
+                                                    : <div></div>}
                                             <div className="form-group col-12">
                                               <div className=' border border-warning rounded' style={{ height: '100px', overflow: 'auto' }}>
                                                 {bugItem.bugDesc}
@@ -373,7 +341,7 @@ export default function BugTracking() {
 
                                   <div>
                                     {
-                                      localStorage.getItem("urole") === "Admin"
+                                      contextdata.urole === "Admin"
                                         ?
                                         <form className="row mt-4">
                                           <div className="form-group col-sm-12 col-md-4">
@@ -384,7 +352,7 @@ export default function BugTracking() {
                                             >
                                               <option id="empID" selected>Select</option>
                                               {empList.map((empItem) => {
-                                                if(empItem.roleID===2){
+                                                if (empItem.roleID === 2) {
                                                   return (
                                                     <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
                                                   );
@@ -421,13 +389,13 @@ export default function BugTracking() {
                                           </div>
 
                                           {
-                                             btItem.status === "Verified" ?
-                                             <div className="form-group col-sm-12 col-md-4">
-                                            <button type="button" onClick={() => handleClosed(btItem.trackID)} className="btn btn-warning text-center">Close Bug</button>
-                                               </div>
-                                            
-                                             :
-                                             <div className="form-group col-sm-12 col-md-4"></div>
+                                            btItem.status === "Verified" ?
+                                              <div className="form-group col-sm-12 col-md-4">
+                                                <button type="button" onClick={() => handleClosed(btItem.trackID)} className="btn btn-warning text-center">Close Bug</button>
+                                              </div>
+
+                                              :
+                                              <div></div>
                                           }
 
                                           {("All" === status)
@@ -442,17 +410,10 @@ export default function BugTracking() {
                                         : (
                                           btItem.status === "Assigned" ?
                                             <form className="row mt-4">
-                                              <div className="form-group col-sm-12 col-md-4">
-                                                <button type="button" onClick={() => handleAccept(btItem.trackID)} className="btn btn-success text-center">Accept Bug</button>
-                                              </div>
                                             </form>
                                             :
                                             <form className="row mt-4">
-                                              <div className="form-group col-sm-12 col-md-4">
-                                                <button type="button" onClick={() => handleResolved(btItem.trackID)} className="btn btn-success text-center">Mark as Resolved</button>
-                                              </div>
                                             </form>)
-
                                     }
                                   </div>
                                 </div>
@@ -484,7 +445,7 @@ export default function BugTracking() {
         <div className='col-md-12 m-2 p-1' >
           <div className="bg-light border border-primary rounded m-xl-5" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
             {
-              localStorage.getItem("urole") === "Admin" ?
+              contextdata.urole === "Admin" ?
                 <span className=" m-1"><span className="m-2">
                   <select className="border border-warning rounded m-4 pl-5 pr-5 pt-2 pb-2"
                     id="status"
@@ -493,15 +454,15 @@ export default function BugTracking() {
                     onChange={handleStatus}
                     required
                   >
-                    <option selected value="New">New</option>
-                    <option value="Assigned">Assigned</option>
-                    <option value="Open">Open</option>
-                    <option value="Resolved">Resolved</option>
-                    <option value="Verified">Verified</option>
-                    <option value="Reopen">Reopen</option>
-                    <option value="Retest">Retest</option>
-                    <option value="Closed">Closed</option>
-                    <option value="All" >All</option>
+                    <option value="New" style={{ backgroundColor: '#00ff00' }}>New</option>
+                    <option value="Assigned" style={{ backgroundColor: '#ffA500' }}>Assigned</option>
+                    <option value="Open" style={{ backgroundColor: '#FFFF00' }}>Open</option>
+                    <option value="Resolved" style={{ backgroundColor: '#008000' }}>Resolved</option>
+                    <option value="Verified" style={{ backgroundColor: '#00cc00' }}>Verified</option>
+                    <option value="Reopen" style={{ backgroundColor: '#FF0000' }}>Reopen</option>
+                    <option value="Retest" style={{ backgroundColor: '#9370DB' }}>Retest</option>
+                    <option value="Closed" style={{ backgroundColor: '#186aed' }}>Closed</option>
+                    <option value="All" style={{ backgroundColor: '#808080' }}>All</option>
                   </select>
                 </span></span>
                 :
@@ -526,7 +487,6 @@ export default function BugTracking() {
                   return (
                     bugList.map((bugItem) => {
                       if (bugItem.bugID === btItem.bugID) {
-                        //     console.log(bugItem.bugID, bugItem.bugName, bugItem.bugID === btItem.bugID)
                         return (
                           <div key={btItem.trackID} className='m-3 login-form rounded' style={{ width: "auto" }}>
                             <div className="row mt-1">
@@ -540,8 +500,23 @@ export default function BugTracking() {
                                   if (bugItem.bugID === btItem.bugID) {
                                     return (
                                       <div className="col-3">
-                                        <h5 className="mt-1"><span className="bg-warning border border-warning rounded m-1"><span className="m-1">{btItem.status}</span></span>
-                                          <span className="bg-warning border border-warning rounded m-1"><span className="m-1">{bugItem.priority}</span></span>
+                                        <h5 className="mt-1"><span className={`border border-warning rounded m-1`} style={{
+                                          backgroundColor: btItem.status === 'New' ? '#00ff00' :
+                                            btItem.status === 'Assigned' ? '#ffA500' :
+                                              btItem.status === 'Open' ? '#FFFF00' :
+                                                btItem.status === 'Resolved' ? '#008000' :
+                                                  btItem.status === 'Verified' ? '#00cc00' :
+                                                    btItem.status === 'Reopen' ? '#FF0000' :
+                                                      btItem.status === 'Retest' ? '#9370DB' :
+                                                        btItem.status === 'Closed' ? '#186aed' :
+                                                          '#808080'
+                                        }} ><span className="m-1">{btItem.status}</span></span>
+                                          <span className="border border-warning rounded m-1" style={{
+                                            backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
+                                              bugItem.priority === "Medium" ? '#ff8c00' :
+                                                bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
+                                                  '#808080'
+                                          }}><span className="m-1">{bugItem.priority}</span></span>
                                         </h5>
                                       </div>
                                     )
@@ -557,16 +532,15 @@ export default function BugTracking() {
                                   return (
                                     <div className="row mt-1">
                                       <div className="col-md-12 col-lg-3">
-                                        <h5 className="mt-1">Tester :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                        <h5 className="mt-1">Tester :<span className="border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                         </h5>
                                       </div>
                                       {
                                         empList.map((empItem) => {
-                                          //  console.log("bugItem.assignTo : ",bugItem.assignTo ,"empItem.empID : ",empItem.empID,bugItem)
                                           if (empItem.empID === btItem.assignTo && status !== "New") {
                                             return (
                                               <div className="col-lg-12 col-xl-4">
-                                                <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="bg-warning border border-warning rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
+                                                <h5 className="mt-1" key={bugItem.assignTo} >Assign To :<span className="border border-info rounded m-1"><span className="m-1">({empItem.empID}) {empItem.fName}</span></span>
                                                 </h5>
                                               </div>
                                             );
@@ -575,7 +549,7 @@ export default function BugTracking() {
                                         })
                                       }
                                       <div className="col-lg-12 col-xl-4">
-                                        <h5 className="mt-1">Create : <span className="bg-info border border-warning rounded m-1"><span className="m-1">{bugItem.crtDate} {bugItem.crtTime}</span></span>
+                                        <h5 className="mt-1">Create : <span className="m-1"><span className="m-1">{bugItem.crtDate} <span className="bg-info rounded m-1 p-1">{bugItem.crtTime}</span></span></span>
                                         </h5>
                                       </div>
                                       <div className="form-group col-lg-12 col-xl-2">
