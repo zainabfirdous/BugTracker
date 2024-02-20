@@ -90,7 +90,7 @@ const CreateEmp =  async (req, res) => {
 const DeleteEmp =  async (req, res) => {
     try {
         const id = req.params.id;
-        const deletedCount = await employee.destroy({ where: { empID: id } });
+        const deletedCount = await EmpProfile.destroy({ where: { empID: id } });
         res.status(200).json(deletedCount);
     } catch (error) {
         console.error('Error creating employee:', error);
@@ -424,6 +424,26 @@ const Track = async(req, res)=>{
     }
 }
 
+const NewTracking = async (req, res) => {
+    try {
+        const body = req.body
+        req.body.status = "New"
+        const newTrack = await Tracker.create(body);
+        res.status(200).json(newTrack);
+    } catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While adding new bug tracker" });
+        }
+    }
+}
+
 const TrackById = async(req, res)=>{
     try{
         const trackID = req.params.id;
@@ -497,7 +517,7 @@ const DeleteTrack =  async(req, res)=>{
 
 const CreateUserProfile = async(req, res)=>{
     try{
-        console.log(req.body)
+        console.log("Profile Show : ",req.body)
         const password = req.body.password
         const id=req.body.empID
         const user = req.body.username
@@ -613,6 +633,7 @@ router.get("/projectassign/:id", AssignmentById)
 router.post("/newPorjectAssign", CreateAssign)
 router.put("/updateProjAssign", UpdateProjectAssign)
 router.delete("/deleteprojAssign/:id", DeleteProjectAssign)
+router.post("/newtrack", NewTracking);
 router.get("/trackbugs", Track)
 router.get("/trackbugs/:id", TrackById)
 router.put("/updateTracker/assigned/:id", UpdateTrack)

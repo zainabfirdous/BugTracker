@@ -42,6 +42,7 @@ function BugRegistration() {
 
   const getBug = async (contextdata) => {
     try {
+      console.log("Get Call");
       const response = await axios.get(`${contextdata.urole==="Admin" ? "/admin/getbugs" : "tester/getbugs"}`);
       // console.log("Bugs : ",response.data);
       setBugList(response.data);
@@ -67,6 +68,16 @@ function BugRegistration() {
     });
   }
 
+  const alertShow = (msg) =>{
+    setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-info");
+        setSetMessage(msg);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+  }
+
   const handleUpdateBug = async () => {
     const bugData = {
       bugID: bugID,
@@ -84,27 +95,13 @@ function BugRegistration() {
     );
    if(response){
     resetForm();
-    setShow(true)
-    setIsAlertVisible(true);
-    setShow(true);
-    setBgColor("bg-warning");
-    setSetMessage("Bug Updated Successfully");
-    setTimeout(() => {
-      setIsAlertVisible(false);
-    }, 5000);
+    alertShow("Bug Updated Successfully");
     setPriorityBGColor("");
     setIsUpdate(false);
-    getBug();
+    getBug(contextdata);
    }
     }catch(e){
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   }
 
@@ -138,29 +135,20 @@ function BugRegistration() {
         bug
       );
    //   console.log(response.data);
-      addBugTrack(response.data.bugID);
       resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage("Bug Registered Successfully");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow("Bug Registered Successfully");
       setPriorityBGColor("");
-      getBug();
+      getBug(contextdata);
+      addBugTrack(response.data.bugID);
+      window.scrollTo({
+        bottom: 0,
+        behavior: 'smooth',
+      });
+     
     }
     catch (e) {
    //   console.log(e)
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+   alertShow(e.response.data.error);
     }
   }
 
@@ -170,10 +158,11 @@ function BugRegistration() {
     }
     try {
       const response = await axios.post(
-        "/tester/newtrack",
+        `${contextdata.urole==="Admin" ? `/admin/newtrack` : `/tester/newtrack`}`,
         bugTract
       );
       if(response){
+        getBug(contextdata);
       }
     }
     catch (e) {
@@ -188,25 +177,11 @@ function BugRegistration() {
       // console.log(response.data);
       addBugTrack(response.data.bugID);
       resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage("Bug Deleted Successfully");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getBug();
+      alertShow("Bug Deleted Successfully");
+      getBug(contextdata);
 
     } catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   }
 

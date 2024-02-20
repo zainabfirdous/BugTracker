@@ -47,17 +47,17 @@ export default function BugReport() {
                 <div className='row mt-4'>
                     <div className='col-md-12 col-lg-4'>
                         <div className="bg-light border border-primary rounded ml-1">
-                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#00ff00' }}>
-                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#00ff00', fontSize: '1.2rem' }}
+                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#f5c842' }}>
+                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#f5c842', fontSize: '1.2rem' }}
                                     id="status"
                                     name="status"
                                     value={status1}
                                     onChange={(e) => { setStatus1(e.target.value) }}
                                     required
                                 >
-                                    <option value="New" style={{ backgroundColor: '#00ff00' }}>New</option>
-                                    <option value="Assigned" style={{ backgroundColor: '#ffA500' }}>Assigned</option>
-                                    <option value="Open" style={{ backgroundColor: '#FFFF00' }}>Open</option>
+                                    <option value="New" style={{ backgroundColor: '#f5c842' }}>New</option>
+                                    <option value="Assigned" style={{ backgroundColor: '#f5c842' }}>Assigned</option>
+                                    <option value="Open" style={{ backgroundColor: '#f5c842' }}>Open</option>
                                 </select>
 
 
@@ -88,11 +88,11 @@ export default function BugReport() {
                                                                             if (bugItem.bugID === btItem.bugID) {
                                                                                 return (
                                                                                     <div className="col-3">
-                                                                                        <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
+                                                                                        <h5 className="mt-1"><span className="border-warning  m-1" style={{
                                                                                             backgroundColor: btItem.status === 'New' ? '#00ff00' :
                                                                                                 btItem.status === 'Assigned' ? '#ffA500' :
                                                                                                     btItem.status === 'Open' ? '#FFFF00' :
-                                                                                                        '#808080'
+                                                                                                        '#808080',fontSize:'15px'
                                                                                         }} ><span className="m-1">{btItem.status}</span></span></h5>
                                                                                     </div>
                                                                                 )
@@ -105,7 +105,7 @@ export default function BugReport() {
                                                                             backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
                                                                                 bugItem.priority === "Medium" ? '#ff8c00' :
                                                                                     bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
-                                                                                        '#808080'
+                                                                                        '#808080',fontSize:'15px'
                                                                         }}><span className="m-1">{bugItem.priority}</span></span></h5>
                                                                     </div>
                                                                 </div>
@@ -156,16 +156,16 @@ export default function BugReport() {
                     </div>
                     <div className='col-md-12 col-lg-4'>
                         <div className="border border-primary rounded ml-1" >
-                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#008000' }}>
-                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#008000', fontSize: '1.2rem' }}
+                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#6bb329' }}>
+                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#6bb329', fontSize: '1.2rem' }}
                                     id="status"
                                     name="status"
                                     value={status2}
                                     onChange={(e) => { setStatus2(e.target.value) }}
                                     required
                                 >
-                                    <option value="Resolved" style={{ backgroundColor: '#008000' }}>Resolved</option>
-                                    <option value="Verified" style={{ backgroundColor: '#00cc00' }}>Verified</option>
+                                    <option value="Resolved" style={{ backgroundColor: '#6bb329' }}>Resolved</option>
+                                    <option value="Verified" style={{ backgroundColor: '#6bb329' }}>Verified</option>
                                 </select>
                             </h3>
                             <div className=' border border-warning rounded' style={{ maxHeight: '600px', overflow: 'auto' }}>
@@ -197,9 +197,9 @@ export default function BugReport() {
                                                                                     <div className="col-4">
                                                                                         <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
                                                                                             backgroundColor:
-                                                                                                btItem.status === 'Resolved' ? '#008000' :
+                                                                                                btItem.status === 'Resolved' ? '#6bb329' :
                                                                                                     btItem.status === 'Verified' ? '#00cc00' :
-                                                                                                        '#808080'
+                                                                                                        '#808080',fontSize:'15px'
                                                                                         }} ><span className="m-1">{btItem.status}</span></span></h5>
                                                                                     </div>
                                                                                 )
@@ -212,7 +212,7 @@ export default function BugReport() {
                                                                             backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
                                                                                 bugItem.priority === "Medium" ? '#ff8c00' :
                                                                                     bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
-                                                                                        '#808080'
+                                                                                        '#808080',fontSize:'15px'
                                                                         }}><span className="m-1">{bugItem.priority}</span></span></h5>
                                                                     </div>
                                                                 </div>
@@ -268,17 +268,17 @@ export default function BugReport() {
                     <div className='col-md-12 col-lg-4'>
                         <div className="bg-light border border-primary rounded ml-1">
 
-                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#FF0000' }}>
-                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#FF0000', fontSize: '1.2rem' }}
+                            <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#fa5d32' }}>
+                                <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#fa5d32', fontSize: '1.2rem' }}
                                     id="status"
                                     name="status"
                                     value={status3}
                                     onChange={(e) => { setStatus3(e.target.value) }}
                                     required
                                 >
-                                    <option value="Reopen" style={{ backgroundColor: '#FF0000' }}>Reopen</option>
-                                    <option value="Retest" style={{ backgroundColor: '#9370DB' }}>Retest</option>
-                                    <option value="Closed" style={{ backgroundColor: '#186aed' }}>Closed</option>
+                                    <option value="Reopen" style={{ backgroundColor: '#fa5d32' }}>Reopen</option>
+                                    <option value="Retest" style={{ backgroundColor: '#fa5d32' }}>Retest</option>
+                                    <option value="Closed" style={{ backgroundColor: '#fa5d32' }}>Closed</option>
                                 </select>
                             </h3>
 
@@ -314,7 +314,7 @@ export default function BugReport() {
                                                                                                 btItem.status === 'Reopen' ? '#FF0000' :
                                                                                                     btItem.status === 'Retest' ? '#9370DB' :
                                                                                                         btItem.status === 'Closed' ? '#186aed' :
-                                                                                                            '#808080'
+                                                                                                            '#808080',fontSize:'15px'
                                                                                         }} ><span className="m-1">{btItem.status}</span></span></h5>
                                                                                     </div>
                                                                                 )
@@ -327,7 +327,7 @@ export default function BugReport() {
                                                                             backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
                                                                                 bugItem.priority === "Medium" ? '#ff8c00' :
                                                                                     bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
-                                                                                        '#808080'
+                                                                                        '#808080',fontSize:'15px'
                                                                         }}><span className="m-1">{bugItem.priority}</span></span></h5>
                                                                     </div>
                                                                 </div>

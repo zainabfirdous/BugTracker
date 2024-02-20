@@ -47,7 +47,15 @@ export default function AddProject(props) {
     setIsUpdateButton(false);
   };
 
-
+  const alertShow = (msg) =>{
+    setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-info");
+        setSetMessage(msg);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+  }
 
   const handleInput = (e) => {
     switch (e.target.id) {
@@ -66,14 +74,7 @@ export default function AddProject(props) {
           break;
         }
         else{
-          setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-info");
-        setSetMessage("End Date must be Future date than Start Date!");
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+          alertShow("End Date must be Future date than Start Date!");
         break;
         }
       case "status":
@@ -117,23 +118,10 @@ export default function AddProject(props) {
       props.updateProjectList();
       resetForm();
       if (udpatedRecord) {
-        setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-info");
-        setSetMessage("Project updated successfully!");
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow("Project updated successfully!");
       }
     } catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`${e.response.data.error}`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   };
 
@@ -147,25 +135,11 @@ export default function AddProject(props) {
      if(response){
       props.updateProjectList();
       resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-success");
-      setSetMessage("Project Added");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow("Project Added");
      }
     }
     catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   };
 
