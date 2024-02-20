@@ -33,7 +33,7 @@ const Team = con.define(
             allowNull: false,
             validate:{
                 notNull: {
-                    msg: 'teamName can not be null'
+                    msg: 'Team Name can not be null'
                   },
                 isAlphanumericWithSpace(value){
                     const regex = /^[a-zA-Z0-9\s]+$/;

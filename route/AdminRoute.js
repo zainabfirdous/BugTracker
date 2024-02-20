@@ -597,18 +597,29 @@ const projIDteams = async(req, res)=>{
     
     }
 
+    const EmpByRole = async(req, res)=>{
+        try{
+            const id = req.params.roleID;
+            const empbyrole = await employee.findAll({where:{roleID : id }}); 
+            if (empbyrole.length === 0) {
+                res.status(404).json({error:'No employees found'})
+            } else {
+                res.status(200).json(empbyrole);
+            }
+        }catch (error) {
+            console.error('Error fetching employees:', error);
+            res.status(500).json({ error: "Error While fetching employees by role" });
+        }
+    }
 
+
+router.get("/empbyRole/:roleID", EmpByRole)
 router.get("/teammembers/:teamID", TeamMembers)
-
 router.get("/projteamsbyID/:projID", projIDteams)
-
 router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)
-
 router.get("/adminDashboardbyID", dashboardByID) //api with token
-
 //router.get("/adminDashboard/id", dashboardByID)
-
 router.get("/getEmployees", allEmp)
 router.get("/getEmpByID/:id", EmpById)
 router.post("/newEmployee",CreateEmp)
