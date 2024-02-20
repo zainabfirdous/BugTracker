@@ -73,16 +73,29 @@ const SideBar = ({ children }) => {
             name: 'Profile',
             icon: <FcBusinessman />,
             subRoutes: [
-                { path: '/profile/Login', name: 'Login', icon: <IoIosLogIn /> },
-                { path: '/profile/Logout', name: 'Logout', icon: <IoIosLogOut /> },
-            ],
-        },
+
+                { path: '/manage-account', name: 'My Account' }
+            ],},
+            // subRoutes: [
+            //     { path: '/profile/Login', name: 'Login', icon: <IoIosLogIn /> },
+            //     { path: '/profile/Logout', name: 'Logout' },
+            // ],
+        
+
+  
+
     ];
 
     const userRoutes = [
         { path: '/BugReport', name: 'Dashboard', icon: <FaHome /> },
         { path: '/DevBugPortal', name: 'Bug Tracking', icon: <FaBug /> },
-        { path: '/Profile', name: 'Profile', icon: <FcBusinessman /> },
+        { path: '/Profile', name: 'Profile', icon: <FcBusinessman />,
+        subRoutes: [
+            { path: '/my-projects', name: 'My Projects' },
+            { path: '/my-teams', name: 'My Teams' },
+            { path: '/manage-account', name: 'My Account' }
+        ],
+     },
 
     ];
 
@@ -90,8 +103,12 @@ const SideBar = ({ children }) => {
         { path: '/BugReport', name: 'Dashboard', icon: <FaHome /> },
         { path: '/BugReg', name: 'Bug Register', icon: <FaBug /> },
         { path: '/TesterBugPortal', name: 'Bug Report', icon: <MdBugReport /> },
-        { path: '/Profile', name: 'Profile', icon: <FcBusinessman /> },
-        // Add more tester-specific routes here
+        { path: '/Profile', name: 'Profile', icon: <FcBusinessman />,
+        subRoutes: [
+            { path: '/my-projects', name: 'My Projects' },
+            { path: '/my-teams', name: 'My Teams' },
+            { path: '/manage-account', name: 'My Account' }
+        ],},
     ];
 
     const guestRoutes = [
@@ -269,11 +286,11 @@ const SideBar = ({ children }) => {
                        </div>
                     </div>
                 </div>
-                <div className='mt-5 ml-5' style={{overflow:'hidden'}}>
+                <div className='mt-5 ml-5' >
                 {children}
                 {console.log(children)}
                 </div>
-         
+          
            
 
 

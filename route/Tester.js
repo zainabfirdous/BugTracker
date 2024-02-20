@@ -68,7 +68,7 @@ const UpdateBugs = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug" });
@@ -116,7 +116,9 @@ const TesterProjects = async (req, res) => {
             'JOIN Employee e ON pa.empID = e.empID ' +
             'WHERE e.empID = :empID',
             {
-                replacements: { empID: req.empID }, 
+
+                replacements: { empID: req.empID}, 
+
                 type: QueryTypes.SELECT
             }
         );
@@ -138,12 +140,12 @@ const TeamMembers = async (req, res) => {
             'JOIN projectassign pa ON e.empID = pa.empID ' +
             'WHERE pa.teamID = :teamID  AND pa.empID != :empID',
             {
-                replacements: { teamID: req.params.id, empID: req.params.eid },
+                replacements: { teamID: req.params.id, empID: req.empID},
                 type: QueryTypes.SELECT
             }
         );
         if (team.length === 0) {
-            res.send('No team members found')
+            res.status(404).json({error:'No team members found'})
             //console.log('No team members found for team ID:', teamId);
         } else {
             res.status(200).json(team);
@@ -159,13 +161,14 @@ const TeamMembers = async (req, res) => {
 const ProjTeam = async (req, res) => {
     try {
         const pteam = await sequelize.query(
-            'SELECT e.empID, e.fName, e.lName, e.email ' +
+            'SELECT e.empID, e.fName, e.lName, e.email, t.teamName ' +
             'FROM Employee e ' +
             'JOIN projectassign pa ON e.empID = pa.empID ' +
+            'JOIN Team t ON pa.teamID = t.teamID '+
             'WHERE pa.projID = :pid ' +
             'AND pa.empID != :eid',
             {
-                replacements: { pid: req.params.id, eid: req.params.eid },
+                replacements: { pid: req.params.id, eid: req.empID },
                 type: QueryTypes.SELECT
             }
         );
@@ -194,7 +197,7 @@ const NewTracking = async (req, res) => {
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While adding new bug tracker" });
@@ -227,7 +230,7 @@ const UpdateTrack = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating tracker" });
@@ -248,7 +251,7 @@ const TrackVerified = async(req, res)=>{
         if (error.name === 'SequelizeValidationError') {
             // Construct an error response with custom error messages
             const errorMessages = error.errors.map(err => err.message).join('; ');
-            res.status(400).json({ errors: errorMessages });
+            res.status(400).json({ error: errorMessages });
         } else {
             // Handle other types of errors
             res.status(500).json({ error: "Error While updating bug tracker" });
@@ -302,12 +305,60 @@ const allEmp =  async (req, res) => {
     }
 }
 
+const testerteams = async(req, res)=>{
+    try{
+        const team = await sequelize.query(
+            'SELECT t.teamID, t.teamName, p.projName FROM team t '+
+            'JOIN project p ON t.projID = p.projID '+
+            'JOIN ProjectAssign pa ON t.teamID = pa.teamID '+ 
+            'JOIN Employee e ON pa.empID = e.empID '+ 
+            'WHERE e.empID = :empID ',
+            {
+                replacements: { empID: req.empID }, 
+                type: QueryTypes.SELECT
+              }
+            );
+      res.status(200).json(team);
+    } catch (error) {
+    // Handle any errors
+    console.error('Error executing raw query:', error);
+    res.status(500).json({ error: 'Error while fetching employee teams' });
+    }
+    }
+  
+    const projIDteams = async(req, res)=>{
+        try{
+            const team = await sequelize.query(
+               'select t.teamID, t.teamName '+
+               'from team t '+
+                'JOIN projectassign pa on t.teamID = pa.teamID '+
+                'where pa.projID = :projID',
+                {
+                    replacements: { projID: req.params.projID }, 
+                    type: QueryTypes.SELECT
+                  }
+                );
+          res.status(200).json(team);
+        } catch (error) {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error while fetching employee teams' });
+        }
+        }
+
+
+Trouter.get("/projteamsbyID/:projID", projIDteams)
+
+Trouter.get("/projTeam/:id", ProjTeam) //api with token
+Trouter.get("/teammembers/:id",TeamMembers); //api with token
+Trouter.get("/myprojects", TesterProjects); //api with token
+Trouter.get('/team', testerteams);
 
 Trouter.get("/getEmployees", allEmp)
 Trouter.get("/projTeam/:id/:eid", ProjTeam)
 Trouter.get("/teammembers/:id/:eid", TeamMembers);
 Trouter.get("/getProjects", Projects)
 Trouter.get("/testerprojects", TesterProjects);
+
 Trouter.get("/testerDashboard", testerProfile);
 Trouter.get("/getbugs", Bugs)
 Trouter.post("/newBug", newbugReg);

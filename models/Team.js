@@ -7,7 +7,11 @@ const Team = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            validate:{
+                notNull: {
+                    msg: 'adminID can not be null'
+                  }}
         },
         admID:{
             type: INTEGER,
@@ -16,7 +20,11 @@ const Team = con.define(
                 model: 'Admin',
                 key: 'adminID',
             },
-            validate:{isInt: {
+            validate:{
+                notNull: {
+                    msg: 'adminID can not be null'
+                  },
+                isInt: {
                 msg: 'admin ID must be an integer'
             }}
         },
@@ -24,6 +32,9 @@ const Team = con.define(
             type:STRING,
             allowNull: false,
             validate:{
+                notNull: {
+                    msg: 'teamName can not be null'
+                  },
                 isAlphanumericWithSpace(value){
                     const regex = /^[a-zA-Z0-9\s]+$/;
                     if (!regex.test(value)) {
@@ -38,7 +49,8 @@ const Team = con.define(
             references: {
                 model: 'Project',
                 key: 'projID',
-        },validate:{isInt: {
+        },validate:{
+            isInt: {
             msg: 'Project ID must be an integer'
         }}
         },

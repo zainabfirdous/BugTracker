@@ -8,6 +8,8 @@ const PAssign = require('../models/ProjectAssign.js')
 const Tracker = require('../models/Tracker.js')
 //const hash = require('./Passwordhashing');
 const Role = require('../models/Role.js')
+const sequelize = require('../config/database.js');
+const { QueryTypes } = require('sequelize');
 
 
 
@@ -549,9 +551,64 @@ const role = async (req, res) => {
     }
 }
 
+  
+const projIDteams = async(req, res)=>{
+    try{
+        const team = await sequelize.query(
+           'select t.teamID, t.teamName '+
+           'from team t '+
+            'JOIN projectassign pa on t.teamID = pa.teamID '+
+            'where pa.projID = :projID',
+            {
+                replacements: { projID: req.params.projID }, 
+                type: QueryTypes.SELECT
+              }
+            );
+      res.status(200).json(team);
+    } catch (error) {
+    console.error('Error executing raw query:', error);
+    res.status(500).json({ error: 'Error while fetching employee teams' });
+    }
+    }
+
+    const TeamMembers = async (req, res) => {
+        try {
+            const team = await sequelize.query(
+                'SELECT e.empID, e.fName, e.lName, e.email ' +
+                'FROM Employee e ' +
+                'JOIN projectassign pa ON e.empID = pa.empID ' +
+                'WHERE pa.teamID = :teamID ',
+                {
+                    replacements: { teamID: req.params.teamID},
+                    type: QueryTypes.SELECT
+                }
+            );
+            if (team.length === 0) {
+                res.status(404).json({error:'No team members found'})
+                //console.log('No team members found for team ID:', teamId);
+            } else {
+                res.status(200).json(team);
+            }
+        } catch (error) {
+            // Handle any errors
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error fetching team members of employee' });
+        }
+    
+    }
+
+
+router.get("/teammembers/:teamID", TeamMembers)
+
+router.get("/projteamsbyID/:projID", projIDteams)
+
 router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)
-router.get("/adminDashboard/id", dashboardByID)
+
+router.get("/adminDashboardbyID", dashboardByID) //api with token
+
+//router.get("/adminDashboard/id", dashboardByID)
+
 router.get("/getEmployees", allEmp)
 router.get("/getEmpByID/:id", EmpById)
 router.post("/newEmployee",CreateEmp)
