@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
     'bts',
     'root',
-    '1234',
+    'root',
 
 
     {
