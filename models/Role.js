@@ -9,7 +9,7 @@ const role = con.define
         primaryKey: true,
         validate:{
             notNull: {
-                msg: 'RoleID can not be null'
+                msg: 'RoleID can not be empty'
               },
             isInt: {
             msg: 'Role ID must be an integer'
@@ -20,7 +20,7 @@ const role = con.define
         allowNull: false,
         validate:{
             notNull: {
-                msg: 'Role name can not be null'
+                msg: 'Role name can not be empty'
               },
             isAlpha:{
             msg:'Role name must contain only alphabetic characters'

@@ -10,7 +10,7 @@ const Admin = con.define(
             autoIncrement: true,
             validate:{
                 notNull: {
-                    msg: 'empID can not be null'
+                    msg: 'empID can not be empty'
                   }}
         },
         fName:{
@@ -18,7 +18,7 @@ const Admin = con.define(
             allowNull: false,
             validate:{
                 notNull: {
-                    msg: 'First name can not be null'
+                    msg: 'First name can not be empty'
                   },
                 isAlpha:{
                 msg:'First name must contain only alphabetic characters'
@@ -29,7 +29,7 @@ const Admin = con.define(
             allowNull: false,
             validate:{
                 notNull: {
-                    msg: 'Last name can not be null'
+                    msg: 'Last name can not be empty'
                   },
                 isAlpha:{
                 msg:'Last name must contain only alphabetic characters'
