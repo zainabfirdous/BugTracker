@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import NoteContext from '../Context/NoteContext';
 
 export default function ProjectAssign() {
-  
+
   const contextdata = useContext(NoteContext);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
 
@@ -23,6 +23,7 @@ export default function ProjectAssign() {
   const [assignID, setAssignID] = useState("");
   const [projID, setProjID] = useState("");
   const [teamID, setTeamID] = useState("");
+  const [roleID, setRoleID] = useState("");
   const [empID, setEmpID] = useState("");
   const [isUpdateButton, setIsUpdateButton] = useState(false);
 
@@ -30,12 +31,15 @@ export default function ProjectAssign() {
   const [teamList, setTeamList] = useState([]);
   const [empList, setEmpList] = useState([]);
   const [assignProjList, setAssignProjList] = useState([]);
+  const [teamListSelect, setTeamListSelect] = useState([]);
+  const [empListSelect, setEmpListSelect] = useState([]);
+  const [roleList, setRoleList] = useState([]);
 
   useEffect(() => {
     const token = contextdata.token;
-    if (token===null) navigate("/", { replace: true });
+    if (token === null) navigate("/", { replace: true });
     getSelectData();
-  }, [navigate,contextdata]);
+  }, [navigate, contextdata]);
 
   const handleUpdateProject = async (aplItem) => {
 
@@ -52,17 +56,19 @@ export default function ProjectAssign() {
   }
 
   const getSelectData = async () => {
-    try{
+    try {
       const resp1 = await axios.get("/admin/getProjects");
       const resp2 = await axios.get("/admin/getteams");
       const resp3 = await axios.get("/admin/getEmployees");
       const resp4 = await axios.get("/admin/projectAssign");
+      const resp5 = await axios.get("/admin/getrole");
       setProjList(resp1.data);
       setTeamList(resp2.data);
       setEmpList(resp3.data);
       setAssignProjList(resp4.data);
+      setRoleList(resp5.data);
     }
-    catch(e){
+    catch (e) {
       console.log(e.message);
     }
   }
@@ -82,22 +88,22 @@ export default function ProjectAssign() {
   };
 
   const handleDelete = async (assignID) => {
-    try{
+    try {
       const response = await axios.delete(
         `/admin/deleteprojAssign/${assignID}`
       );
-      if(response){
+      if (response) {
         setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage("Project Assignment Deleted Successfully");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      getSelectData();
+        setIsAlertVisible(true);
+        setShow(true);
+        setBgColor("bg-warning");
+        setSetMessage("Project Assignment Deleted Successfully");
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+        getSelectData();
       }
-    }catch(e){
+    } catch (e) {
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
@@ -112,12 +118,12 @@ export default function ProjectAssign() {
   const updateProjAssign = async (projectAssign) => {
     const data = { ...projectAssign };
     data.assignID = assignID;
-    try{
+    try {
       const response = await axios.put(
         "/admin/updateProjAssign",
         data
       );
-      if(response){
+      if (response) {
         getSelectData();
         resetForm();
         setShow(true)
@@ -131,7 +137,7 @@ export default function ProjectAssign() {
         setIsUpdateButton(false);
       }
 
-    }catch(e){
+    } catch (e) {
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
@@ -144,12 +150,12 @@ export default function ProjectAssign() {
   }
 
   const addProjAssign = async (projAssign) => {
-    try{
+    try {
       const response = await axios.post(
         "/admin/newPorjectAssign",
         projAssign
       );
-      if(response){
+      if (response) {
         getSelectData();
         resetForm();
         setShow(true)
@@ -162,7 +168,7 @@ export default function ProjectAssign() {
         }, 5000);
       }
     }
-    catch(e){
+    catch (e) {
       setShow(true)
       setIsAlertVisible(true);
       setShow(true);
@@ -180,16 +186,23 @@ export default function ProjectAssign() {
     setEmpID("");
   };
 
-  const handleInput = (e) => {
+  const handleInput = async (e) => {
     switch (e.target.id) {
       case "projID":
         setProjID(e.target.value);
+        const resp2 = await axios.get(`/admin/projteamsbyID/${e.target.value}`);
+        setTeamListSelect(resp2.data);
         break;
       case "teamID":
         setTeamID(e.target.value);
         break;
       case "empID":
         setEmpID(e.target.value);
+        break;
+      case "roleID":
+        setRoleID(e.target.value);
+        const resp3 = await axios.get(`/admin/empbyRole/${e.target.value}`);
+        setEmpListSelect(resp3.data);
         break;
       default: break;
     }
@@ -235,9 +248,20 @@ export default function ProjectAssign() {
             <label htmlFor="teamID">Team : </label>
             <select id="teamID" value={teamID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
               <option id="teamID" selected>Select</option>
-              {teamList.map((teamItem) => {
+              {teamListSelect.map((teamItem) => {
                 return (
                   <option value={teamItem.teamID} key={teamItem.teamID}>{teamItem.teamID} {teamItem.teamName}</option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="form-group col-sm-12 col-md-4">
+            <label htmlFor="roleID">Role : </label>
+            <select id="roleID" value={roleID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
+              <option id="roleID" selected>Select</option>
+              {roleList.map((roleItem) => {
+                return (
+                  <option value={roleItem.roleID} key={roleItem.roleID}>{roleItem.roleID} {roleItem.roleName}</option>
                 );
               })}
             </select>
@@ -246,7 +270,7 @@ export default function ProjectAssign() {
             <label htmlFor="startDate">Employee : </label>
             <select id="empID" value={empID} className="form-control form-select" variant="info" aria-label="Default select example" onChange={handleInput}>
               <option id="empID" selected>Select</option>
-              {empList.map((empItem) => {
+              {empListSelect.map((empItem) => {
                 return (
                   <option value={empItem.empID} key={empItem.empID}>{empItem.empID} {empItem.fName}</option>
                 );
@@ -291,7 +315,7 @@ export default function ProjectAssign() {
                             <td key={aplItem.projID}>{projItem.projID} {projItem.projName}</td>
                           );
                         }
-                        return null; 
+                        return null;
                       })}
                       {teamList.map((teamItem) => {
                         if (teamItem.teamID === aplItem.teamID) {
@@ -299,7 +323,7 @@ export default function ProjectAssign() {
                             <td key={aplItem.teamID}>{teamItem.teamID} {teamItem.teamName}</td>
                           );
                         }
-                        return null; 
+                        return null;
                       })}
                       {empList.map((empItem) => {
                         if (empItem.empID === aplItem.empID) {
@@ -307,9 +331,8 @@ export default function ProjectAssign() {
                             <td key={aplItem.empID}>{empItem.empID} {empItem.fName}</td>
                           );
                         }
-                        return null; 
+                        return null;
                       })}
-
                       <td>
                         <div className='row'>
                           <div className='col-sm-12 col-lg-6'>

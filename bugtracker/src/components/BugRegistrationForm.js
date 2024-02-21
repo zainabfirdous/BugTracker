@@ -53,6 +53,16 @@ export default function BugRegistrationForm() {
     setprojID("");
   };
 
+  const alertShow = (msg) =>{
+    setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-info");
+        setSetMessage(msg);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+  }
+
   const handlesubmit = (e) => {
     e.preventDefault();
     const bugData = {
@@ -65,52 +75,50 @@ export default function BugRegistrationForm() {
     addBug(bugData);
   };
 
+  
   const addBug = async (bug) => {
-    try {
-      const response = await axios.post(
-        "/tester/newBug",
-        bug
-      );
-      addBugTrack(response.data.bugID);
-      resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage("Bug Registered Successfully");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-      setPriorityBGColor("");
-    }
-    catch (e) {
-      console.log(e)
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.errors);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
-    }
-  }
-
-  const addBugTrack = async (bugID) => {
-    const bugTract = {
-      bugID: bugID
-    }
-    try {
-      const response = await axios.post(
-        `/${contextdata.urole === "Admin" ? "admin" : "tester"}/newtrack`,
-        bugTract
-      );
-      console.log(response);
-    }
-    catch (e) {
-    }
-  }
-
+    // console.log(bug);
+ 
+     try {
+    //   console.log("contextdata.urole : ",contextdata.urole)
+       const response = await axios.post(
+         `${contextdata.urole==="Admin" ? "/admin/newBug" : "/tester/newBug"}`,
+         bug
+       );
+    //   console.log(response.data);
+       resetForm();
+       alertShow("Bug Registered Successfully");
+       setPriorityBGColor("");
+       addBugTrack(response.data.bugID);
+       window.scrollTo({
+         bottom: 0,
+         behavior: 'smooth',
+       });
+      
+     }
+     catch (e) {
+    //   console.log(e)
+    alertShow(e.response.data.error);
+     }
+   }
+ 
+   const addBugTrack = async (bugID) => {
+     const bugTract = {
+       bugID: bugID
+     }
+     try {
+       const response = await axios.post(
+         `${contextdata.urole==="Admin" ? `/admin/newtrack` : `/tester/newtrack`}`,
+         bugTract
+       );
+       if(response){
+        
+       }
+     }
+     catch (e) {
+     }
+   }
+ 
 
   const handleInput = (e) => {
     switch (e.target.id) {

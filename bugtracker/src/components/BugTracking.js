@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useContext } from 'react';
 import NoteContext from '../Context/NoteContext';
+import './BugTracking.css'
 
 
 export default function BugTracking() {
@@ -76,31 +77,29 @@ export default function BugTracking() {
     putbugAssign(bugAssign);
   };
 
+  const alertShow = (msg) => {
+    setShow(true)
+    setIsAlertVisible(true);
+    setBgColor("bg-info");
+    setSetMessage(msg);
+    setTimeout(() => {
+      setIsAlertVisible(false);
+    }, 5000);
+  }
+
   const handleClosed = async (trackID) => {
     try {
       const response = await axios.put(
         `/admin/updateTracker/close/${trackID}`
       );
       if (response) {
-        setShow(true)
-        setIsAlertVisible(true);
-        setBgColor("bg-warning");
-        setSetMessage(`Bug is Closed`);
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow(`Bug is Closed`);
         getData();
         setShowBugdesc(false);
       }
     }
     catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   }
 
@@ -110,25 +109,13 @@ export default function BugTracking() {
         `/admin/deletetracks/${trackID}`
       );
       if (response) {
-        setShow(true)
-        setIsAlertVisible(true);
-        setBgColor("bg-warning");
-        setSetMessage(`Bug ${trackID} Deleted Successfully`);
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow(`Bug ${trackID} Deleted Successfully`);
         getData();
         setShowBugdesc(false);
       }
 
     } catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   };
 
@@ -139,12 +126,7 @@ export default function BugTracking() {
         bugAssign
       );
       if (response) {
-        setIsAlertVisible(true);
-        setShow(true);
-        setSetMessage(`Bug Assigned to ${empName} Successfully`);
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow(`Bug Assigned to ${empName} Successfully`);
         setShowBugdesc(false);
         getData();
         resetinput();
@@ -252,24 +234,24 @@ export default function BugTracking() {
                                           return (
                                             <div className="col-12">
                                               <h5 className="mt-1">Status :
-                                                <span className="rounded m-1" style={{
+                                                <span className=" m-1" style={{
                                                   backgroundColor: btItem.status === 'New' ? '#00ff00' :
                                                     btItem.status === 'Assigned' ? '#ffA500' :
                                                       btItem.status === 'Open' ? '#FFFF00' :
-                                                        btItem.status === 'Resolved' ? '#008000' :
+                                                        btItem.status === 'Resolved' ? '#6bb329' :
                                                           btItem.status === 'Verified' ? '#00cc00' :
                                                             btItem.status === 'Reopen' ? '#FF0000' :
                                                               btItem.status === 'Retest' ? '#9370DB' :
                                                                 btItem.status === 'Closed' ? '#186aed' :
-                                                                  '#808080'
+                                                                  '#808080',borderRadius:'10px'
                                                 }}  ><span className="m-1">{btItem.status}</span></span>
                                               </h5>
                                               <h5 className="mt-1">Priority :
-                                                <span className=" rounded m-1" style={{
+                                                <span className=" m-1" style={{
                                                   backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
                                                     bugItem.priority === "Medium" ? '#ff8c00' :
                                                       bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
-                                                        '#808080'
+                                                        '#808080',borderRadius:'10px'
                                                 }}><span className="m-1">{bugItem.priority}</span></span>
                                               </h5>
                                             </div>
@@ -454,15 +436,15 @@ export default function BugTracking() {
                     onChange={handleStatus}
                     required
                   >
-                    <option value="New" style={{ backgroundColor: '#00ff00' }}>New</option>
-                    <option value="Assigned" style={{ backgroundColor: '#ffA500' }}>Assigned</option>
-                    <option value="Open" style={{ backgroundColor: '#FFFF00' }}>Open</option>
-                    <option value="Resolved" style={{ backgroundColor: '#008000' }}>Resolved</option>
-                    <option value="Verified" style={{ backgroundColor: '#00cc00' }}>Verified</option>
-                    <option value="Reopen" style={{ backgroundColor: '#FF0000' }}>Reopen</option>
-                    <option value="Retest" style={{ backgroundColor: '#9370DB' }}>Retest</option>
-                    <option value="Closed" style={{ backgroundColor: '#186aed' }}>Closed</option>
-                    <option value="All" style={{ backgroundColor: '#808080' }}>All</option>
+                    <option value="New">New</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Open">Open</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Reopen">Reopen</option>
+                    <option value="Retest">Retest</option>
+                    <option value="Closed">Closed</option>
+                    <option value="All">All</option>
                   </select>
                 </span></span>
                 :
@@ -500,22 +482,22 @@ export default function BugTracking() {
                                   if (bugItem.bugID === btItem.bugID) {
                                     return (
                                       <div className="col-3">
-                                        <h5 className="mt-1"><span className={`border border-warning rounded m-1`} style={{
+                                        <h5 className="mt-1"><span className={` border-warning  m-1`} style={{
                                           backgroundColor: btItem.status === 'New' ? '#00ff00' :
                                             btItem.status === 'Assigned' ? '#ffA500' :
                                               btItem.status === 'Open' ? '#FFFF00' :
-                                                btItem.status === 'Resolved' ? '#008000' :
+                                                btItem.status === 'Resolved' ? '#6bb329' :
                                                   btItem.status === 'Verified' ? '#00cc00' :
                                                     btItem.status === 'Reopen' ? '#FF0000' :
                                                       btItem.status === 'Retest' ? '#9370DB' :
                                                         btItem.status === 'Closed' ? '#186aed' :
-                                                          '#808080'
-                                        }} ><span className="m-1">{btItem.status}</span></span>
-                                          <span className="border border-warning rounded m-1" style={{
+                                                          '#808080',borderRadius:'10px'
+                                        }} ><span className="m-1" >{btItem.status}</span></span>
+                                          <span className="border border-warning m-1" style={{
                                             backgroundColor: bugItem.priority === "Low" ? 'skyblue' :
                                               bugItem.priority === "Medium" ? '#ff8c00' :
                                                 bugItem.priority === "High" || bugItem.priority === "Critical" ? '#dc3545' :
-                                                  '#808080'
+                                                  '#808080',borderRadius:'10px'
                                           }}><span className="m-1">{bugItem.priority}</span></span>
                                         </h5>
                                       </div>
@@ -549,11 +531,11 @@ export default function BugTracking() {
                                         })
                                       }
                                       <div className="col-lg-12 col-xl-4">
-                                        <h5 className="mt-1">Create : <span className="m-1"><span className="m-1">{bugItem.crtDate} <span className="bg-info rounded m-1 p-1">{bugItem.crtTime}</span></span></span>
+                                        <h5 className="mt-1">Create : <span className="m-1"><span className="m-1">{bugItem.crtDate} <span className="bg-info m-1 p-1" style={{borderRadius:'10px'}}>{bugItem.crtTime}</span></span></span>
                                         </h5>
                                       </div>
                                       <div className="form-group col-lg-12 col-xl-2">
-                                        <button type="button" onClick={() => handleOpenBugdesc(btItem.trackID)} className="btn btn-success text-center">Details</button>
+                                        <button type="button" onClick={() => handleOpenBugdesc(btItem.trackID)} style={{borderRadius:'10px'}} className="btn btn-success text-center">Details</button>
                                       </div>
                                     </div>
                                   );
