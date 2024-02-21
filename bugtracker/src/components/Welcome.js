@@ -16,8 +16,17 @@ export default function Welcome() {
   
   return (
     <>
-     <div className="container mt-5 text-center">
-      <div className="jumbotron">
+
+     <div className="container text-center" style={{
+        backgroundImage: 'url(./Img/background.jpg)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        height: '500px',
+      }}>
+     <div className='row'>
+      <div className='col-12'>
+      <div className="">
       <h1 className="display-4 text-primary" style={{ textShadow: '2px 2px 4px #5bc0de' }}>
           Welcome to BugTracker
         </h1>
@@ -63,6 +72,8 @@ export default function Welcome() {
           </ul>
         </div>
       </div>
+      </div>
+     </div>
     </div>
     </>
   )

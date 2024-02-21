@@ -58,6 +58,16 @@ export default function AddTeam(props) {
     isUpdateButton ? updateTeam(team) : addTeam(team);
   };
 
+  const alertShow = (msg) =>{
+    setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-info");
+        setSetMessage(msg);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+  }
+
   const addTeam = async (team) => {
   //  console.log(team);
     try {
@@ -68,25 +78,11 @@ export default function AddTeam(props) {
       if (response) {
         resetForm();
         props.updateTeamList();
-        setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-warning");
-        setSetMessage("Team Registered Successfully");
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow("Team Registered Successfully");
         getProj();
       }
     } catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   }
 
@@ -100,25 +96,11 @@ export default function AddTeam(props) {
       if (response) {
         resetForm();
         props.updateTeamList();
-        setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-warning");
-        setSetMessage("Team Updated Successfully");
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow("Team Updated Successfully");
         getProj();
       }
     } catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   }
 
@@ -158,7 +140,7 @@ export default function AddTeam(props) {
 
       {/* Main Body */}
 
-      <form className="row mt-4">
+      <form className="row mt-4"  onSubmit={handlesubmit}>
 
         <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="teamName">Name: </label>
@@ -168,6 +150,7 @@ export default function AddTeam(props) {
             id="teamName"
             value={teamName}
             onChange={handleInput}
+            required
           />
         </div>
 
@@ -185,8 +168,8 @@ export default function AddTeam(props) {
         </div>
 
         <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-          <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"}
-            onClick={handlesubmit}
+          <button type="submit" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"}
+           
           >
             {isUpdateButton ? "Update" : "Add Team"}
           </button>

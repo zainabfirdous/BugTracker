@@ -8,6 +8,8 @@ const PAssign = require('../models/ProjectAssign.js')
 const Tracker = require('../models/Tracker.js')
 //const hash = require('./Passwordhashing');
 const Role = require('../models/Role.js')
+const sequelize = require('../config/database.js');
+const { QueryTypes } = require('sequelize');
 
 
 
@@ -88,7 +90,7 @@ const CreateEmp =  async (req, res) => {
 const DeleteEmp =  async (req, res) => {
     try {
         const id = req.params.id;
-        const deletedCount = await employee.destroy({ where: { empID: id } });
+        const deletedCount = await EmpProfile.destroy({ where: { empID: id } });
         res.status(200).json(deletedCount);
     } catch (error) {
         console.error('Error creating employee:', error);
@@ -422,6 +424,26 @@ const Track = async(req, res)=>{
     }
 }
 
+const NewTracking = async (req, res) => {
+    try {
+        const body = req.body
+        req.body.status = "New"
+        const newTrack = await Tracker.create(body);
+        res.status(200).json(newTrack);
+    } catch(error){
+        console.error('Error creating employee:', error);
+        // Check if error is a Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            // Construct an error response with custom error messages
+            const errorMessages = error.errors.map(err => err.message).join('; ');
+            res.status(400).json({ errors: errorMessages });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ error: "Error While adding new bug tracker" });
+        }
+    }
+}
+
 const TrackById = async(req, res)=>{
     try{
         const trackID = req.params.id;
@@ -495,7 +517,7 @@ const DeleteTrack =  async(req, res)=>{
 
 const CreateUserProfile = async(req, res)=>{
     try{
-        console.log(req.body)
+        console.log("Profile Show : ",req.body)
         const password = req.body.password
         const id=req.body.empID
         const user = req.body.username
@@ -529,13 +551,75 @@ const role = async (req, res) => {
     }
 }
 
+  
+const projIDteams = async(req, res)=>{
+    try{
+        const team = await sequelize.query(
+           'select t.teamID, t.teamName '+
+           'from team t '+
+            'JOIN projectassign pa on t.teamID = pa.teamID '+
+            'where pa.projID = :projID',
+            {
+                replacements: { projID: req.params.projID }, 
+                type: QueryTypes.SELECT
+              }
+            );
+      res.status(200).json(team);
+    } catch (error) {
+    console.error('Error executing raw query:', error);
+    res.status(500).json({ error: 'Error while fetching employee teams' });
+    }
+    }
+
+    const TeamMembers = async (req, res) => {
+        try {
+            const team = await sequelize.query(
+                'SELECT e.empID, e.fName, e.lName, e.email ' +
+                'FROM Employee e ' +
+                'JOIN projectassign pa ON e.empID = pa.empID ' +
+                'WHERE pa.teamID = :teamID ',
+                {
+                    replacements: { teamID: req.params.teamID},
+                    type: QueryTypes.SELECT
+                }
+            );
+            if (team.length === 0) {
+                res.status(404).json({error:'No team members found'})
+                //console.log('No team members found for team ID:', teamId);
+            } else {
+                res.status(200).json(team);
+            }
+        } catch (error) {
+            // Handle any errors
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error fetching team members of employee' });
+        }
+    
+    }
+
+    const EmpByRole = async(req, res)=>{
+        try{
+            const id = req.params.roleID;
+            const empbyrole = await employee.findAll({where:{roleID : id }}); 
+            if (empbyrole.length === 0) {
+                res.status(404).json({error:'No employees found'})
+            } else {
+                res.status(200).json(empbyrole);
+            }
+        }catch (error) {
+            console.error('Error fetching employees:', error);
+            res.status(500).json({ error: "Error While fetching employees by role" });
+        }
+    }
+
+
+router.get("/empbyRole/:roleID", EmpByRole)
+router.get("/teammembers/:teamID", TeamMembers)
+router.get("/projteamsbyID/:projID", projIDteams)
 router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)
-
-//router.get("/adminDashboardbyID", dashboardByID) api with token
-
-router.get("/adminDashboard/id", dashboardByID)
-
+router.get("/adminDashboardbyID", dashboardByID) //api with token
+//router.get("/adminDashboard/id", dashboardByID)
 router.get("/getEmployees", allEmp)
 router.get("/getEmpByID/:id", EmpById)
 router.post("/newEmployee",CreateEmp)
@@ -560,6 +644,7 @@ router.get("/projectassign/:id", AssignmentById)
 router.post("/newPorjectAssign", CreateAssign)
 router.put("/updateProjAssign", UpdateProjectAssign)
 router.delete("/deleteprojAssign/:id", DeleteProjectAssign)
+router.post("/newtrack", NewTracking);
 router.get("/trackbugs", Track)
 router.get("/trackbugs/:id", TrackById)
 router.put("/updateTracker/assigned/:id", UpdateTrack)
