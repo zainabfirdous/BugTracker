@@ -16,7 +16,14 @@ export default function Welcome() {
   
   return (
     <>
-     <div className="container text-center">
+
+     <div className="container text-center" style={{
+        backgroundImage: 'url(./Img/background.jpg)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        height: '500px',
+      }}>
      <div className='row'>
       <div className='col-12'>
       <div className="">

@@ -200,8 +200,8 @@ export default function ProjectAssign() {
         setEmpID(e.target.value);
         break;
       case "roleID":
-        const resp3 = await axios.get(`/admin/empbyRole/${e.target.value}`);
         setRoleID(e.target.value);
+        const resp3 = await axios.get(`/admin/empbyRole/${e.target.value}`);
         setEmpListSelect(resp3.data);
         break;
       default: break;

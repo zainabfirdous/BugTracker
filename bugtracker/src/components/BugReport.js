@@ -45,8 +45,8 @@ export default function BugReport() {
         <>
             <div className='container'>
                 <div className='row mt-4'>
-                    <div className='col-md-12 col-lg-4'>
-                        <div className="bg-light border border-primary rounded ml-1">
+                <div className='col-md-12 col-lg-4'>
+                        <div className="border border-primary rounded ml-1" >
                             <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#f5c842' }}>
                                 <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#f5c842', fontSize: '1.2rem' }}
                                     id="status"
@@ -264,10 +264,8 @@ export default function BugReport() {
                                 }
                             </div>
                         </div>
-                    </div>
-                    <div className='col-md-12 col-lg-4'>
-                        <div className="bg-light border border-primary rounded ml-1">
-
+                    </div> <div className='col-md-12 col-lg-4'>
+                        <div className="border border-primary rounded ml-1" >
                             <h3 className="border border-warning rounded m-1" style={{ backgroundColor: '#fa5d32' }}>
                                 <select className="border border-info rounded m-1" style={{ textAlign: 'center', backgroundColor: '#fa5d32', fontSize: '1.2rem' }}
                                     id="status"
