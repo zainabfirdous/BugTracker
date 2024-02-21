@@ -91,7 +91,7 @@ export default function Project() {
 
      {/* Main Body */}
     <div
-      className="container"
+      className="container" style={{overflowY: 'hidden'}}
     >
        <div className="container">
         <AddProject

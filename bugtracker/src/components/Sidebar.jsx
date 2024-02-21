@@ -168,7 +168,7 @@ const SideBar = ({ children }) => {
   backgroundPosition: 'center',
   minHeight: '100vh',
   maxHeight: '100%', // Set maximum height to 100% of the viewport height
-  overflow: 'hidden', // Hide any overflowing content
+  overflowX: 'hidden', // Hide any overflowing content
   // width: '100vw', // Uncomment this line if you want to cover the entire viewport horizontally as well
 }} >
                 {/* Create Bug */}
