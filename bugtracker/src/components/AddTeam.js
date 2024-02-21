@@ -140,7 +140,7 @@ export default function AddTeam(props) {
 
       {/* Main Body */}
 
-      <form className="row mt-4">
+      <form className="row mt-4"  onSubmit={handlesubmit}>
 
         <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="teamName">Name: </label>
@@ -150,6 +150,7 @@ export default function AddTeam(props) {
             id="teamName"
             value={teamName}
             onChange={handleInput}
+            required
           />
         </div>
 
@@ -167,8 +168,8 @@ export default function AddTeam(props) {
         </div>
 
         <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-          <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"}
-            onClick={handlesubmit}
+          <button type="submit" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"}
+           
           >
             {isUpdateButton ? "Update" : "Add Team"}
           </button>

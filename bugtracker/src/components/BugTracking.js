@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useContext } from 'react';
 import NoteContext from '../Context/NoteContext';
+import './BugTracking.css'
 
 
 export default function BugTracking() {
