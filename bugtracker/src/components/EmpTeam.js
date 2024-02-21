@@ -102,7 +102,7 @@ export default function EmpTeam() {
     </Modal>}</div>
    
       
-      <div className="container profile-con text-center">
+      <div className="container profile-con text-center mt-3">
       <div className = "row profile-row">
       <div classNamw="col">
       <h2 className="heading">My Teams</h2>

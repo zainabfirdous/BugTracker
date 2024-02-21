@@ -135,7 +135,7 @@ export default function MySettings() {
   </div>
 
 
-    <div className='container profile-con  text-center'>
+    <div className='container profile-con text-center mt-3'>
         <div className='row profile-row'>
             <div className='col '>
             <h2 className="heading">My Account</h2>
