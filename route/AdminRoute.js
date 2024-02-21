@@ -571,6 +571,25 @@ const projIDteams = async(req, res)=>{
     }
     }
 
+    const projIDteamsSelect = async(req, res)=>{
+        try{
+            
+            const team = await sequelize.query(
+               'select t.teamID, t.teamName from team t '+
+               'JOIN project p on t.projID = p.projID '+
+                'where p.projID = :projID',
+                {
+                    replacements: { projID: req.params.projID }, 
+                    type: QueryTypes.SELECT
+                  }
+                );
+          res.status(200).json(team);
+        } catch (error) {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error while fetching employee teams' });
+        }
+        }
+
     const TeamMembers = async (req, res) => {
         try {
             const team = await sequelize.query(
@@ -615,6 +634,7 @@ const projIDteams = async(req, res)=>{
 
 router.get("/empbyRole/:roleID", EmpByRole)
 router.get("/teammembers/:teamID", TeamMembers)
+router.get("/projteamsbyIDSelect/:projID", projIDteamsSelect)
 router.get("/projteamsbyID/:projID", projIDteams)
 router.get("/getrole", role)
 router.get("/adminDashboard", dashboard)

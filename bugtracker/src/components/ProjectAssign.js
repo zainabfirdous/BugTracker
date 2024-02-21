@@ -190,7 +190,7 @@ export default function ProjectAssign() {
     switch (e.target.id) {
       case "projID":
         setProjID(e.target.value);
-        const resp2 = await axios.get(`/admin/projteamsbyID/${e.target.value}`);
+        const resp2 = await axios.get(`/admin/projteamsbyIDSelect/${e.target.value}`);
         setTeamListSelect(resp2.data);
         break;
       case "teamID":

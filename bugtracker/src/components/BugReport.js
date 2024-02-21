@@ -274,7 +274,7 @@ export default function BugReport() {
                                     onChange={(e) => { setStatus3(e.target.value) }}
                                     required
                                 >
-                                    <option value="Reopen" style={{ backgroundColor: '#fa5d32' }}>Reopen</option>
+                                    <option value="Reopened" style={{ backgroundColor: '#fa5d32' }}>Reopened</option>
                                     <option value="Retest" style={{ backgroundColor: '#fa5d32' }}>Retest</option>
                                     <option value="Closed" style={{ backgroundColor: '#fa5d32' }}>Closed</option>
                                 </select>
@@ -309,7 +309,7 @@ export default function BugReport() {
                                                                                     <div className="col-4">
                                                                                         <h5 className="mt-1"><span className="border border-warning rounded m-1" style={{
                                                                                             backgroundColor:
-                                                                                                btItem.status === 'Reopen' ? '#FF0000' :
+                                                                                                btItem.status === 'Reopened' ? '#FF0000' :
                                                                                                     btItem.status === 'Retest' ? '#9370DB' :
                                                                                                         btItem.status === 'Closed' ? '#186aed' :
                                                                                                             '#808080',fontSize:'15px'

@@ -155,6 +155,7 @@ export default function AddEmployee(props) {
         profileLogin);
       if (resp) {
         props.updateEmployeeList();
+        alertShow("Employee Added!")
         resetForm();
         setUsername("");
         setPassword("");
