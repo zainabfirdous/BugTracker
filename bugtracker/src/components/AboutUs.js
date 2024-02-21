@@ -5,6 +5,8 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import sachin from '../Img/Sachin.jpg';
 import zainab from '../Img/Zainab.jpeg';
 import rohan from '../Img/Rohan.png';
+import Anushka from '../Img/Anushka.jpg';
+import Veena from '../Img/Veena.jpeg';
 
 import "./Features.css";
 
@@ -17,9 +19,9 @@ function Services() {
 
                 <div class="row">
 
-                    <div class="col-md-12 text-center border-info m-3" style={{backgroundColor: 'skyblue', borderRadius: '30px',}}>
+                    <div class="col-md-12 text-center border-info m-3" style={{ backgroundColor: 'skyblue', borderRadius: '30px', }}>
 
-                        <h2 class="section-title"><span className="p-3" style={{ fontSize:'0.8rem' }}>The Team Behind Bug Tracking Application</span></h2>
+                        <h2 class="section-title"><span className="p-3" style={{ fontSize: '0.8rem' }}>The Team Behind Bug Tracking Application</span></h2>
 
                     </div>
 
@@ -37,8 +39,8 @@ function Services() {
 
                             <img src={sachin} class="team-img" alt="pic" />
                             <h3>Sachin Patidar</h3>
-                            <div class="team-info"><p>UI Developer</p></div>
-                            <p>Sachin is software developer proficient in
+                            <div class="team-info"><p>UX Developer</p></div>
+                            <p style={{ textAlign: 'justify' }}>Software developer proficient in
                                 React and Node.js development. Additionally, He has expertise in UI functionality and REST APIs, with experience in
                                 ADO Dot Net, Spring Boot, and Express.</p>
 
@@ -66,9 +68,10 @@ function Services() {
 
                             <h3>Zainab Firdous</h3>
 
-                            <div class="team-info"><p>SEO Specialist</p></div>
+                            <div class="team-info"><p>Backend Developer</p></div>
 
-                            <p>Graduating with a degree in Spanish and English, Alexandra has always loved writing and now she’s lucky enough to do it as part of her new job inside our agency.</p>
+                            <p style={{ textAlign: 'justify' }}> Software developer proficient in React and Node.js development.
+                                She has expertise in database designing, and RestAPIs with experience in .Net, Java and Express</p>
 
                             <ul class="team-icon">
 
@@ -85,17 +88,18 @@ function Services() {
                         </div>
 
                     </div>
+
                     <div class="col-sm-6 col-md-4">
 
                         <div class="team-item">
 
-                            <img src={rohan} class="team-img" alt="pic" />
+                            <img src={Anushka} class="team-img" alt="pic" />
 
-                            <h3>Rohan Patinge</h3>
+                            <h3>Anushka Bajpai</h3>
 
-                            <div class="team-info"><p>Marketing Manager</p></div>
+                            <div class="team-info"><p>UI Developer</p></div>
 
-                            <p>Elisa first fell in love with digital marketing at the university. He loves to learn, and looks forward to being part of this new exciting industry for many years.</p>
+                            <p style={{ textAlign: 'justify' }}>A passionate front-end developer dedicated to crafting visually stunning and highly functional web experiences. With a keen eye for design and a strong command of modern web technologies.</p>
 
                             <ul class="team-icon">
 
@@ -106,6 +110,62 @@ function Services() {
                                 <li><a href="#" class="facebook"><i class="fa-brands fa-facebook"></i></a></li>
 
                                 <li><a href="#" class="dribble"><i class="fa-brands fa-linkedin"></i></a></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="offset-lg-2 col-sm-6 col-md-4">
+
+                        <div class="team-item">
+
+                            <img src={rohan} class="team-img" alt="pic" />
+
+                            <h3>Rohan Patinge</h3>
+
+                            <div class="team-info"><p>MERN Developer</p></div>
+
+                            <p style={{ textAlign: 'justify' }}>Software developer proficient in React and Node development. He has expertise in UI functionality with experience in Java, C++, and Node.js.<br></br>.</p>
+
+                            <ul class="team-icon">
+
+                                <li><a href="#" class="twitter"><i class="fa-brands fa-twitter"></i></a></li>
+
+                                <li><a href="#" class="pinterest"><i class="fa-brands fa-pinterest"></i></a></li>
+
+                                <li><a href="#" class="facebook"><i class="fa-brands fa-facebook"></i></a></li>
+
+                                <li><a href="#" class="dribble"><i class="fa-brands fa-linkedin"></i></a></li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+                    <div class="col-sm-6 col-md-4">
+
+                        <div class="team-item">
+
+                            <img src={Veena} class="team-img" alt="pic" />
+
+                            <h3>Veena Dubey</h3>
+
+                            <div class="team-info"><p>UI Developer</p></div>
+
+                            <p style={{ textAlign: 'justify' }}>Passion for Full Stack Developer, with a
+                                solid foundation in MERN
+                                stack(MongoDB,Express.js,React.js,Node.js). Proven ability to
+                                design, develop, and maintain user-friendly, scalable, and
+                                performant web applications.</p>
+
+                            <ul class="team-icon">
+
+                                <li><a href="#" class="twitter"><i class="fa-brands fa-twitter"></i></a></li>
+
+                                <li><a href="#" class="pinterest"><i class="fa-brands fa-pinterest"></i></a></li>
+
+                                <li><a href="#" class="facebook"><i class="fa-brands fa-facebook"></i></a></li>
+
+                                <li><a href="#" class="dribble"><i class="fa-brands fa-linkedin"></i></a></li>
+
                             </ul>
 
                         </div>
