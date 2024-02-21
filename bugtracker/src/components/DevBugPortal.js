@@ -205,7 +205,7 @@ export default function DevBugPortal() {
                                                       btItem.status === 'Open' ? '#FFFF00' :
                                                         btItem.status === 'Resolved' ? '#008000' :
                                                           btItem.status === 'Verified' ? '#00cc00' :
-                                                            btItem.status === 'Reopen' ? '#FF0000' :
+                                                            btItem.status === 'Reopened' ? '#FF0000' :
                                                               btItem.status === 'Retest' ? '#9370DB' :
                                                                 btItem.status === 'Closed' ? '#186aed' :
                                                                   '#808080'
@@ -356,7 +356,7 @@ export default function DevBugPortal() {
                     <option value="Open">Open</option>
                     <option value="Resolved">Resolved</option>
                     <option value="Verified">Verified</option>
-                    <option value="Reopen">Reopen</option>
+                    <option value="Reopened">Reopened</option>
                     <option value="Retest">Retest</option>
                     <option value="Closed">Closed</option>
                     <option value="All">All</option>
@@ -391,7 +391,7 @@ export default function DevBugPortal() {
                                               btItem.status === 'Open' ? '#FFFF00' :
                                                 btItem.status === 'Resolved' ? '#008000' :
                                                   btItem.status === 'Verified' ? '#00cc00' :
-                                                    btItem.status === 'Reopen' ? '#FF0000' :
+                                                    btItem.status === 'Reopened' ? '#FF0000' :
                                                       btItem.status === 'Retest' ? '#9370DB' :
                                                         btItem.status === 'Closed' ? '#186aed' :
                                                           '#808080'
