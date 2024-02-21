@@ -47,7 +47,15 @@ export default function AddProject(props) {
     setIsUpdateButton(false);
   };
 
-
+  const alertShow = (msg) =>{
+    setShow(true)
+        setIsAlertVisible(true);
+        setBgColor("bg-info");
+        setSetMessage(msg);
+        setTimeout(() => {
+          setIsAlertVisible(false);
+        }, 5000);
+  }
 
   const handleInput = (e) => {
     switch (e.target.id) {
@@ -66,14 +74,7 @@ export default function AddProject(props) {
           break;
         }
         else{
-          setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-info");
-        setSetMessage("End Date must be Future date than Start Date!");
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+          alertShow("End Date must be Future date than Start Date!");
         break;
         }
       case "status":
@@ -117,23 +118,10 @@ export default function AddProject(props) {
       props.updateProjectList();
       resetForm();
       if (udpatedRecord) {
-        setShow(true)
-        setIsAlertVisible(true);
-        setShow(true);
-        setBgColor("bg-info");
-        setSetMessage("Project updated successfully!");
-        setTimeout(() => {
-          setIsAlertVisible(false);
-        }, 5000);
+        alertShow("Project updated successfully!");
       }
     } catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setBgColor("bg-warning");
-      setSetMessage(`${e.response.data.error}`);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   };
 
@@ -147,25 +135,11 @@ export default function AddProject(props) {
      if(response){
       props.updateProjectList();
       resetForm();
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-success");
-      setSetMessage("Project Added");
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow("Project Added");
      }
     }
     catch (e) {
-      setShow(true)
-      setIsAlertVisible(true);
-      setShow(true);
-      setBgColor("bg-warning");
-      setSetMessage(e.response.data.error);
-      setTimeout(() => {
-        setIsAlertVisible(false);
-      }, 5000);
+      alertShow(e.response.data.error);
     }
   };
 
@@ -191,7 +165,7 @@ export default function AddProject(props) {
       {/* Main Body */}
 
 
-      <form className="row mt-4">
+      <form className="row mt-4" onSubmit={handleSubmit}>
         {
           isUpdateButton ?
             <div className="form-group col-sm-12 col-md-4">
@@ -215,6 +189,7 @@ export default function AddProject(props) {
             id="projName"
             value={projName}
             onChange={handleInput}
+            required
           />
         </div>
         <div className="form-group col-sm-12 col-md-4">
@@ -236,6 +211,7 @@ export default function AddProject(props) {
                 id="startDate"
                 value={startDate}
                 onChange={handleInput}
+                required
               />
           }
 
@@ -248,18 +224,19 @@ export default function AddProject(props) {
             id="endDate"
             value={endDate}
             onChange={handleInput}
+            required
           />
         </div>
         <div className="form-group col-sm-12 col-md-4 ">
           <label htmlFor="endDate">Status </label>
-          <select class="form-control" value={status} id="status" aria-label="Default select example" onChange={handleInput}>
+          <select class="form-control" value={status} id="status" aria-label="Default select example" onChange={handleInput} required>
             <option selected >Select</option>
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
           </select>
         </div>
         <div className="form-group col-sm-12 col-md-4 d-flex align-items-end">
-          <button type="button" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"} onClick={handleSubmit}>
+          <button type="submit" className={isUpdateButton ? "btn btn-warning text-center" : "btn btn-success text-center"} >
             {isUpdateButton ? "Update Project" : "Add Project"}
           </button>
         </div>

@@ -311,15 +311,12 @@ export default function TesterBugPortal() {
                                 onChange={handleStatus}
                                 required
                             >
-                                <option value="Resolved" style={{ backgroundColor: '#008000' }}>Resolved</option>
-                                <option value="Verified" style={{ backgroundColor: '#00cc00' }}>Verified</option>
-                                <option value="Reopen" style={{ backgroundColor: '#FF0000' }}>Reopen</option>
-                                <option value="Retest" style={{ backgroundColor: '#9370DB' }}>Retest</option>
-                                <option value="Closed" style={{ backgroundColor: '#186aed' }}>Closed</option>
-                                <option value="All" style={{ backgroundColor: '#808080' }}>All</option>
-
-                                {/* let uid = parseInt(localStorage.getItem('uid'));
-                                if (("All" === status && btItem.assignTo === uid) || ( btItem.status === status && btItem.assignTo === uid)) { */}
+                                <option value="Resolved">Resolved</option>
+                                <option value="Verified">Verified</option>
+                                <option value="Reopen">Reopen</option>
+                                <option value="Retest">Retest</option>
+                                <option value="Closed">Closed</option>
+                                <option value="All">All</option>
                             </select>
                         </span></span>
                         {

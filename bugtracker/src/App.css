@@ -172,6 +172,6 @@ main {
     flex: 1;
     padding: 20px;
     overflow-y: hidden; /* Allow scrolling within the content */
-    overflow-X: hidden;
+    overflow-X: hidden; 
   }
 
