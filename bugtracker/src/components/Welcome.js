@@ -1,21 +1,32 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function Welcome() {
- // axios.defaults.withCredentials = true;
+
+ const contextdata = useContext(NoteContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-    console.log("Welcome : token  = " + token)
-  }, [navigate]);
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+  }, [navigate,contextdata]);
   
   return (
     <>
-     <div className="container mt-5 text-center">
-      <div className="jumbotron">
+
+     <div className="container text-center" style={{
+        backgroundImage: 'url(./Img/background.jpg)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        height: '500px',
+      }}>
+     <div className='row'>
+      <div className='col-12'>
+      <div className="">
       <h1 className="display-4 text-primary" style={{ textShadow: '2px 2px 4px #5bc0de' }}>
           Welcome to BugTracker
         </h1>
@@ -61,6 +72,8 @@ export default function Welcome() {
           </ul>
         </div>
       </div>
+      </div>
+     </div>
     </div>
     </>
   )

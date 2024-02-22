@@ -5,27 +5,33 @@ import axios from "axios";
 import AddProject from './AddProject';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useContext } from 'react';
+import NoteContext from '../Context/NoteContext';
 
 export default function Project() {
-  //axios.defaults.withCredentials = true;
+  
+  const contextdata = useContext(NoteContext);
+  axios.defaults.headers.common['Authorization'] = contextdata.token;
+  axios.defaults.withCredentials = true;
   const [message, setSetMessage] = useState("");
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const [ isAlertVisible, setIsAlertVisible ] = useState(false);
 
   const navigate = useNavigate();
-
   const [projectList, setProjectList] = useState([]);
-
   const [updateProject, setUpdateProject] = useState({});
+
+  useEffect(() => {
+    const token = contextdata.token;
+    if (token===null) navigate("/", { replace: true });
+    getProject();
+  }, [navigate,contextdata]);
+
 
   const getProject = async () => {
     try {
-
-    //  const response1 = await axios.get("http://127.0.0.1:5000/get");
-      const response = await axios.get("http://127.0.0.1:5000/admin/getProjects");
-    //  / console.log("Resp : " + response1.data);
-
+      const response = await axios.get("/admin/getProjects");
       setProjectList(response.data);
     } catch (err) {
       console.log(err);
@@ -33,20 +39,12 @@ export default function Project() {
   };
 
   const handleDelete = async (projID) => {
-    console.log("delete : ", projID);
+    try{
     const deletedRecords = await axios.delete(
-      `http://127.0.0.1:5000/admin/deleteproj/${projID}`
+      `/admin/deleteproj/${projID}`
     );
-    getProject();
-    if(deletedRecords.data.error){
-      setIsAlertVisible(true);
-      setShow(true);
-        setSetMessage(`${deletedRecords.data.error}`);
-        setTimeout(() => {
-            setIsAlertVisible(false);
-        }, 5000);
-    }
-    else{
+    if(deletedRecords){
+      getProject();
       setIsAlertVisible(true);
       setShow(true);
         setSetMessage(`${deletedRecords.data} Project deleted successfully`);
@@ -54,27 +52,25 @@ export default function Project() {
             setIsAlertVisible(false);
         }, 5000);
     }
-    // if(deletedRecords.data.error){
-    //   alert(`${deletedRecords.data.error}`);
-    // }
-    // else{
-    //   alert(`${deletedRecords.data} Project deleted successfully`);
-    // }
+    }catch(e){
+      setIsAlertVisible(true);
+      setShow(true);
+        setSetMessage(`${e.response.data.error}`);
+        setTimeout(() => {
+            setIsAlertVisible(false);
+        }, 5000);
+      }
   };
 
   const handleUpdateProject = (project) => {
-    console.log(project);
-    // pass employee object to addEmployee component
     setUpdateProject(project);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/", { replace: true });
-
-    getProject();
-  }, [navigate]);
-
+ 
   return (
     <>
     
@@ -95,7 +91,7 @@ export default function Project() {
 
      {/* Main Body */}
     <div
-      className="container"
+      className="container" style={{overflowY: 'hidden'}}
     >
        <div className="container">
         <AddProject

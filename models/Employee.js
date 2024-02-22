@@ -7,34 +7,51 @@ const Emp = con.define
         type:INTEGER,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        validate:{
+            notNull: {
+                msg: 'empID can not be empty'
+              }}
     },
     fName:{
         type:STRING,
         allowNull: false,
-        validate:{isAlpha:{
+        validate:{
+            notNull: {
+                msg: 'First name can not be empty'
+              },
+            isAlpha:{
             msg:'First name must contain only alphabetic characters'
         }}
     },
     lName:{
         type:STRING,
         allowNull: false,
-        validate:{isAlpha:{
+        validate:{
+            notNull: {
+                msg: 'Last name can not be empty'},
+            isAlpha:{
             msg:'Last name must contain only alphabetic characters'
         }}
     },
     email:{
         type:STRING,
         allowNull: false,
-        validate:{isEmail:{
+        validate:{
+            notNull: {
+                msg: 'Email can not be empty'},
+            isEmail:{
             msg: 'Invalid email format'
         }}
     },
     roleID:{
         type:INTEGER,
         allowNull: false,
-        validate:{isInt: {
-            msg: 'Role ID must be an integer'
+        validate:{
+            notNull: {
+                msg: 'RoleID can not be empty'},
+            isInt: {
+            msg: 'Role must be Valid'
         }}
     },
     crtDate:{

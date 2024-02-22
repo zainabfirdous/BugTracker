@@ -10,14 +10,24 @@ const credential = con.define
             model: 'Employee',
             key: 'empID',
        },
-    },
+       validate: {
+        notNull: {
+            msg: 'empID can not be empty'
+          }}
+        },
     username:{
         type:STRING,
         allowNull: false,
         unique: true,
         validate: {
-            isAlphanumeric: {
-                msg: 'Username must contain only alphabets and numbers'
+            notNull: {
+                msg: 'Username can not be empty'
+              },
+            isAlphanumericWithSpace(value){
+                const regex = /^[a-zA-Z0-9\s]+$/;
+                if (!regex.test(value)) {
+                    throw new Error('Username must contain only alphabets and numbers');
+                }
             }
         }
     },
@@ -43,14 +53,10 @@ const credential = con.define
     }
 },{ tableName: 'EmpProfile',timestamps:false, freezeTableName:false, hooks: {
     async beforeCreate(empProfile) {
-        // Hash the password before saving
-        //const saltRounds = 10;
         const hashedPassword = await hash(empProfile.password);
         empProfile.password = hashedPassword;
     },
     async beforeUpdate(empProfile) {
-        // Hash the password before updating
-        console.log("inside trigger")
         if (empProfile.changed('password')) {
 
             const hashedPassword = await hash(empProfile.password);

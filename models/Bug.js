@@ -16,15 +16,24 @@ const Bug = con.define(
         type:STRING,
         allowNull:false,
         validate: {
-          isAlphanumeric: {
-              msg: 'Bug Name must contain only alphabets and numbers'
-          }
+          notNull: {
+            msg: 'Bug name can not be empty'
+          },
+          isAlphanumericWithSpace(value){
+            const regex = /^[a-zA-Z0-9\s]+$/;
+            if (!regex.test(value)) {
+                throw new Error('Bug Name must contain only alphabets and numbers');
+            }
+        }
       }
     },
     priority:{
         type:STRING,
         allowNull: false,
         validate:{
+          notNull: {
+            msg: 'Priority can not be empty'
+          },
           isAlpha:{
             msg: 'Priority can contain only string'
           }
@@ -34,9 +43,15 @@ const Bug = con.define(
         type:TEXT,
         allowNull:false,
         validate: {
-          isAlphanumeric: {
-              msg: 'Bug Description must contain only alphabets and numbers'
-          }
+          notNull: {
+            msg: 'Bug Description can not be empty'
+          },
+          isAlphanumericWithSpace(value){
+            const regex = /^[a-zA-Z0-9\s]+$/;
+            if (!regex.test(value)) {
+                throw new Error('Bug Description must contain only alphabets and numbers');
+            }
+        }
       }
     },
     projID: {
@@ -46,7 +61,11 @@ const Bug = con.define(
           model: 'Project',
           key: 'projID',
         },
-        validate:{isInt: {
+        validate:{
+          notNull: {
+            msg: 'ProjID can not be empty'
+          },
+          isInt: {
           msg: 'Project ID must be an integer'
       }}
       },
@@ -57,7 +76,11 @@ const Bug = con.define(
           model: 'Employee',
           key: 'empID',
         },
-        validate:{isInt: {
+        validate:{
+          notNull: {
+            msg: 'Employee ID can not be empty'
+          },
+          isInt: {
           msg: 'Employee ID must be an integer'
       }}
     },

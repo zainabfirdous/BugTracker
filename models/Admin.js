@@ -7,19 +7,31 @@ const Admin = con.define(
             type:INTEGER,
             allowNull: false,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            validate:{
+                notNull: {
+                    msg: 'empID can not be empty'
+                  }}
         },
         fName:{
             type:STRING,
             allowNull: false,
-            validate:{isAlpha:{
+            validate:{
+                notNull: {
+                    msg: 'First name can not be empty'
+                  },
+                isAlpha:{
                 msg:'First name must contain only alphabetic characters'
             }}
         },
         lName:{
             type:STRING,
             allowNull: false,
-            validate:{isAlpha:{
+            validate:{
+                notNull: {
+                    msg: 'Last name can not be empty'
+                  },
+                isAlpha:{
                 msg:'Last name must contain only alphabetic characters'
             }}
         },
@@ -27,7 +39,11 @@ const Admin = con.define(
             type:STRING,
             allowNull: false,
             unique: true,
-            validate:{isEmail:{
+            validate:{
+                notNull: {
+                    msg: 'Email can not be null'
+                  },
+                isEmail:{
                 msg: 'Invalid email format'
             }}
         },
@@ -46,13 +62,10 @@ const Admin = con.define(
         }
     },{ tableName: 'admin',timestamps:false, freezeTableName:false, hooks: {
         async beforeCreate(empProfile) {
-            // Hash the password before saving
-            //const saltRounds = 10;
             const hashedPassword = await hash(empProfile.password);
             empProfile.password = hashedPassword;
         },
         async beforeUpdate(empProfile) {
-            // Hash the password before updating
             console.log("inside trigger")
             if (empProfile.changed('password')) {
     
