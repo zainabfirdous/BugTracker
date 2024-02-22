@@ -1,7 +1,7 @@
 use BTS;
 
 INSERT INTO admin (fName, lName, email, password)
-VALUES ("Alia", "Kapoor", "alia@gmail.com", "1234");
+VALUES ("Alia", "Kapoor", "alia@gmail.com", "1234@abc");
 
 insert into role(roleName)
 values("Admin"),("Developer"),("Tester");
