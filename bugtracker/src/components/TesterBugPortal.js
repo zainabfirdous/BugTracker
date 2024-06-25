@@ -111,7 +111,7 @@ export default function TesterBugPortal() {
         const token = contextdata.token;
         if (token === null) navigate("/", { replace: true });
         if (contextdata.urole === "Tester") {
-            setStatus("Resolved");
+            setStatus("All");
         }
         getData(contextdata);
     }, [navigate, contextdata])

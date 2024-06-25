@@ -138,7 +138,7 @@ export default function DevBugPortal() {
     const token = contextdata.token;
     if (token === null) navigate("/", { replace: true });
     if (contextdata.urole === "Developer") {
-      setStatus("Assigned");
+      setStatus("All");
     }
     getData();
   }, [navigate, contextdata])
@@ -352,6 +352,7 @@ export default function DevBugPortal() {
                     onChange={handleStatus}
                     required
                   >
+                     <option value="All">All</option>
                     <option value="Assigned">Assigned</option>
                     <option value="Open">Open</option>
                     <option value="Resolved">Resolved</option>
@@ -359,7 +360,7 @@ export default function DevBugPortal() {
                     <option value="Reopened">Reopened</option>
                     <option value="Retest">Retest</option>
                     <option value="Closed">Closed</option>
-                    <option value="All">All</option>
+                   
                   </select>
                 </span></span>
                 :

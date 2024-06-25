@@ -632,6 +632,71 @@ const projIDteams = async(req, res)=>{
     }
 
 
+    // const getStatusCounts = async (req, res) => {
+    //     try {
+    //         const statusCounts = await sequelize.query(
+    //             'SELECT status, COUNT(*) AS status_count ' +
+    //             'FROM tracking ' +
+    //             'WHERE status IN (:statuses) ' +
+    //             'GROUP BY status',
+    //             {
+    //                 replacements: { statuses: ['New', 'Assigned', 'Open', 'Resolved', 'Verified', 'Reopened', 'Retest', 'Closed'] },
+    //                 type: QueryTypes.SELECT
+    //             }
+    //         );
+    //         if (statusCounts.length === 0) {
+    //             res.status(404).json({ error: 'No status counts found' });
+    //         } else {
+    //             res.status(200).json(statusCounts);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error executing raw query:', error);
+    //         res.status(500).json({ error: 'Error fetching status counts' });
+    //     }
+    // };
+
+    const getStatusCounts = async (req, res) => {
+        try {
+            // List of all possible statuses
+            const allStatuses = ['New', 'Assigned', 'Open', 'Resolved', 'Verified', 'Reopened', 'Retest', 'Closed'];
+    
+            // Query to get the counts of each status
+            const statusCounts = await sequelize.query(
+                'SELECT status, COUNT(*) AS status_count ' +
+                'FROM tracking ' +
+                'WHERE status IN (:statuses) ' +
+                'GROUP BY status',
+                {
+                    replacements: { statuses: allStatuses },
+                    type: QueryTypes.SELECT
+                }
+            );
+    
+            // Initialize an object with all statuses set to 0
+            const statusCountMap = allStatuses.reduce((acc, status) => {
+                acc[status] = 0;
+                return acc;
+            }, {});
+    
+            // Map the results to the statusCountMap
+            statusCounts.forEach(item => {
+                statusCountMap[item.status] = item.status_count;
+            });
+    
+            // Convert the statusCountMap to an array of objects
+            const response = Object.keys(statusCountMap).map(status => ({
+                status,
+                status_count: statusCountMap[status]
+            }));
+    
+            res.status(200).json(response);
+        } catch (error) {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error fetching status counts' });
+        }
+    };
+
+router.get("/getStatusCounts", getStatusCounts)
 router.get("/empbyRole/:roleID", EmpByRole)
 router.get("/teammembers/:teamID", TeamMembers)
 router.get("/projteamsbyIDSelect/:projID", projIDteamsSelect)

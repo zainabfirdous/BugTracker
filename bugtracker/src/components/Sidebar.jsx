@@ -24,6 +24,7 @@ import { IoIosLogIn } from "react-icons/io";
 import BugRegistrationForm from './BugRegistrationForm';
 import bgImage from '../backgroundImg2.png'
 import bugImage from '../Img/BugLogo.png'
+import notiimg from '../Img/notificationpng.png'
 
 
 const SideBar = ({ children }) => {
@@ -324,19 +325,36 @@ const SideBar = ({ children }) => {
                                         Welcome, {contextdata.user}</p>:
                             <></>} {isLoggedIn && (contextdata.urole === 'Admin' || contextdata.urole === 'Tester') ? (
                                             <Button onClick={() => handleCreateBug()} style={{ backgroundColor: 'white', color: 'black',height:'3rem'}}>Create</Button>
+                                            
                                         
                                             ) : (
                                             <></>
                                         )}
+                                               <div  style={{padding:'2px' }}>
+                           
+                           <div className='d-flex justify-content-end' style={{ textAlign: 'end' }}>
+                               <span className='d-flex justify-content-end' style={{padding:'2px' }} >
+                               <img src={notiimg} style={{ width: '50px', height: '50px',backgroundColor: '#00000000',borderRadius:'20px',padding:'5px'  }} alt='Bug Tracking' />
+                           <p style={{padding:'10px',fontSize:'0.9rem'}}><b>Notification</b></p>
+                               </span>
+                               
+                                 
+                           </div>
+                         
+                       </div>
+                                          
                                     </div>
-                                    
-
+                                  
                                 </div>
+                                
                             
                            
                             </div>
-                        </div>
+                        </div> 
+                   
+                                
                     </div>
+                   
                 </div>
                 <div className='mt-5 ml-5'>
                     {children}
