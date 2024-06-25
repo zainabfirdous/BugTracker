@@ -171,6 +171,7 @@ export default function BugTracking() {
       const data1 = await axios.get("/admin/getbugs");
       const data2 = await axios.get("/admin/trackbugs");
       const data3 = await axios.get("/admin/getEmployees");
+     
       setBugList(data1.data);
       setBugTrackList(data2.data);
       setEmpList(data3.data);
@@ -423,6 +424,8 @@ export default function BugTracking() {
 
 
       <div className="container" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>
+
+      
 
         <div className='col-md-12 m-2 p-1' >
           <div className="bg-light border border-primary rounded m-xl-5" style={{ background: "linear-gradient(to right, #e6f7ff, #e7f7ff)" }}>

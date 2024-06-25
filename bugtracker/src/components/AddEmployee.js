@@ -8,7 +8,7 @@ import NoteContext from '../Context/NoteContext';
 
 export default function AddEmployee(props) {
 
-
+  let strRegex = new RegExp(/^[a-zA-Z\s-, ]+$/);
   const contextdata = useContext(NoteContext);
   //  console.log("contextdata : ",contextdata);
   axios.defaults.headers.common['Authorization'] = contextdata.token;
@@ -23,12 +23,16 @@ export default function AddEmployee(props) {
 
   const [empID, setEmpID] = useState();
   const [firstName, setFirstName] = useState();
+  const [fnameerr, setFnameerr] = useState(null);
   const [lastName, setLastName] = useState();
+  const [lnameerr, setLnameerr]  = useState(null);
   const [email, setEmail] = useState();
+  const [emailerr, setEmailerr ] = useState(null);
   const [roleID, setRoleID] = useState();
   const [isUpdateButton, setIsUpdateButton] = useState(false);
 
   const [username, setUsername] = useState("");
+  const [usererr, setUsererr ] = useState(null);
   const [password, setPassword] = useState("");
   const [passwordCnf, setPasswordCnf] = useState("");
 
@@ -87,6 +91,8 @@ export default function AddEmployee(props) {
     }
   };
 
+  
+
   const handleInput = (e) => {
     switch (e.target.id) {
       case "empID":
@@ -94,22 +100,60 @@ export default function AddEmployee(props) {
         //  console.log(e.target.value);
         break;
       case "firstName":
-        setFirstName(e.target.value);
+        let result1 = strRegex.test(e.target.value);  
+        if (result1) {
+          setFnameerr(null);
+          setFirstName(e.target.value);
+        }
+        else{
+          setFirstName(e.target.value);
+          setFnameerr("Alphabet Only")
+        }
         //  console.log(e.target.value);
         break;
       case "lastName":
-        setLastName(e.target.value);
+        let result2 = strRegex.test(e.target.value);  
+        if (result2) {
+          setLnameerr(null);
+          setLastName(e.target.value);
+        }
+        else{
+          setLastName(e.target.value);
+          setLnameerr("Alphabet Only")
+        }
+       
         //  console.log(e.target.value);
         break;
       case "email":
-        setEmail(e.target.value);
+      //  var validRegex = /^[a-zA-Z0-9.!#$%&.'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      var validRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}$/;
+        let result3 = validRegex.test(e.target.value);  
+        if (result3) {
+          setEmailerr(null);
+          setEmail(e.target.value);
+        }
+        else{
+          setEmail(e.target.value);
+          setEmailerr("User Proper Email Address")
+        }
+       
         break;
       case "roleID":
         setRoleID(e.target.value);
         // console.log(e.target.value);
         break;
       case "username":
-        setUsername(e.target.value);
+        let strRegexusr = new RegExp(/^[a-z0-9]+$/i);
+        let resultu = strRegexusr.test(e.target.value);  
+        if (resultu) {
+          setUsererr(null);
+          setUsername(e.target.value);
+        }
+        else{
+          setUsername(e.target.value);
+          setUsererr("Alphabets and Numbers Only!!!")
+        }
+        
         // console.log(e.target.value);
         break;
       case "password":
@@ -126,20 +170,25 @@ export default function AddEmployee(props) {
   };
 
   const addEmployee = async (employee) => {
-    if (password !== passwordCnf) {
-      alertShow("Password Not Matching!!!");
-    } else {
-      console.log("Employee : ", employee)
-      try {
-        const response = await axios.post(
-          "/admin/newEmployee",
-          employee);
-        profileAdd(response.data.empID)
 
-      } catch (e) {
-        alertShow(e.response.data.error);
+    
+      if (password !== passwordCnf) {
+        alertShow("Password Not Matching!!!");
+      } else {
+        console.log("Employee : ", employee)
+        try {
+          console.log("EMployee is been Added!!! Forced")
+          const response = await axios.post(
+            "/admin/newEmployee",
+            employee);
+          profileAdd(response.data.empID)
+  
+        } catch (e) {
+          alertShow(e.response.data.error);
+        }
       }
-    }
+    
+    
   };
 
   const profileAdd = async (empID) => {
@@ -241,7 +290,7 @@ export default function AddEmployee(props) {
             value={firstName}
             onChange={handleInput}
             required
-          />
+          /><p className="ml-3 mt-2 mb-0" class="text-danger" >{fnameerr}</p>
         </div>
         <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="lastName">Last Name: </label>
@@ -252,7 +301,7 @@ export default function AddEmployee(props) {
             value={lastName}
             onChange={handleInput}
             required
-          />
+          /><p className="ml-3 mt-2 mb-0" class="text-danger" >{lnameerr}</p>
         </div>
         <div className="form-group col-sm-12 col-md-4">
           <label htmlFor="email">Email : </label>
@@ -263,7 +312,7 @@ export default function AddEmployee(props) {
             value={email}
             onChange={handleInput}
             required
-          />
+          /><p className="ml-3 mt-2 mb-0" class="text-danger" >{emailerr}</p>
         </div>
 
         <div className="form-group col-sm-12 col-md-4">
@@ -292,7 +341,7 @@ export default function AddEmployee(props) {
                   value={username}
                   onChange={handleInput}
                   required
-                />
+                /><p className="ml-3 mt-2 mb-0" class="text-danger" >{usererr}</p>
               </div>
               <div className="form-group col-sm-12 col-md-4">
                 <label htmlFor="email">Password : </label>

@@ -43,14 +43,14 @@ const credential = con.define
             }
         }
     },
-    crtDate:{
-        type: DATEONLY,
-        defaultValue: NOW
-    },
-    updDate:{
-        type: DATEONLY,
-        defaultValue: null
-    }
+    // crtDate:{
+    //     type: DATEONLY,
+    //     defaultValue: NOW
+    // },
+    // updDate:{
+    //     type: DATEONLY,
+    //     defaultValue: null
+    // }
 },{ tableName: 'EmpProfile',timestamps:false, freezeTableName:false, hooks: {
     async beforeCreate(empProfile) {
         const hashedPassword = await hash(empProfile.password);
