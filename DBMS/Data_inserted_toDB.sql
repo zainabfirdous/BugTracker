@@ -1,7 +1,7 @@
 use BTS;
 
 INSERT INTO admin (fName, lName, email, password)
-VALUES ("Alia", "Kapoor", "alia@gmail.com", "1234");
+VALUES ("Alia", "Kapoor", "admin@gmail.com", "$2a$10$/HXh7l9H3LrfXowjVfPHLO.49da91.N3/Zgshz291w7LkjZyxq9KC");
 
 insert into role(roleName)
 values("Admin"),("Developer"),("Tester");
@@ -10,7 +10,7 @@ insert into employee(fName, lName, email, roleID)
 values("Sachin","Patidar","sachin@gmail.com",2),("Anushka","Bajpai","anushka@gmail.com",3),("Veena","Dubey","veena@gmail.com", 3),("Rohan","Patinge","rohan@gmail.coom",2),("Zainab","Firdous","zainab@gmail.com",2);
 
 insert into empprofile
-values(100,"sachin","1234@a"),(101,"anushka","1234@ab"),(102,"veena","1234@abc"),(103,"rohan","1234@A"),(104,"zainab","1234@AB");
+values(100,"sachin","$2a$10$/HXh7l9H3LrfXowjVfPHLO.49da91.N3/Zgshz291w7LkjZyxq9KC"),(101,"anushka","$2a$10$/HXh7l9H3LrfXowjVfPHLO.49da91.N3/Zgshz291w7LkjZyxq9KC"),(102,"veena","$2a$10$/HXh7l9H3LrfXowjVfPHLO.49da91.N3/Zgshz291w7LkjZyxq9KC"),(103,"rohan","$2a$10$/HXh7l9H3LrfXowjVfPHLO.49da91.N3/Zgshz291w7LkjZyxq9KC"),(104,"zainab","$2a$10$/HXh7l9H3LrfXowjVfPHLO.49da91.N3/Zgshz291w7LkjZyxq9KC");
 
 insert into project(projName, status, startDate, endDate)
 values("Smart Home Security","Active","2024-03-15","2024-07-31"),("Recommendation Engine","Completed","2024-01-05","2024-02-02"),

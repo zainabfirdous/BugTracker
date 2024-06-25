@@ -18,7 +18,7 @@ const tracking = con.define(
             },
             validate:{
                     notNull: {
-                        msg: 'BugID can not be null'
+                        msg: 'BugID can not be empty'
                       },
                 isInt: {
                 msg: 'Bug ID must be an integer'
@@ -157,7 +157,7 @@ const tracking = con.define(
             allowNull:false,
             validate:{
                 notNull: {
-                    msg: 'status can not be null'
+                    msg: 'status can not be empty'
                   },
                 isAlpha:{
                     msg:'Status can not be string'

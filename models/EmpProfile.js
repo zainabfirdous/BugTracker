@@ -12,7 +12,7 @@ const credential = con.define
        },
        validate: {
         notNull: {
-            msg: 'empID can not be null'
+            msg: 'empID can not be empty'
           }}
         },
     username:{
@@ -21,7 +21,7 @@ const credential = con.define
         unique: true,
         validate: {
             notNull: {
-                msg: 'Username can not be null'
+                msg: 'Username can not be empty'
               },
             isAlphanumericWithSpace(value){
                 const regex = /^[a-zA-Z0-9\s]+$/;

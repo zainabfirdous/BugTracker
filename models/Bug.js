@@ -17,7 +17,7 @@ const Bug = con.define(
         allowNull:false,
         validate: {
           notNull: {
-            msg: 'Bug name can not be null'
+            msg: 'Bug name can not be empty'
           },
           isAlphanumericWithSpace(value){
             const regex = /^[a-zA-Z0-9\s]+$/;
@@ -32,7 +32,7 @@ const Bug = con.define(
         allowNull: false,
         validate:{
           notNull: {
-            msg: 'Priority can not be null'
+            msg: 'Priority can not be empty'
           },
           isAlpha:{
             msg: 'Priority can contain only string'
@@ -44,7 +44,7 @@ const Bug = con.define(
         allowNull:false,
         validate: {
           notNull: {
-            msg: 'Bug Description can not be null'
+            msg: 'Bug Description can not be empty'
           },
           isAlphanumericWithSpace(value){
             const regex = /^[a-zA-Z0-9\s]+$/;
@@ -63,7 +63,7 @@ const Bug = con.define(
         },
         validate:{
           notNull: {
-            msg: 'ProjID can not be null'
+            msg: 'ProjID can not be empty'
           },
           isInt: {
           msg: 'Project ID must be an integer'
@@ -78,7 +78,7 @@ const Bug = con.define(
         },
         validate:{
           notNull: {
-            msg: 'Employee ID can not be null'
+            msg: 'Employee ID can not be empty'
           },
           isInt: {
           msg: 'Employee ID must be an integer'
