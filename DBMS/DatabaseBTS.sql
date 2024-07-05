@@ -106,3 +106,19 @@ foreign key(assignBy) references admin(admID),
 foreign key(bugID) references bug(bugID),
 primary key(trackID)
 );
+
+
+CREATE TABLE notification (
+    notiID INT NOT NULL AUTO_INCREMENT,
+    sender INT NOT NULL,
+    receiver INT NOT NULL,
+    message TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    bugID INT NOT NULL,
+    trackID INT NOT NULL,
+    time TIME DEFAULT NULL,
+    seenTime TIME DEFAULT NULL,
+    PRIMARY KEY (notiID),
+    FOREIGN KEY (bugID) REFERENCES bug(bugID),
+    FOREIGN KEY (trackID) REFERENCES tracking(trackID)
+);
